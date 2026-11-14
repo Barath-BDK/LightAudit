@@ -1,0 +1,14 @@
+numpy
+scipy
+scikit-learn
+scikit-image
+opencv-python
+pillow
+matplotlib
+tqdm
+pytest
+fastapi
+uvicorn
+python-multipart
+pandas
+httpx

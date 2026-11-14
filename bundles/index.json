@@ -1,0 +1,114 @@
+[
+ {
+  "name": "demo_consistent",
+  "title": "Clean sunny scene",
+  "description": "An unedited sunny scene. Synthetic scene (seed 4000), simulated normals. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
+  "thumb": "demo_consistent/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_damage_fake",
+  "title": "Dent pasted from another light (panel mode)",
+  "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4039), simulated normals. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "demo_damage_fake/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_damage_genuine",
+  "title": "Genuine dent (panel mode)",
+  "description": "A real dent, lit by the same sun as the rest of the car. Panel mode: dent ROI + surrounding ring. Synthetic scene (seed 4020), simulated normals. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
+  "thumb": "demo_damage_genuine/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_failure_missed_splice",
+  "title": "Failure example: a splice that passes",
+  "description": "FAILURE EXAMPLE. The car was pasted from a light 120\u00b0 away, yet the audit does not flag it. Synthetic scene (seed 4061), simulated normals. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
+  "thumb": "demo_failure_missed_splice/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_multilight",
+  "title": "Two suns",
+  "description": "An unedited scene lit by two strong lights (outside the one-light model). Synthetic scene (seed 4051), simulated normals. Audit verdict: CONSISTENT (intended: CONFLICT/INSUFFICIENT; shown as it is).",
+  "verdict": "CONSISTENT",
+  "thumb": "demo_multilight/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_overcast",
+  "title": "Overcast",
+  "description": "An unedited scene under mostly diffuse sky light. Synthetic scene (seed 4061), simulated normals. Audit verdict: INSUFFICIENT.",
+  "verdict": "INSUFFICIENT",
+  "thumb": "demo_overcast/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "demo_splice_car",
+  "title": "Car pasted from another light",
+  "description": "The car was rendered under a light 120\u00b0 away from the scene's sun and pasted in. Synthetic scene (seed 4012), simulated normals. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "demo_splice_car/thumb.jpg",
+  "source": "synthetic"
+ },
+ {
+  "name": "real_airfield_car",
+  "title": "airfield_car.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
+  "thumb": "real_airfield_car/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_carpark_sunny",
+  "title": "carpark_sunny.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
+  "thumb": "real_carpark_sunny/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_mini_parking",
+  "title": "mini_parking.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "real_mini_parking/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_peugeot_104",
+  "title": "peugeot_104.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "real_peugeot_104/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_splice_carpark_sunny_from_peugeot_104",
+  "title": "carpark_sunny_from_peugeot_104.png",
+  "description": "Real photo with a region pasted from another photo (made by tools/make_real_splice.py).",
+  "verdict": "SUSPICIOUS",
+  "thumb": "real_splice_carpark_sunny_from_peugeot_104/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_street_car",
+  "title": "street_car.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "real_street_car/thumb.jpg",
+  "source": "real"
+ },
+ {
+  "name": "real_supermarket_carpark",
+  "title": "supermarket_carpark.jpg",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
+  "thumb": "real_supermarket_carpark/thumb.jpg",
+  "source": "real"
+ }
+]

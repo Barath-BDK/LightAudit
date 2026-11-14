@@ -1,0 +1,799 @@
+{
+ "version": 1,
+ "name": "demo_overcast",
+ "title": "Overcast",
+ "description": "An unedited scene under mostly diffuse sky light. Synthetic scene (seed 4061), simulated normals. Audit verdict: INSUFFICIENT.",
+ "image": {
+  "w": 512,
+  "h": 352,
+  "fov_deg": 60.0,
+  "source": "synthetic"
+ },
+ "ground_truth": {
+  "light_cam": [
+   -0.2917,
+   0.57894,
+   0.76141
+  ],
+  "edited_region_ids": [],
+  "delta_deg": 0.0
+ },
+ "normals_backend": "noisy_gt(8)",
+ "regions_backend": "gt",
+ "calibration": {
+  "h": 18.0,
+  "T": 1.5,
+  "tau_img": 4.94575,
+  "tau_ref": 4.94575,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.5,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "source": "calib_default.json"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "ground",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 92923,
+   "bbox": [
+    0,
+    129,
+    512,
+    352
+   ],
+   "color": "#4c78a8",
+   "n_valid": 45667,
+   "spread_deg": 14.85633,
+   "rho_max": 0.05203,
+   "sharp_area": 0.34366,
+   "mean_unc": 13.44344,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.46612,
+    "f_sharp": 0.31267,
+    "f_dir": 0.0,
+    "f_norm": 0.82783
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.17421,
+    0.96378,
+    -0.20196
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95699,
+    0.95842,
+    0.95842,
+    0.95842,
+    0.95846,
+    0.95855,
+    0.95862
+   ],
+   "sigma": 0.015,
+   "slope": 0.00163,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0
+   }
+  },
+  {
+   "id": 2,
+   "name": "car body",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 7181,
+   "bbox": [
+    143,
+    106,
+    322,
+    180
+   ],
+   "color": "#f58518",
+   "n_valid": 4882,
+   "spread_deg": 65.6634,
+   "rho_max": 0.93184,
+   "sharp_area": 0.01456,
+   "mean_unc": 15.22261,
+   "weight": 0.93572,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.97088,
+    "f_dir": 1.0,
+    "f_norm": 0.73887
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.32102,
+    0.92371,
+    0.20906
+   ],
+   "r68_deg": 38.35612,
+   "r95_deg": 61.9333,
+   "g_lut": [
+    0.57898,
+    0.68469,
+    0.69065,
+    0.69527,
+    0.70304,
+    0.73244,
+    0.73244,
+    0.74286,
+    0.74603,
+    0.75086,
+    0.75773,
+    0.75773,
+    0.76326,
+    0.76474,
+    0.76474,
+    0.77108,
+    0.78076,
+    0.78076,
+    0.79461,
+    0.79929,
+    0.81553,
+    0.82283,
+    0.83161,
+    0.83161,
+    0.83161,
+    0.85046,
+    0.85682,
+    0.85909,
+    0.86782,
+    0.87596,
+    0.87596,
+    0.87953,
+    0.888
+   ],
+   "sigma": 0.02577,
+   "slope": 0.30902,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 1
+   }
+  },
+  {
+   "id": 3,
+   "name": "car windows",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 1688,
+   "bbox": [
+    166,
+    112,
+    274,
+    130
+   ],
+   "color": "#54a24b",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 12.49677,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 2
+   }
+  },
+  {
+   "id": 4,
+   "name": "wheels",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 1493,
+   "bbox": [
+    148,
+    143,
+    309,
+    191
+   ],
+   "color": "#e45756",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 14.61092,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 3,
+   "cue_maps": {
+    "shading": 3
+   }
+  },
+  {
+   "id": 6,
+   "name": "bush 2",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 658,
+   "bbox": [
+    440,
+    131,
+    469,
+    198
+   ],
+   "color": "#72b7b2",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 22.15958,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "smaller than the minimum region size",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 4,
+   "cue_maps": {
+    "shading": 4
+   }
+  },
+  {
+   "id": 7,
+   "name": "sphere 3",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 12460,
+   "bbox": [
+    329,
+    113,
+    458,
+    236
+   ],
+   "color": "#eeca3b",
+   "n_valid": 9327,
+   "spread_deg": 57.98774,
+   "rho_max": 0.89774,
+   "sharp_area": 0.02562,
+   "mean_unc": 14.26698,
+   "weight": 0.94317,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.94876,
+    "f_dir": 1.0,
+    "f_norm": 0.78665
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    -0.12236,
+    0.8416,
+    0.52606
+   ],
+   "r68_deg": 42.94884,
+   "r95_deg": 69.63735,
+   "g_lut": [
+    0.69713,
+    0.80355,
+    0.80621,
+    0.81584,
+    0.81584,
+    0.82456,
+    0.82456,
+    0.82456,
+    0.83537,
+    0.88265,
+    0.88265,
+    0.88285,
+    0.88285,
+    0.88285,
+    0.90993,
+    0.91507,
+    0.91865,
+    0.92388,
+    0.93001,
+    0.93686,
+    0.93686,
+    0.94334,
+    0.94446,
+    0.9501,
+    0.95909,
+    0.95989,
+    0.95989,
+    0.96284,
+    0.96472,
+    0.96564,
+    0.96564,
+    0.96564,
+    0.96838
+   ],
+   "sigma": 0.04359,
+   "slope": 0.27126,
+   "landscape_index": 5,
+   "cue_maps": {
+    "shading": 5,
+    "contour": 6
+   }
+  },
+  {
+   "id": 8,
+   "name": "bush 4",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 57,
+   "bbox": [
+    392,
+    112,
+    425,
+    121
+   ],
+   "color": "#b279a2",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 32.61005,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "smaller than the minimum region size",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 6,
+   "cue_maps": {
+    "shading": 7
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "INSUFFICIENT",
+  "reason": "only 2 reliable region(s); at least 3 are needed",
+  "S_img": 0.29341,
+  "n_reliable": 2,
+  "top_region": 7,
+  "flagged": [],
+  "consensus": {
+   "dir": [
+    -0.30325,
+    0.87009,
+    0.38857
+   ],
+   "az_deg": -37.96875,
+   "el_deg": 60.46875,
+   "r68_deg": 36.86972,
+   "r95_deg": 59.59215,
+   "frac95": 0.14098
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": -0.001,
+    "angle_deg": 35.61759,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 0.21869,
+    "angle_deg": 18.72246,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 4,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 6,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 7,
+    "shortfall": 0.29341,
+    "angle_deg": 22.28023,
+    "flagged": false
+   },
+   {
+    "id": 8,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   }
+  ],
+  "text": "Not enough usable lighting evidence: only 2 reliable region(s); at least 3 are needed (1 region(s): weak directional shading (overcast/soft light?)). Try a photo outdoors in direct light with several objects visible."
+ },
+ "baseline_ls": {
+  "present": true,
+  "fusion": {
+   "verdict": "INSUFFICIENT",
+   "reason": "only 2 reliable region(s); at least 3 are needed",
+   "S_img": 0.381,
+   "n_reliable": 2,
+   "top_region": 7,
+   "flagged": [],
+   "consensus": {
+    "dir": [
+     -0.35426,
+     0.78835,
+     0.503
+    ],
+    "az_deg": -35.15625,
+    "el_deg": 52.03125,
+    "r68_deg": 34.83951,
+    "r95_deg": 56.51952,
+    "frac95": 0.12514
+   },
+   "per_region": [
+    {
+     "id": 1,
+     "shortfall": -0.001,
+     "angle_deg": 93.33927,
+     "flagged": false
+    },
+    {
+     "id": 2,
+     "shortfall": 0.37612,
+     "angle_deg": 22.973,
+     "flagged": false
+    },
+    {
+     "id": 3,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 4,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 6,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 7,
+     "shortfall": 0.381,
+     "angle_deg": 17.7851,
+     "flagged": false
+    },
+    {
+     "id": 8,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    }
+   ],
+   "text": "Not enough usable lighting evidence: only 2 reliable region(s); at least 3 are needed (1 region(s): weak directional shading (overcast/soft light?)). Try a photo outdoors in direct light with several objects visible."
+  },
+  "regions": [
+   {
+    "id": 1,
+    "center": [
+     -0.2003,
+     0.40524,
+     -0.892
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 2,
+    "center": [
+     -0.24433,
+     0.89604,
+     0.3707
+    ],
+    "r68_deg": 36.51012,
+    "r95_deg": 58.89762,
+    "weight": 0.936,
+    "reliable": true
+   },
+   {
+    "id": 3,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 4,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 6,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 7,
+    "center": [
+     -0.23555,
+     0.72955,
+     0.64209
+    ],
+    "r68_deg": 39.38071,
+    "r95_deg": 63.1228,
+    "weight": 0.94686,
+    "reliable": true
+   },
+   {
+    "id": 8,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   }
+  ]
+ },
+ "attacks": [],
+ "backends_log": [],
+ "created": "2026-11-14T10:07:49+00:00"
+}

@@ -1,0 +1,1092 @@
+{
+ "version": 1,
+ "name": "demo_splice_car",
+ "title": "Car pasted from another light",
+ "description": "The car was rendered under a light 120\u00b0 away from the scene's sun and pasted in. Synthetic scene (seed 4012), simulated normals. Audit verdict: SUSPICIOUS.",
+ "image": {
+  "w": 512,
+  "h": 352,
+  "fov_deg": 60.0,
+  "source": "synthetic"
+ },
+ "ground_truth": {
+  "light_cam": [
+   -0.49243,
+   0.85465,
+   0.16459
+  ],
+  "edited_region_ids": [
+   2,
+   3,
+   4
+  ],
+  "delta_deg": 120.0
+ },
+ "normals_backend": "noisy_gt(8)",
+ "regions_backend": "gt",
+ "calibration": {
+  "h": 18.0,
+  "T": 1.5,
+  "tau_img": 4.94575,
+  "tau_ref": 4.94575,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.5,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "source": "calib_default.json"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "ground",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 74506,
+   "bbox": [
+    0,
+    157,
+    512,
+    352
+   ],
+   "color": "#4c78a8",
+   "n_valid": 44249,
+   "spread_deg": 14.27951,
+   "rho_max": 0.14668,
+   "sharp_area": 0.01236,
+   "mean_unc": 13.5444,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.43576,
+    "f_sharp": 0.97527,
+    "f_dir": 0.0,
+    "f_norm": 0.82278
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.97787,
+    -0.17096,
+    -0.12061
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.80185,
+    0.82285,
+    0.82285,
+    0.84502,
+    0.85012,
+    0.85012,
+    0.85012,
+    0.85012,
+    0.86067,
+    0.88467,
+    0.89281,
+    0.89542,
+    0.89542,
+    0.89542
+   ],
+   "sigma": 0.02036,
+   "slope": 0.09357,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0
+   }
+  },
+  {
+   "id": 2,
+   "name": "car body",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 8952,
+   "bbox": [
+    168,
+    143,
+    387,
+    220
+   ],
+   "color": "#f58518",
+   "n_valid": 6170,
+   "spread_deg": 72.15488,
+   "rho_max": 0.79871,
+   "sharp_area": 0.01497,
+   "mean_unc": 13.65456,
+   "weight": 0.95462,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.97005,
+    "f_dir": 1.0,
+    "f_norm": 0.81727
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    0.53168,
+    0.11915,
+    0.83853
+   ],
+   "r68_deg": 36.83817,
+   "r95_deg": 59.93739,
+   "g_lut": [
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864,
+    0.35864
+   ],
+   "sigma": 0.02992,
+   "slope": 0.0,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 1,
+    "contour": 2
+   }
+  },
+  {
+   "id": 3,
+   "name": "car windows",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 2103,
+   "bbox": [
+    208,
+    150,
+    333,
+    170
+   ],
+   "color": "#54a24b",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 22.49647,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 3
+   }
+  },
+  {
+   "id": 4,
+   "name": "wheels",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 2192,
+   "bbox": [
+    210,
+    185,
+    375,
+    233
+   ],
+   "color": "#e45756",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 13.18258,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 3,
+   "cue_maps": {
+    "shading": 4
+   }
+  },
+  {
+   "id": 5,
+   "name": "pole 1",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 9434,
+   "bbox": [
+    41,
+    102,
+    101,
+    280
+   ],
+   "color": "#72b7b2",
+   "n_valid": 7423,
+   "spread_deg": 51.39081,
+   "rho_max": 0.81134,
+   "sharp_area": 0.02899,
+   "mean_unc": 15.67747,
+   "weight": 0.92429,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.94201,
+    "f_dir": 1.0,
+    "f_norm": 0.71613
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.98244,
+    -0.08151,
+    0.16781
+   ],
+   "r68_deg": 43.23305,
+   "r95_deg": 70.04135,
+   "g_lut": [
+    0.17617,
+    0.17617,
+    0.17617,
+    0.17734,
+    0.17734,
+    0.17734,
+    0.17748,
+    0.17748,
+    0.17748,
+    0.18023,
+    0.18165,
+    0.18508,
+    0.19462,
+    0.19555,
+    0.20228,
+    0.21649,
+    0.21848,
+    0.34903,
+    0.34903,
+    0.37373,
+    0.39002,
+    0.39002,
+    0.39002,
+    0.40227,
+    0.43183,
+    0.49065,
+    0.52123,
+    0.52425,
+    0.52425,
+    0.52476,
+    0.54961,
+    0.58151,
+    0.58151
+   ],
+   "sigma": 0.03117,
+   "slope": 0.40534,
+   "landscape_index": 4,
+   "cue_maps": {
+    "shading": 5
+   }
+  },
+  {
+   "id": 6,
+   "name": "pole 2",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 874,
+   "bbox": [
+    110,
+    94,
+    130,
+    150
+   ],
+   "color": "#eeca3b",
+   "n_valid": 474,
+   "spread_deg": 43.69937,
+   "rho_max": 0.86883,
+   "sharp_area": 0.04206,
+   "mean_unc": 15.41259,
+   "weight": 0.8308,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 0.5925,
+    "f_spread": 1.0,
+    "f_sharp": 0.91588,
+    "f_dir": 1.0,
+    "f_norm": 0.72937
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.98517,
+    -0.1149,
+    0.12743
+   ],
+   "r68_deg": 50.05869,
+   "r95_deg": 77.55917,
+   "g_lut": [
+    0.26954,
+    0.26959,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27016,
+    0.27125,
+    0.27232,
+    0.27232,
+    0.27232,
+    0.27935,
+    0.33502,
+    0.4123,
+    0.54347,
+    0.54347,
+    0.54347,
+    0.54347,
+    0.55651,
+    0.59201,
+    0.65263,
+    0.67843,
+    0.67843,
+    0.67843,
+    0.67843,
+    0.67843,
+    0.67843
+   ],
+   "sigma": 0.01537,
+   "slope": 0.40889,
+   "landscape_index": 5,
+   "cue_maps": {
+    "shading": 6
+   }
+  },
+  {
+   "id": 7,
+   "name": "sphere 3",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 4812,
+   "bbox": [
+    398,
+    131,
+    480,
+    206
+   ],
+   "color": "#b279a2",
+   "n_valid": 2893,
+   "spread_deg": 53.68721,
+   "rho_max": 0.89434,
+   "sharp_area": 0.02394,
+   "mean_unc": 14.48717,
+   "weight": 0.94118,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.95213,
+    "f_dir": 1.0,
+    "f_norm": 0.77564
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    -0.45722,
+    0.81387,
+    0.35855
+   ],
+   "r68_deg": 41.60489,
+   "r95_deg": 68.02534,
+   "g_lut": [
+    0.17682,
+    0.19414,
+    0.19451,
+    0.25439,
+    0.25439,
+    0.29657,
+    0.39616,
+    0.39616,
+    0.42782,
+    0.48258,
+    0.48258,
+    0.48258,
+    0.50304,
+    0.52712,
+    0.52712,
+    0.56028,
+    0.56028,
+    0.56028,
+    0.56028,
+    0.56028,
+    0.58621,
+    0.58621,
+    0.58621,
+    0.68523,
+    0.69692,
+    0.74443,
+    0.76249,
+    0.82958,
+    0.88268,
+    0.89396,
+    0.96166,
+    0.96611,
+    0.96611
+   ],
+   "sigma": 0.13875,
+   "slope": 0.78929,
+   "landscape_index": 6,
+   "cue_maps": {
+    "shading": 7,
+    "contour": 8
+   }
+  },
+  {
+   "id": 8,
+   "name": "sphere 4",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 3282,
+   "bbox": [
+    36,
+    131,
+    140,
+    226
+   ],
+   "color": "#ff9da6",
+   "n_valid": 2239,
+   "spread_deg": 48.87691,
+   "rho_max": 0.94336,
+   "sharp_area": 0.06449,
+   "mean_unc": 13.0855,
+   "weight": 0.9407,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.87101,
+    "f_dir": 1.0,
+    "f_norm": 0.84573
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    0.16257,
+    0.98355,
+    0.07868
+   ],
+   "r68_deg": 56.58341,
+   "r95_deg": 90.6321,
+   "g_lut": [
+    0.13622,
+    0.16414,
+    0.171,
+    0.18315,
+    0.18837,
+    0.20196,
+    0.20984,
+    0.22,
+    0.22494,
+    0.22777,
+    0.24722,
+    0.25464,
+    0.28294,
+    0.37165,
+    0.37563,
+    0.40191,
+    0.66667,
+    0.69292,
+    0.69292,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70588,
+    0.70921,
+    0.72192,
+    0.74685,
+    0.74685,
+    0.74685
+   ],
+   "sigma": 0.05431,
+   "slope": 0.61064,
+   "landscape_index": 7,
+   "cue_maps": {
+    "shading": 9,
+    "contour": 10
+   }
+  },
+  {
+   "id": 9,
+   "name": "building",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 22106,
+   "bbox": [
+    236,
+    35,
+    436,
+    177
+   ],
+   "color": "#9d755d",
+   "n_valid": 20080,
+   "spread_deg": 16.02672,
+   "rho_max": 0.06826,
+   "sharp_area": 0.01466,
+   "mean_unc": 12.6797,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.52772,
+    "f_sharp": 0.97068,
+    "f_dir": 0.0,
+    "f_norm": 0.86602
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.49915,
+    -0.84485,
+    -0.19254
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.60165,
+    0.61074,
+    0.61074,
+    0.61074,
+    0.61074,
+    0.61074,
+    0.61074,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108,
+    0.61108
+   ],
+   "sigma": 0.015,
+   "slope": 0.00943,
+   "landscape_index": 8,
+   "cue_maps": {
+    "shading": 11
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "SUSPICIOUS",
+  "reason": "",
+  "S_img": 5.90537,
+  "n_reliable": 5,
+  "top_region": 2,
+  "flagged": [
+   2
+  ],
+  "consensus": {
+   "dir": [
+    -0.37323,
+    0.65317,
+    0.65884
+   ],
+   "az_deg": -29.53125,
+   "el_deg": 40.78125,
+   "r68_deg": 53.14919,
+   "r95_deg": 104.39857,
+   "frac95": 0.10468
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": -0.001,
+    "angle_deg": 123.78621,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 5.90537,
+    "angle_deg": 90.18721,
+    "flagged": true
+   },
+   {
+    "id": 3,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 4,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 5,
+    "shortfall": 4.16398,
+    "angle_deg": 82.78376,
+    "flagged": false
+   },
+   {
+    "id": 6,
+    "shortfall": 2.46481,
+    "angle_deg": 71.48659,
+    "flagged": false
+   },
+   {
+    "id": 7,
+    "shortfall": 1.07105,
+    "angle_deg": 28.09346,
+    "flagged": false
+   },
+   {
+    "id": 8,
+    "shortfall": 2.11864,
+    "angle_deg": 60.38921,
+    "flagged": false
+   },
+   {
+    "id": 9,
+    "shortfall": -0.001,
+    "angle_deg": 149.88108,
+    "flagged": false
+   }
+  ],
+  "text": "The estimate for **car body** points 90\u00b0 away from where 4 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 5.9 > alert 4.9). Cues: shading, silhouette. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+ },
+ "baseline_ls": {
+  "present": true,
+  "fusion": {
+   "verdict": "SUSPICIOUS",
+   "reason": "",
+   "S_img": 6.2736,
+   "n_reliable": 5,
+   "top_region": 2,
+   "flagged": [
+    2
+   ],
+   "consensus": {
+    "dir": [
+     -0.46586,
+     0.78835,
+     0.40185
+    ],
+    "az_deg": -49.21875,
+    "el_deg": 52.03125,
+    "r68_deg": 53.92076,
+    "r95_deg": 109.91483,
+    "frac95": 0.10246
+   },
+   "per_region": [
+    {
+     "id": 1,
+     "shortfall": -0.001,
+     "angle_deg": 65.41638,
+     "flagged": false
+    },
+    {
+     "id": 2,
+     "shortfall": 6.2736,
+     "angle_deg": 103.47683,
+     "flagged": true
+    },
+    {
+     "id": 3,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 4,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 5,
+     "shortfall": 2.66421,
+     "angle_deg": 66.83263,
+     "flagged": false
+    },
+    {
+     "id": 6,
+     "shortfall": 1.13968,
+     "angle_deg": 66.03088,
+     "flagged": false
+    },
+    {
+     "id": 7,
+     "shortfall": 0.76811,
+     "angle_deg": 13.66256,
+     "flagged": false
+    },
+    {
+     "id": 8,
+     "shortfall": 1.71496,
+     "angle_deg": 45.07554,
+     "flagged": false
+    },
+    {
+     "id": 9,
+     "shortfall": -0.001,
+     "angle_deg": 167.45318,
+     "flagged": false
+    }
+   ],
+   "text": "The estimate for **car body** points 103\u00b0 away from where 4 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.3 > alert 4.9). Cues: shading, silhouette. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  },
+  "regions": [
+   {
+    "id": 1,
+    "center": [
+     -0.84895,
+     -0.2191,
+     0.48092
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 2,
+    "center": [
+     0.70679,
+     0.13833,
+     0.69377
+    ],
+    "r68_deg": 37.81659,
+    "r95_deg": 60.80355,
+    "weight": 0.94773,
+    "reliable": true
+   },
+   {
+    "id": 3,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 4,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 5,
+    "center": [
+     -0.97795,
+     -0.06669,
+     0.19792
+    ],
+    "r68_deg": 40.03937,
+    "r95_deg": 65.89367,
+    "weight": 0.91458,
+    "reliable": true
+   },
+   {
+    "id": 6,
+    "center": [
+     -0.98158,
+     -0.12346,
+     0.14579
+    ],
+    "r68_deg": 52.84272,
+    "r95_deg": 91.4088,
+    "weight": 0.83084,
+    "reliable": true
+   },
+   {
+    "id": 7,
+    "center": [
+     -0.51419,
+     0.79579,
+     0.3199
+    ],
+    "r68_deg": 38.69123,
+    "r95_deg": 63.08928,
+    "weight": 0.94586,
+    "reliable": true
+   },
+   {
+    "id": 8,
+    "center": [
+     -0.30043,
+     0.94756,
+     -0.109
+    ],
+    "r68_deg": 61.42525,
+    "r95_deg": 97.65391,
+    "weight": 0.96171,
+    "reliable": true
+   },
+   {
+    "id": 9,
+    "center": [
+     0.45061,
+     -0.87009,
+     -0.19974
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   }
+  ]
+ },
+ "attacks": [
+  {
+   "variant": "T1",
+   "title": "T1 colour transfer",
+   "verdict": "SUSPICIOUS",
+   "S_img": 6.8931,
+   "fidelity": {
+    "mean_abs_dY": 0.19196,
+    "ssim_loss": 0.32946
+   },
+   "region_id": 2,
+   "interpretation": "T1 colour transfer moved the estimate for car body from 90\u00b0 to 92\u00b0 off the consensus (shortfall 5.9 \u2192 6.9); verdict SUSPICIOUS \u2192 SUSPICIOUS. The region is still flagged (cues: shading + glint, contour)."
+  },
+  {
+   "variant": "T3a_0",
+   "title": "T3a re-shade (exact light)",
+   "verdict": "CONSISTENT",
+   "S_img": 2.5165,
+   "fidelity": {
+    "mean_abs_dY": 0.18046,
+    "ssim_loss": 0.64368
+   },
+   "region_id": 2,
+   "interpretation": "T3a re-shade (exact light) moved the estimate for car body from 90\u00b0 to 16\u00b0 off the consensus (shortfall 5.9 \u2192 0.2); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T3a_10",
+   "title": "T3a re-shade (\u00b110\u00b0 error)",
+   "verdict": "CONSISTENT",
+   "S_img": 3.10107,
+   "fidelity": {
+    "mean_abs_dY": 0.1715,
+    "ssim_loss": 0.62307
+   },
+   "region_id": 2,
+   "interpretation": "T3a re-shade (\u00b110\u00b0 error) moved the estimate for car body from 90\u00b0 to 9\u00b0 off the consensus (shortfall 5.9 \u2192 0.2); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T3a_20",
+   "title": "T3a re-shade (\u00b120\u00b0 error)",
+   "verdict": "CONSISTENT",
+   "S_img": 3.10107,
+   "fidelity": {
+    "mean_abs_dY": 0.15889,
+    "ssim_loss": 0.59366
+   },
+   "region_id": 2,
+   "interpretation": "T3a re-shade (\u00b120\u00b0 error) moved the estimate for car body from 90\u00b0 to 20\u00b0 off the consensus (shortfall 5.9 \u2192 0.8); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T4",
+   "title": "T4 adaptive",
+   "verdict": "CONSISTENT",
+   "S_img": 2.5165,
+   "fidelity": {
+    "mean_abs_dY": 0.17837,
+    "ssim_loss": 0.63966
+   },
+   "region_id": 2,
+   "interpretation": "T4 adaptive moved the estimate for car body from 90\u00b0 to 10\u00b0 off the consensus (shortfall 5.9 \u2192 0.1); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  }
+ ],
+ "backends_log": [],
+ "created": "2026-11-14T10:03:05+00:00"
+}

@@ -1,0 +1,201 @@
+  [arbiter rows] 3/60  36s
+  [arbiter rows] 6/60  38s
+  [arbiter rows] 9/60  66s
+  [arbiter rows] 12/60  78s
+  [arbiter rows] 15/60  90s
+  [arbiter rows] 18/60  102s
+  [arbiter rows] 21/60  117s
+  [arbiter rows] 24/60  133s
+  [arbiter rows] 27/60  154s
+  [arbiter rows] 30/60  163s
+  [arbiter rows] 33/60  177s
+  [arbiter rows] 36/60  198s
+  [arbiter rows] 39/60  211s
+  [arbiter rows] 42/60  234s
+  [arbiter rows] 45/60  244s
+  [arbiter rows] 48/60  325s
+  [arbiter rows] 51/60  329s
+  [arbiter rows] 54/60  343s
+  [arbiter rows] 57/60  355s
+  [arbiter rows] 60/60  360s
+  [arbiter calibration] 3/60  21s
+  [arbiter calibration] 6/60  22s
+  [arbiter calibration] 9/60  32s
+  [arbiter calibration] 12/60  38s
+  [arbiter calibration] 15/60  43s
+  [arbiter calibration] 18/60  46s
+  [arbiter calibration] 21/60  52s
+  [arbiter calibration] 24/60  58s
+  [arbiter calibration] 27/60  64s
+  [arbiter calibration] 30/60  69s
+  [arbiter calibration] 33/60  74s
+  [arbiter calibration] 36/60  82s
+  [arbiter calibration] 39/60  86s
+  [arbiter calibration] 42/60  91s
+  [arbiter calibration] 45/60  95s
+  [arbiter calibration] 48/60  104s
+  [arbiter calibration] 51/60  109s
+  [arbiter calibration] 54/60  115s
+  [arbiter calibration] 57/60  124s
+  [arbiter calibration] 60/60  129s
+{"n_scenes": 60, "seeds": [2000, 2059], "n_rows": 502, "n_pos": 52, "features": ["s_k", "angle_k", "w", "f_size", "f_spread", "f_sharp", "f_dir", "f_norm", "rho_max", "sharp_area", "mean_unc", "has_glint", "n_valid", "spread_deg", "is_largest_region"], "threshold": 0.7578840639560803, "threshold_alpha": 0.05, "threshold_10": 0.6327820153771543, "threshold_note": null, "n_cal_scenes": 60, "cal_seeds": [1000, 1059], "n_cal_scored": 54, "cal_insufficient_rate": 0.09999999999999998, "heldout_scenes": 12, "heldout_rows": 101, "heldout_region_auc": 0.8565656565656565, "permutation_importance": [{"feature": "angle_k", "mean": 0.1704040404040404, "std": 0.06777401425670848}, {"feature": "n_valid", "mean": 0.10499999999999998, "std": 0.03969899370273886}, {"feature": "s_k", "mean": 0.07868686868686865, "std": 0.017781507873142498}, {"feature": "spread_deg", "mean": 0.07146464646464645, "std": 0.01790722785093141}, {"feature": "has_glint", "mean": 0.010404040404040383, "std": 0.005533473100930237}, {"feature": "f_norm", "mean": 0.005656565656565632, "std": 0.011668306325813048}, {"feature": "f_dir", "mean": 0.0014141414141414066, "std": 0.0032323232323232306}, {"feature": "f_spread", "mean": 0.0, "std": 0.0}, {"feature": "is_largest_region", "mean": 0.0, "std": 0.0}, {"feature": "mean_unc", "mean": -0.0010101010101010387, "std": 0.0018625342337965397}, {"feature": "sharp_area", "mean": -0.0011616161616161858, "std": 0.0031178432998081977}, {"feature": "f_size", "mean": -0.0021212121212
+== E1 (quick) ==
+  [E1] 1/15  46s
+  [E1] 2/15  49s
+  [E1] 3/15  55s
+  [E1] 4/15  58s
+  [E1] 5/15  64s
+  [E1] 6/15  65s
+  [E1] 7/15  66s
+  [E1] 8/15  88s
+  [E1] 9/15  89s
+  [E1] 10/15  91s
+  [E1] 11/15  92s
+  [E1] 12/15  99s
+  [E1] 13/15  101s
+  [E1] 14/15  104s
+  [E1] 15/15  109s
+   E1: {'ok': True, 'seconds': 112.6}
+== E2 (quick) ==
+  [E2] 1/15  79s
+  [E2] 2/15  82s
+  [E2] 3/15  89s
+  [E2] 4/15  114s
+  [E2] 5/15  115s
+  [E2] 6/15  117s
+  [E2] 7/15  135s
+  [E2] 8/15  141s
+  [E2] 9/15  147s
+  [E2] 10/15  157s
+  [E2] 11/15  176s
+  [E2] 12/15  184s
+  [E2] 13/15  186s
+  [E2] 14/15  188s
+  [E2] 15/15  195s
+   E2: {'ok': True, 'seconds': 195.8}
+== E3 (quick) ==
+  [E3] 1/15  6s
+  [E3] 2/15  6s
+  [E3] 3/15  6s
+  [E3] 4/15  6s
+  [E3] 5/15  7s
+  [E3] 6/15  7s
+  [E3] 7/15  7s
+  [E3] 8/15  7s
+  [E3] 9/15  7s
+  [E3] 10/15  7s
+  [E3] 11/15  7s
+  [E3] 12/15  7s
+  [E3] 13/15  7s
+  [E3] 14/15  7s
+  [E3] 15/15  7s
+   E3: {'ok': True, 'seconds': 7.6}
+== E4 (quick) ==
+  [E4 audits] 1/30  139s
+  [E4 audits] 2/30  151s
+  [E4 audits] 3/30  176s
+  [E4 audits] 4/30  180s
+  [E4 audits] 5/30  181s
+  [E4 audits] 6/30  186s
+  [E4 audits] 7/30  186s
+  [E4 audits] 8/30  355s
+  [E4 audits] 9/30  390s
+  [E4 audits] 10/30  415s
+  [E4 audits] 11/30  418s
+  [E4 audits] 12/30  422s
+  [E4 audits] 13/30  442s
+  [E4 audits] 14/30  446s
+  [E4 audits] 15/30  450s
+  [E4 audits] 16/30  452s
+  [E4 audits] 17/30  454s
+  [E4 audits] 18/30  462s
+  [E4 audits] 19/30  481s
+  [E4 audits] 20/30  481s
+  [E4 audits] 21/30  485s
+  [E4 audits] 22/30  489s
+  [E4 audits] 23/30  492s
+  [E4 audits] 24/30  492s
+  [E4 audits] 25/30  510s
+  [E4 audits] 26/30  510s
+  [E4 audits] 27/30  512s
+  [E4 audits] 28/30  512s
+  [E4 audits] 29/30  516s
+  [E4 audits] 30/30  516s
+   E4: {'ok': True, 'seconds': 524.4}
+== E5 (quick) ==
+   E5: {'ok': True, 'seconds': 1.5}
+== E6 (quick) ==
+  [E6] 2/40  11s
+  [E6] 4/40  12s
+  [E6] 6/40  36s
+  [E6] 8/40  38s
+  [E6] 10/40  39s
+  [E6] 12/40  48s
+  [E6] 14/40  63s
+  [E6] 16/40  65s
+  [E6] 18/40  66s
+  [E6] 20/40  67s
+  [E6] 22/40  67s
+  [E6] 24/40  75s
+  [E6] 26/40  136s
+  [E6] 28/40  148s
+  [E6] 30/40  155s
+  [E6] 32/40  175s
+  [E6] 34/40  179s
+  [E6] 36/40  181s
+  [E6] 38/40  187s
+  [E6] 40/40  192s
+   E6: {'ok': True, 'seconds': 192.3}
+== E7 (quick) ==
+  [E7] 1/10  141s
+  [E7] 2/10  147s
+  [E7] 3/10  147s
+  [E7] 4/10  171s
+  [E7] 5/10  176s
+  [E7] 6/10  202s
+  [E7] 7/10  207s
+  [E7] 8/10  260s
+  [E7] 9/10  261s
+  [E7] 10/10  263s
+   E7: {'ok': True, 'seconds': 265.3}
+== E8 (quick) ==
+  [E8 slic] 1/6  33s
+  [E8 slic] 2/6  33s
+  [E8 slic] 3/6  34s
+  [E8 slic] 4/6  35s
+  [E8 slic] 5/6  36s
+  [E8 slic] 6/6  38s
+   E8: {'ok': True, 'seconds': 40.1}
+== E9 (quick) ==
+  [E9 attacks] 1/24  85s
+  [E9 attacks] 2/24  87s
+  [E9 attacks] 3/24  88s
+  [E9 attacks] 4/24  89s
+  [E9 attacks] 5/24  89s
+  [E9 attacks] 6/24  91s
+  [E9 attacks] 7/24  92s
+  [E9 attacks] 8/24  92s
+  [E9 attacks] 9/24  145s
+  [E9 attacks] 10/24  146s
+  [E9 attacks] 11/24  154s
+  [E9 attacks] 12/24  154s
+  [E9 attacks] 13/24  158s
+  [E9 attacks] 14/24  161s
+  [E9 attacks] 15/24  166s
+  [E9 attacks] 16/24  197s
+  [E9 attacks] 17/24  197s
+  [E9 attacks] 18/24  202s
+  [E9 attacks] 19/24  212s
+  [E9 attacks] 20/24  219s
+  [E9 attacks] 21/24  222s
+  [E9 attacks] 22/24  222s
+  [E9 attacks] 23/24  225s
+  [E9 attacks] 24/24  236s
+   E9: {'ok': True, 'seconds': 236.3}
+== E10 (quick) ==
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+Device set to use cpu
+  [E10] 1/2  44s
+Using cache found in C:\Users\t490s/.cache\torch\hub\hugoycj_DSINE-hub_main
+  [E10] 2/2  45s
+   E10: {'ok': True, 'seconds': 45.5}

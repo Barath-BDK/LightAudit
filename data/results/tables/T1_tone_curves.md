@@ -1,0 +1,11 @@
+### T1 - E1 median light error (deg) by tone curve
+
+| tone curve | C1 rank | LS landscape | LS closed form | n regions |
+|---|---|---|---|---|
+| srgb | 21.6 [14.1, 31.5] | 7.6 [5.1, 12.5] | 29.7 | 59 |
+| gamma1.8 | 24.8 [16.4, 32.7] | 6.0 [5.2, 9.4] | 37.1 | 60 |
+| gamma2.6 | 22.9 [13.5, 30.2] | 6.7 [5.1, 12.3] | 28.8 | 59 |
+| scurve | 25.8 [13.5, 39.0] | 7.3 [5.9, 14.3] | 36.0 | 56 |
+| filmic | 22.1 [16.3, 32.7] | 6.7 [5.7, 10.0] | 28.4 | 61 |
+
+Suite quick, 15 scenes, exact normals, 95% bootstrap CI over scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.

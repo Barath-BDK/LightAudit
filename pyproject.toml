@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lightaudit"
+version = "1.0.0"
+description = "Explainable lighting-consistency auditing of edited images, with relighting-attack evaluation"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["lightaudit", "lightaudit.cues", "lightaudit.synth"]
+
+[tool.setuptools.package-data]
+lightaudit = ["*.json", "*.joblib"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

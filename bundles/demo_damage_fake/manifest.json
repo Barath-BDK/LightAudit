@@ -1,0 +1,1290 @@
+{
+ "version": 1,
+ "name": "demo_damage_fake",
+ "title": "Dent pasted from another light (panel mode)",
+ "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4039), simulated normals. Audit verdict: SUSPICIOUS.",
+ "image": {
+  "w": 512,
+  "h": 352,
+  "fov_deg": 60.0,
+  "source": "synthetic"
+ },
+ "ground_truth": {
+  "light_cam": [
+   -0.64852,
+   0.25351,
+   0.71775
+  ],
+  "edited_region_ids": [
+   10
+  ],
+  "delta_deg": 120.0
+ },
+ "normals_backend": "noisy_gt(8)",
+ "regions_backend": "gt",
+ "calibration": {
+  "h": 18.0,
+  "T": 1.5,
+  "tau_img": 4.94575,
+  "tau_ref": 4.94575,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.5,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "source": "calib_default.json"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "ground",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 73567,
+   "bbox": [
+    0,
+    141,
+    512,
+    352
+   ],
+   "color": "#4c78a8",
+   "n_valid": 46049,
+   "spread_deg": 14.70729,
+   "rho_max": 0.08321,
+   "sharp_area": 0.26144,
+   "mean_unc": 13.55592,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.45828,
+    "f_sharp": 0.47711,
+    "f_dir": 0.0,
+    "f_norm": 0.8222
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.96116,
+    -0.26671,
+    0.0709
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.4449,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702,
+    0.46702
+   ],
+   "sigma": 0.015,
+   "slope": 0.02211,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0
+   }
+  },
+  {
+   "id": 2,
+   "name": "car body (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 15468,
+   "bbox": [
+    205,
+    130,
+    456,
+    258
+   ],
+   "color": "#f58518",
+   "n_valid": 12258,
+   "spread_deg": 68.02306,
+   "rho_max": 0.92951,
+   "sharp_area": 0.02967,
+   "mean_unc": 14.655,
+   "weight": 0.93686,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.94065,
+    "f_dir": 1.0,
+    "f_norm": 0.76725
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    -0.86,
+    0.18035,
+    0.47736
+   ],
+   "r68_deg": 35.85078,
+   "r95_deg": 58.12188,
+   "g_lut": [
+    0.27889,
+    0.38678,
+    0.40998,
+    0.40998,
+    0.41549,
+    0.41549,
+    0.42864,
+    0.43306,
+    0.43306,
+    0.43306,
+    0.44482,
+    0.48458,
+    0.48689,
+    0.49524,
+    0.49524,
+    0.50432,
+    0.51112,
+    0.52102,
+    0.52375,
+    0.52797,
+    0.52797,
+    0.5287,
+    0.53002,
+    0.53549,
+    0.53549,
+    0.53549,
+    0.54477,
+    0.54477,
+    0.55484,
+    0.55484,
+    0.55484,
+    0.55628,
+    0.55683
+   ],
+   "sigma": 0.03013,
+   "slope": 0.27794,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 1,
+    "contour": 2
+   }
+  },
+  {
+   "id": 3,
+   "name": "car windows",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 3855,
+   "bbox": [
+    203,
+    139,
+    368,
+    171
+   ],
+   "color": "#54a24b",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 12.51833,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 3
+   }
+  },
+  {
+   "id": 4,
+   "name": "wheels",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 3758,
+   "bbox": [
+    174,
+    183,
+    358,
+    272
+   ],
+   "color": "#e45756",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 14.71647,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "glass or tyre (not a diffuse surface)",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 3,
+   "cue_maps": {
+    "shading": 4
+   }
+  },
+  {
+   "id": 5,
+   "name": "pole 1",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 4429,
+   "bbox": [
+    76,
+    97,
+    117,
+    225
+   ],
+   "color": "#72b7b2",
+   "n_valid": 3453,
+   "spread_deg": 50.07648,
+   "rho_max": 0.96593,
+   "sharp_area": 0.11416,
+   "mean_unc": 10.61372,
+   "weight": 0.94358,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.77167,
+    "f_dir": 1.0,
+    "f_norm": 0.96931
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.64399,
+    -0.22573,
+    0.73098
+   ],
+   "r68_deg": 37.66443,
+   "r95_deg": 60.72022,
+   "g_lut": [
+    0.32496,
+    0.50899,
+    0.51716,
+    0.52635,
+    0.5322,
+    0.5476,
+    0.5476,
+    0.57199,
+    0.57199,
+    0.58926,
+    0.60149,
+    0.60577,
+    0.61409,
+    0.61916,
+    0.63147,
+    0.64528,
+    0.64863,
+    0.65994,
+    0.65994,
+    0.67551,
+    0.67732,
+    0.67732,
+    0.6787,
+    0.68027,
+    0.68027,
+    0.68293,
+    0.68293,
+    0.68458,
+    0.68603,
+    0.68905,
+    0.68905,
+    0.69111,
+    0.69364
+   ],
+   "sigma": 0.0407,
+   "slope": 0.36868,
+   "landscape_index": 4,
+   "cue_maps": {
+    "shading": 5
+   }
+  },
+  {
+   "id": 6,
+   "name": "sphere 2",
+   "kind": "region",
+   "excluded": true,
+   "area_px": 399,
+   "bbox": [
+    71,
+    139,
+    126,
+    184
+   ],
+   "color": "#eeca3b",
+   "n_valid": 0,
+   "spread_deg": 0.0,
+   "rho_max": 0.0,
+   "sharp_area": 1.0,
+   "mean_unc": 22.24515,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "smaller than the minimum region size",
+   "factors": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+   ],
+   "sigma": 0.015,
+   "slope": 1.0,
+   "landscape_index": 5,
+   "cue_maps": {
+    "shading": 6
+   }
+  },
+  {
+   "id": 7,
+   "name": "box 3",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 3425,
+   "bbox": [
+    26,
+    145,
+    82,
+    212
+   ],
+   "color": "#b279a2",
+   "n_valid": 2708,
+   "spread_deg": 19.65913,
+   "rho_max": 0.23564,
+   "sharp_area": 0.06951,
+   "mean_unc": 12.94056,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.7189,
+    "f_sharp": 0.86097,
+    "f_dir": 0.0,
+    "f_norm": 0.85297
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.07114,
+    0.96378,
+    -0.25705
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69319,
+    0.69358,
+    0.69358,
+    0.69358,
+    0.69358,
+    0.69358,
+    0.69358,
+    0.69358,
+    0.69515,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787,
+    0.69787
+   ],
+   "sigma": 0.015,
+   "slope": 0.00467,
+   "landscape_index": 6,
+   "cue_maps": {
+    "shading": 7
+   }
+  },
+  {
+   "id": 8,
+   "name": "pole 4",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 5154,
+   "bbox": [
+    449,
+    23,
+    486,
+    223
+   ],
+   "color": "#ff9da6",
+   "n_valid": 3488,
+   "spread_deg": 46.50712,
+   "rho_max": 0.78471,
+   "sharp_area": 0.07322,
+   "mean_unc": 15.26447,
+   "weight": 0.91141,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.85356,
+    "f_dir": 1.0,
+    "f_norm": 0.73678
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.9512,
+    0.0095,
+    0.30844
+   ],
+   "r68_deg": 46.11133,
+   "r95_deg": 72.47844,
+   "g_lut": [
+    0.57627,
+    0.58117,
+    0.58288,
+    0.58704,
+    0.58704,
+    0.58704,
+    0.62035,
+    0.62035,
+    0.62035,
+    0.6283,
+    0.6283,
+    0.64081,
+    0.64081,
+    0.64417,
+    0.64417,
+    0.66064,
+    0.6866,
+    0.6866,
+    0.6866,
+    0.6866,
+    0.6866,
+    0.6866,
+    0.69012,
+    0.69551,
+    0.69551,
+    0.69551,
+    0.69551,
+    0.69551,
+    0.71031,
+    0.7396,
+    0.7396,
+    0.7396,
+    0.74596
+   ],
+   "sigma": 0.03169,
+   "slope": 0.16969,
+   "landscape_index": 7,
+   "cue_maps": {
+    "shading": 8
+   }
+  },
+  {
+   "id": 9,
+   "name": "building",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 11006,
+   "bbox": [
+    143,
+    62,
+    288,
+    152
+   ],
+   "color": "#9d755d",
+   "n_valid": 9517,
+   "spread_deg": 17.09407,
+   "rho_max": 0.07981,
+   "sharp_area": 0.25783,
+   "mean_unc": 13.0748,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 0.5839,
+    "f_sharp": 0.48434,
+    "f_dir": 0.0,
+    "f_norm": 0.84626
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.74744,
+    -0.57581,
+    -0.33132
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.6958,
+    0.6958,
+    0.6958,
+    0.6958,
+    0.69802,
+    0.69802,
+    0.69802,
+    0.69842,
+    0.69853,
+    0.69853,
+    0.69853,
+    0.69853,
+    0.69853,
+    0.69853,
+    0.69914,
+    0.69914,
+    0.69953,
+    0.6999,
+    0.6999,
+    0.6999,
+    0.6999,
+    0.7002,
+    0.70034,
+    0.70034,
+    0.70034,
+    0.7011,
+    0.70542,
+    0.70542,
+    0.70542,
+    0.70542,
+    0.70542,
+    0.70542,
+    0.70542
+   ],
+   "sigma": 0.015,
+   "slope": 0.00963,
+   "landscape_index": 8,
+   "cue_maps": {
+    "shading": 9
+   }
+  },
+  {
+   "id": 10,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 969,
+   "bbox": [
+    187,
+    168,
+    220,
+    216
+   ],
+   "color": "#bab0ac",
+   "n_valid": 525,
+   "spread_deg": 26.20383,
+   "rho_max": 0.66983,
+   "sharp_area": 0.04882,
+   "mean_unc": 15.66145,
+   "weight": 0.84253,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 0.65625,
+    "f_spread": 1.0,
+    "f_sharp": 0.90236,
+    "f_dir": 1.0,
+    "f_norm": 0.71693
+   },
+   "cues": [
+    "shading",
+    "contour"
+   ],
+   "center": [
+    -0.04528,
+    0.96618,
+    -0.25385
+   ],
+   "r68_deg": 56.24197,
+   "r95_deg": 90.04491,
+   "g_lut": [
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651,
+    0.20651
+   ],
+   "sigma": 0.015,
+   "slope": 0.0,
+   "landscape_index": 9,
+   "cue_maps": {
+    "shading": 10,
+    "contour": 11
+   }
+  },
+  {
+   "id": 11,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 2019,
+   "bbox": [
+    167,
+    160,
+    240,
+    222
+   ],
+   "color": "#59a14f",
+   "n_valid": 1013,
+   "spread_deg": 41.86991,
+   "rho_max": 0.64281,
+   "sharp_area": 0.00731,
+   "mean_unc": 14.20403,
+   "weight": 0.9511,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.98538,
+    "f_dir": 1.0,
+    "f_norm": 0.7898
+   },
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.79401,
+    0.23581,
+    0.56031
+   ],
+   "r68_deg": 50.15238,
+   "r95_deg": 87.09217,
+   "g_lut": [
+    0.4102,
+    0.4102,
+    0.4102,
+    0.4102,
+    0.4102,
+    0.4102,
+    0.41064,
+    0.42629,
+    0.43954,
+    0.44351,
+    0.44468,
+    0.46172,
+    0.46172,
+    0.48231,
+    0.49319,
+    0.49552,
+    0.49571,
+    0.49924,
+    0.49924,
+    0.49924,
+    0.49924,
+    0.49924,
+    0.49924,
+    0.49924,
+    0.51859,
+    0.51859,
+    0.52366,
+    0.52366,
+    0.53382,
+    0.53604,
+    0.55706,
+    0.55706,
+    0.56645
+   ],
+   "sigma": 0.019,
+   "slope": 0.15624,
+   "landscape_index": 10,
+   "cue_maps": {
+    "shading": 12
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "SUSPICIOUS",
+  "reason": "",
+  "S_img": 5.43976,
+  "n_reliable": 5,
+  "top_region": 10,
+  "flagged": [
+   10
+  ],
+  "consensus": {
+   "dir": [
+    -0.86982,
+    -0.02454,
+    0.49275
+   ],
+   "az_deg": -60.46875,
+   "el_deg": -1.40625,
+   "r68_deg": 46.83126,
+   "r95_deg": 86.84954,
+   "frac95": 0.09071
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": -0.001,
+    "angle_deg": 28.65461,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 3.52461,
+    "angle_deg": 22.96731,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 4,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 5,
+    "shortfall": 0.93663,
+    "angle_deg": 32.21379,
+    "flagged": false
+   },
+   {
+    "id": 6,
+    "shortfall": null,
+    "angle_deg": null,
+    "flagged": false
+   },
+   {
+    "id": 7,
+    "shortfall": -0.001,
+    "angle_deg": 102.25071,
+    "flagged": false
+   },
+   {
+    "id": 8,
+    "shortfall": 0.17947,
+    "angle_deg": 14.5083,
+    "flagged": false
+   },
+   {
+    "id": 9,
+    "shortfall": -0.001,
+    "angle_deg": 59.93256,
+    "flagged": false
+   },
+   {
+    "id": 10,
+    "shortfall": 5.43976,
+    "angle_deg": 98.28834,
+    "flagged": true
+   },
+   {
+    "id": 11,
+    "shortfall": 0.23717,
+    "angle_deg": 17.23999,
+    "flagged": false
+   }
+  ],
+  "text": "The estimate for **ROI** points 98\u00b0 away from where 4 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 5.4 > alert 4.9). Cues: shading, silhouette. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+ },
+ "baseline_ls": {
+  "present": true,
+  "fusion": {
+   "verdict": "SUSPICIOUS",
+   "reason": "",
+   "S_img": 6.64502,
+   "n_reliable": 6,
+   "top_region": 10,
+   "flagged": [
+    10
+   ],
+   "consensus": {
+    "dir": [
+     -0.8446,
+     -0.02454,
+     0.53484
+    ],
+    "az_deg": -57.65625,
+    "el_deg": -1.40625,
+    "r68_deg": 52.64076,
+    "r95_deg": 93.00187,
+    "frac95": 0.09723
+   },
+   "per_region": [
+    {
+     "id": 1,
+     "shortfall": -0.001,
+     "angle_deg": 157.50687,
+     "flagged": false
+    },
+    {
+     "id": 2,
+     "shortfall": 3.47557,
+     "angle_deg": 17.08921,
+     "flagged": false
+    },
+    {
+     "id": 3,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 4,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 5,
+     "shortfall": 2.05179,
+     "angle_deg": 50.11297,
+     "flagged": false
+    },
+    {
+     "id": 6,
+     "shortfall": null,
+     "angle_deg": null,
+     "flagged": false
+    },
+    {
+     "id": 7,
+     "shortfall": 4.45262,
+     "angle_deg": 98.63762,
+     "flagged": false
+    },
+    {
+     "id": 8,
+     "shortfall": 0.02609,
+     "angle_deg": 6.49748,
+     "flagged": false
+    },
+    {
+     "id": 9,
+     "shortfall": -0.001,
+     "angle_deg": 14.01604,
+     "flagged": false
+    },
+    {
+     "id": 10,
+     "shortfall": 6.64502,
+     "angle_deg": 99.25056,
+     "flagged": true
+    },
+    {
+     "id": 11,
+     "shortfall": 0.26163,
+     "angle_deg": 19.54239,
+     "flagged": false
+    }
+   ],
+   "text": "The estimate for **ROI** points 99\u00b0 away from where 5 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.6 > alert 4.9). Cues: shading, silhouette. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  },
+  "regions": [
+   {
+    "id": 1,
+    "center": [
+     0.98498,
+     0.02454,
+     -0.17091
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 2,
+    "center": [
+     -0.83801,
+     0.16951,
+     0.51866
+    ],
+    "r68_deg": 34.84601,
+    "r95_deg": 56.47775,
+    "weight": 0.93988,
+    "reliable": true
+   },
+   {
+    "id": 3,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 4,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 5,
+    "center": [
+     -0.58338,
+     -0.21502,
+     0.78322
+    ],
+    "r68_deg": 35.64622,
+    "r95_deg": 57.57848,
+    "weight": 0.96204,
+    "reliable": true
+   },
+   {
+    "id": 6,
+    "center": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 7,
+    "center": [
+     -0.0288,
+     0.96975,
+     -0.2424
+    ],
+    "r68_deg": 47.3494,
+    "r95_deg": 78.63247,
+    "weight": 0.57441,
+    "reliable": true
+   },
+   {
+    "id": 8,
+    "center": [
+     -0.89782,
+     0.00826,
+     0.44029
+    ],
+    "r68_deg": 45.4556,
+    "r95_deg": 72.62103,
+    "weight": 0.91315,
+    "reliable": true
+   },
+   {
+    "id": 9,
+    "center": [
+     -0.892,
+     -0.2191,
+     0.39539
+    ],
+    "r68_deg": 180.0,
+    "r95_deg": 180.0,
+    "weight": 0.0,
+    "reliable": false
+   },
+   {
+    "id": 10,
+    "center": [
+     0.00152,
+     0.96726,
+     -0.25378
+    ],
+    "r68_deg": 50.2265,
+    "r95_deg": 84.40292,
+    "weight": 0.84816,
+    "reliable": true
+   },
+   {
+    "id": 11,
+    "center": [
+     -0.7416,
+     0.26431,
+     0.61659
+    ],
+    "r68_deg": 45.46956,
+    "r95_deg": 75.19683,
+    "weight": 0.94914,
+    "reliable": true
+   }
+  ]
+ },
+ "attacks": [
+  {
+   "variant": "T1",
+   "title": "T1 colour transfer",
+   "verdict": "SUSPICIOUS",
+   "S_img": 5.39846,
+   "fidelity": {
+    "mean_abs_dY": 0.20373,
+    "ssim_loss": 0.39791
+   },
+   "region_id": 10,
+   "interpretation": "T1 colour transfer moved the estimate for ROI from 98\u00b0 to 98\u00b0 off the consensus (shortfall 5.4 \u2192 5.4); verdict SUSPICIOUS \u2192 SUSPICIOUS. The region is still flagged (cues: shading + contour)."
+  },
+  {
+   "variant": "T3a_0",
+   "title": "T3a re-shade (exact light)",
+   "verdict": "CONSISTENT",
+   "S_img": 2.904,
+   "fidelity": {
+    "mean_abs_dY": 0.09412,
+    "ssim_loss": 0.32231
+   },
+   "region_id": 10,
+   "interpretation": "T3a re-shade (exact light) moved the estimate for ROI from 98\u00b0 to 94\u00b0 off the consensus (shortfall 5.4 \u2192 1.8); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T3a_10",
+   "title": "T3a re-shade (\u00b110\u00b0 error)",
+   "verdict": "CONSISTENT",
+   "S_img": 4.45725,
+   "fidelity": {
+    "mean_abs_dY": 0.09248,
+    "ssim_loss": 0.3078
+   },
+   "region_id": 10,
+   "interpretation": "T3a re-shade (\u00b110\u00b0 error) moved the estimate for ROI from 98\u00b0 to 100\u00b0 off the consensus (shortfall 5.4 \u2192 4.5); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T3a_20",
+   "title": "T3a re-shade (\u00b120\u00b0 error)",
+   "verdict": "CONSISTENT",
+   "S_img": 4.57455,
+   "fidelity": {
+    "mean_abs_dY": 0.09225,
+    "ssim_loss": 0.30591
+   },
+   "region_id": 10,
+   "interpretation": "T3a re-shade (\u00b120\u00b0 error) moved the estimate for ROI from 98\u00b0 to 100\u00b0 off the consensus (shortfall 5.4 \u2192 4.6); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  },
+  {
+   "variant": "T4",
+   "title": "T4 adaptive",
+   "verdict": "CONSISTENT",
+   "S_img": 2.904,
+   "fidelity": {
+    "mean_abs_dY": 0.09412,
+    "ssim_loss": 0.32231
+   },
+   "region_id": 10,
+   "interpretation": "T4 adaptive moved the estimate for ROI from 98\u00b0 to 94\u00b0 off the consensus (shortfall 5.4 \u2192 1.8); verdict SUSPICIOUS \u2192 CONSISTENT. The lighting check is fooled."
+  }
+ ],
+ "backends_log": [],
+ "created": "2026-11-14T10:05:08+00:00"
+}

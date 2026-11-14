@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>LightAudit Guide</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  body { font: 10.5pt/1.5 "Segoe UI", Arial, sans-serif; color: #1b1f24; }
+  h1 { font-size: 24pt; margin: 0 0 2mm; }
+  h2 { font-size: 15pt; margin: 7mm 0 2mm; padding-bottom: 1mm; border-bottom: 1.5px solid #d0d5db; break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 4mm 0 1mm; break-after: avoid; }
+  p, li { margin: 0 0 1.5mm; }
+  .sub { color: #56606b; font-size: 11pt; margin-bottom: 5mm; }
+  code, pre { font-family: Consolas, monospace; font-size: 9.2pt; }
+  pre { background: #f3f5f7; border: 1px solid #dde1e6; border-radius: 4px; padding: 2.5mm 3mm; white-space: pre-wrap; break-inside: avoid; }
+  code { background: #f3f5f7; padding: 0 2px; border-radius: 2px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 3mm; font-size: 9.6pt; break-inside: avoid; }
+  th, td { border: 1px solid #d0d5db; padding: 1.3mm 2mm; text-align: left; vertical-align: top; }
+  th { background: #eef1f4; }
+  figure { margin: 3mm 0 4mm; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #c9ced4; }
+  figcaption { font-size: 9pt; color: #56606b; margin-top: 1mm; }
+  .note { background: #fff6e5; border-left: 4px solid #e0a030; padding: 2mm 3mm; margin: 3mm 0; break-inside: avoid; }
+  .bad { color: #b3261e; font-weight: 600; } .ok { color: #1a7f37; font-weight: 600; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+</style></head><body>
+
+<h1>LightAudit</h1>
+<div class="sub">Explainable lighting-consistency auditing of edited images &middot; ICG course project &middot; status guide, 14 November 2026<br>
+Repository: https://github.com/Barath-BDK/LightAudit</div>
+
+<p>LightAudit checks one physical thing: <b>does a single light direction explain every part of a photo?</b>
+If an object was pasted in from a photo with different lighting, its shading points to a different light. The tool
+estimates the light for each region, compares the regions, shows the evidence in an interactive 3D viewer, and
+attacks itself to see how easily a forger could pass. A flag means "send for human review", never "this is fraud".</p>
+
+<div class="note"><b>Where it stands.</b> Everything in the build spec exists and runs: library, synthetic renderer,
+viewer, server, evaluation, report. The viewer and the pipeline work. The <i>detector</i> is weak: it needs large
+lighting differences, re-shading defeats it, and it wrongly flags unedited real photos. Section 5 has the numbers.</div>
+
+<h2>1. How to run it</h2>
+<h3>From the zip or a git clone (Windows 11, Python 3.11, no GPU needed)</h3>
+<pre>git clone https://github.com/Barath-BDK/LightAudit      # or unzip LightAudit.zip
+cd LightAudit
+Set-ExecutionPolicy -Scope Process Bypass
+.\setup.ps1                                              # creates .venv, installs dependencies
+.\.venv\Scripts\python.exe -m lightaudit.cli serve       # starts the viewer
+# open http://127.0.0.1:8000 in a browser</pre>
+<p>The demo and real-photo results are already in <code>bundles/</code>, so the viewer shows them immediately.
+The first load of a result takes a few seconds.</p>
+
+<h3>Other commands</h3>
+<table>
+<tr><th>What</th><th>Command (prefix each with <code>.\.venv\Scripts\python.exe</code>)</th></tr>
+<tr><td>Run the tests</td><td><code>-m pytest</code></td></tr>
+<tr><td>Audit your own photo</td><td><code>-m lightaudit.cli audit --image data\real\photo.jpg --regions sam --normals depth_anything --html</code><br>or the "Upload a photo" card in the viewer gallery</td></tr>
+<tr><td>Audit a damage area only</td><td>add <code>--roi mask.png</code> (white = the area to check)</td></tr>
+<tr><td>Rebuild the demo results</td><td><code>-m lightaudit.cli demo-bundles</code></td></tr>
+<tr><td>Recalibrate</td><td><code>-m lightaudit.cli calibrate --n-cal 200</code></td></tr>
+<tr><td>Evaluation (quick / full)</td><td><code>-m lightaudit.cli eval --suite quick</code> &nbsp;/&nbsp; <code>--suite full</code></td></tr>
+<tr><td>Figures, tables, report</td><td><code>-m lightaudit.cli figures</code> then <code>-m lightaudit.cli report</code></td></tr>
+<tr><td>Everything in one go</td><td><code>.\run_all.ps1 -Quick</code> (not yet run as one script)</td></tr>
+</table>
+<p>A real photo takes about 5&ndash;7 minutes on CPU. For the 5-minute demo walk-through see <code>docs/DEMO_SCRIPT.md</code>.</p>
+
+<h2>2. How it works</h2>
+<ol>
+<li>The photo is split into regions, and the direction each surface faces is estimated for every pixel.</li>
+<li>For each region, the tool finds the light direction under which the brighter pixels are the ones facing the light.</li>
+<li>Resampling the pixels turns that into a map of plausible light directions. Highlights and silhouettes sharpen it.</li>
+<li>Each region is compared with what all the other regions agree on. A region that disagrees gets a high "shortfall".</li>
+<li>If the largest shortfall is above a threshold (set so that 5% of clean calibration scenes are flagged) the verdict is
+SUSPICIOUS. Too little evidence gives INSUFFICIENT; references that disagree among themselves give CONFLICT.</li>
+<li>The viewer shows the maps on a 3D dome and re-lights the image live. The attack lab re-shades the fake and audits it again.</li>
+</ol>
+<figure><img src="figures/pipeline.png"><figcaption>The pipeline, with the graphics, vision, image-processing and ML parts marked.</figcaption></figure>
+
+<h2>3. What we have built</h2>
+<table>
+<tr><th>Part</th><th>Where</th><th>State</th></tr>
+<tr><td>Core library, command line</td><td><code>lightaudit/</code></td><td class="ok">working</td></tr>
+<tr><td>Synthetic scene renderer with ground truth</td><td><code>lightaudit/synth/</code></td><td class="ok">working</td></tr>
+<tr><td>Web viewer (3D light dome, live relighting, explain stepper, attack lab)</td><td><code>viewer/</code></td><td class="ok">working</td></tr>
+<tr><td>Server with photo upload</td><td><code>lightaudit/server.py</code></td><td class="ok">working (upload tested once)</td></tr>
+<tr><td>Results the viewer loads: 7 demos, 6 real photos, 1 real splice</td><td><code>bundles/</code></td><td class="ok">built</td></tr>
+<tr><td>Real-photo path (Segment Anything, Depth Anything)</td><td><code>lightaudit/normals.py</code>, <code>regions.py</code></td><td>runs; results unreliable</td></tr>
+<tr><td>Evaluation E1&ndash;E10, figures F1&ndash;F9, tables</td><td><code>eval/</code>, <code>data/results/</code>, <code>docs/figures/</code></td><td>quick suite only</td></tr>
+<tr><td>Tests: 60 Python tests + browser/Python parity check</td><td><code>tests/</code>, <code>viewer/tests/</code></td><td class="ok">all pass</td></tr>
+<tr><td>Docs, report, slides, demo script, build log</td><td><code>docs/</code>, <code>report/</code>, <code>README.md</code>, <code>BUILD_LOG.md</code></td><td class="ok">written</td></tr>
+<tr><td>Real test photos (Wikimedia Commons, CC BY / CC BY-SA)</td><td><code>data/real/</code></td><td>6 photos + 1 splice</td></tr>
+</table>
+
+<h2>4. Screenshots</h2>
+<figure><img src="figures/viewer_gallery.png"><figcaption>Gallery: every audited image with its verdict.</figcaption></figure>
+<figure><img src="figures/viewer_main.png"><figcaption>Synthetic demo: the car was pasted from a light 120&deg; away. Left: the photo. Right: the light dome with each region's cone. Bottom: verdict SUSPICIOUS and the region table; the car body is 90&deg; off the consensus.</figcaption></figure>
+<figure><img src="figures/viewer_residual.png"><figcaption>Residual view: where the image does not match what the consensus light predicts.</figcaption></figure>
+<figure><img src="figures/viewer_explain.png"><figcaption>Explain stepper: how the verdict was made, in seven steps.</figcaption></figure>
+<figure><img src="figures/viewer_attack.png"><figcaption>Attack lab: the fake is re-shaded to match the scene and audited again.</figcaption></figure>
+<figure><img src="figures/viewer_real.png"><figcaption>Real photo (unedited Peugeot). The tool flags it SUSPICIOUS, which is a false alarm.</figcaption></figure>
+<figure><img src="figures/viewer_real_splice.png"><figcaption>Real splice: part of the Peugeot photo pasted into a car-park photo. The pasted area is flagged.</figcaption></figure>
+
+<h2>5. Results so far</h2>
+<h3>Synthetic demos</h3>
+<table>
+<tr><th>Demo</th><th>Intended</th><th>Actual</th></tr>
+<tr><td>Clean sunny scene</td><td>CONSISTENT</td><td class="ok">CONSISTENT</td></tr>
+<tr><td>Car pasted from another light (120&deg;)</td><td>SUSPICIOUS</td><td class="ok">SUSPICIOUS</td></tr>
+<tr><td>Genuine dent</td><td>CONSISTENT</td><td class="ok">CONSISTENT</td></tr>
+<tr><td>Dent pasted from another light</td><td>SUSPICIOUS</td><td class="ok">SUSPICIOUS (took 10 scenes to find one that is caught)</td></tr>
+<tr><td>Two suns</td><td>CONFLICT</td><td class="bad">CONSISTENT</td></tr>
+<tr><td>Overcast</td><td>INSUFFICIENT</td><td class="ok">INSUFFICIENT (took 12 scenes)</td></tr>
+<tr><td>Failure example: 120&deg; splice</td><td>a miss, on purpose</td><td>CONSISTENT (missed)</td></tr>
+</table>
+<h3>Evaluation (quick suite: 5&ndash;15 scenes per cell, so provisional)</h3>
+<table>
+<tr><th>Question</th><th>Result</th></tr>
+<tr><td>Accuracy of our rank-based light estimate against a simple least-squares baseline</td><td class="bad">about 22&ndash;26&deg; median error against 6&ndash;8&deg;: ours is worse</td></tr>
+<tr><td>Detection of a pasted car (AUC, 0.5 = chance)</td><td>0.65 with all cues; 0.71 with least squares</td></tr>
+<tr><td>Detection of a pasted dent</td><td class="bad">0.40, at chance</td></tr>
+<tr><td>Calibration: does the 68% / 95% region contain the true light?</td><td class="ok">0.66 / 0.93</td></tr>
+<tr><td>Attack by colour matching</td><td class="ok">does not fool it (0.45 before and after)</td></tr>
+<tr><td>Attack by re-shading to the scene light</td><td class="bad">detection falls to 0&ndash;0.05</td></tr>
+<tr><td>Downscaled images</td><td class="bad">detection falls from 0.8 to 0.2</td></tr>
+<tr><td>Overcast and two-light scenes</td><td class="bad">mostly not recognised as such</td></tr>
+</table>
+<h3>Real photos</h3>
+<table>
+<tr><th>Photo (all unedited)</th><th>Verdict</th><th>Correct?</th></tr>
+<tr><td>airfield_car</td><td>CONSISTENT</td><td class="ok">yes</td></tr>
+<tr><td>carpark_sunny</td><td>CONSISTENT</td><td class="ok">yes</td></tr>
+<tr><td>mini_parking</td><td>SUSPICIOUS</td><td class="bad">false alarm</td></tr>
+<tr><td>peugeot_104</td><td>SUSPICIOUS</td><td class="bad">false alarm</td></tr>
+<tr><td>street_car</td><td>SUSPICIOUS</td><td class="bad">false alarm</td></tr>
+<tr><td>supermarket_carpark</td><td>SUSPICIOUS</td><td class="bad">false alarm</td></tr>
+</table>
+<p>One real splice (a rectangle of the Peugeot pasted into the car-park photo) was flagged, 67&deg; off the consensus.
+With four false alarms in six clean photos, that single detection is weak evidence.</p>
+
+<h2>6. Where we are struggling</h2>
+<ol>
+<li><b>The main idea loses to the baseline.</b> The rank cue only uses the order of brightness, not how much brighter
+one surface is than another. For boxy shapes like a car many light directions give the same order, so the estimate is loose.</li>
+<li><b>Detection needs very large lighting differences</b>, and small shallow regions such as dents carry too little evidence.</li>
+<li><b>Re-shading defeats it.</b> The highlight and silhouette cues were meant to catch this and recover almost nothing.</li>
+<li><b>Real photos produce false alarms.</b> The alert threshold was calibrated on synthetic scenes only, the surface
+directions came from one weak estimator (the better one, DSINE, needs a package that is not installed), and real
+surfaces have texture and cast shadows that the model ignores.</li>
+<li><b>Abstention does not work as intended:</b> overcast and two-light scenes are usually called CONSISTENT.</li>
+<li><b>Evidence is thin:</b> only the quick evaluation has been run, and real photos take 5&ndash;7 minutes each on CPU.</li>
+</ol>
+
+<h2>7. What to do to make it better</h2>
+<table>
+<tr><th>#</th><th>Step</th><th>Why</th><th>Effort</th></tr>
+<tr><td>1</td><td><b>Make least squares the default cue</b> (agreed next step), then recalibrate, rebuild the demos, re-evaluate</td><td>It is about three times more accurate in our tests</td><td>1.5&ndash;2 h of compute</td></tr>
+<tr><td>2</td><td>Try a hybrid: least squares for the estimate, rank as a cross-check</td><td>Keeps the tone-curve robustness where it helps</td><td>half a day</td></tr>
+<tr><td>3</td><td>Install <code>geffnet</code> so DSINE runs, and use both normal estimators together</td><td>Better surface directions for real photos</td><td>minutes + re-run</td></tr>
+<tr><td>4</td><td>Recalibrate the alert threshold on 20+ unedited real photos (<code>tools/calibrate_on_folder.py</code>)</td><td>The synthetic threshold does not transfer</td><td>about 2 h of CPU</td></tr>
+<tr><td>5</td><td>Merge small regions and skip textured or shadowed ones on real photos</td><td>Fewer spurious outliers among 20&ndash;40 regions</td><td>half a day</td></tr>
+<tr><td>6</td><td>Run the full evaluation</td><td>Narrow the confidence intervals</td><td>1&ndash;2 h of compute</td></tr>
+<tr><td>7</td><td>Fix abstention for overcast and two-light scenes</td><td>The tool should say "cannot tell" there</td><td>a day</td></tr>
+</table>
+<p>Whatever changes, the report should keep stating the results as measured, including the rank cue's loss.</p>
+
+<h2>8. Fixed in this step</h2>
+<p>The photo in the middle of the light dome was drawn upside down. That was a bug in the viewer and is fixed;
+the screenshots above were taken after the fix.</p>
+</body></html>

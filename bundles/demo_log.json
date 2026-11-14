@@ -1,0 +1,136 @@
+[
+ {
+  "name": "demo_consistent",
+  "built": true,
+  "seed": 4000,
+  "seeds_tried": 1,
+  "intended": [
+   "CONSISTENT"
+  ],
+  "verdict": "CONSISTENT",
+  "matched": true,
+  "S_img": 0.7726796108800936,
+  "attacks": []
+ },
+ {
+  "name": "demo_splice_car",
+  "built": true,
+  "seed": 4012,
+  "seeds_tried": 3,
+  "intended": [
+   "SUSPICIOUS"
+  ],
+  "verdict": "SUSPICIOUS",
+  "matched": true,
+  "S_img": 5.905368159966091,
+  "attacks": [
+   {
+    "variant": "T1",
+    "verdict": "SUSPICIOUS"
+   },
+   {
+    "variant": "T3a_0",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T3a_10",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T3a_20",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T4",
+    "verdict": "CONSISTENT"
+   }
+  ]
+ },
+ {
+  "name": "demo_damage_genuine",
+  "built": true,
+  "seed": 4020,
+  "seeds_tried": 1,
+  "intended": [
+   "CONSISTENT"
+  ],
+  "verdict": "CONSISTENT",
+  "matched": true,
+  "S_img": 2.175982927544117,
+  "attacks": []
+ },
+ {
+  "name": "demo_damage_fake",
+  "built": true,
+  "seed": 4039,
+  "seeds_tried": 10,
+  "intended": [
+   "SUSPICIOUS"
+  ],
+  "verdict": "SUSPICIOUS",
+  "matched": true,
+  "S_img": 5.439760164971866,
+  "attacks": [
+   {
+    "variant": "T1",
+    "verdict": "SUSPICIOUS"
+   },
+   {
+    "variant": "T3a_0",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T3a_10",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T3a_20",
+    "verdict": "CONSISTENT"
+   },
+   {
+    "variant": "T4",
+    "verdict": "CONSISTENT"
+   }
+  ]
+ },
+ {
+  "name": "demo_multilight",
+  "built": true,
+  "seed": 4051,
+  "seeds_tried": 12,
+  "intended": [
+   "CONFLICT",
+   "INSUFFICIENT"
+  ],
+  "verdict": "CONSISTENT",
+  "matched": false,
+  "S_img": 4.060308531215175,
+  "attacks": []
+ },
+ {
+  "name": "demo_overcast",
+  "built": true,
+  "seed": 4061,
+  "seeds_tried": 12,
+  "intended": [
+   "INSUFFICIENT"
+  ],
+  "verdict": "INSUFFICIENT",
+  "matched": true,
+  "S_img": 0.29341302129649544,
+  "attacks": []
+ },
+ {
+  "name": "demo_failure_missed_splice",
+  "built": true,
+  "seed": 4061,
+  "seeds_tried": 2,
+  "intended": [
+   "CONSISTENT"
+  ],
+  "verdict": "CONSISTENT",
+  "matched": true,
+  "S_img": 4.64675573798108,
+  "attacks": []
+ }
+]
