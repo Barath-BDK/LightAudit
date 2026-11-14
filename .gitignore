@@ -13,3 +13,4 @@ blender/
 docs/LightAudit_Guide.html.tmp
 data/multilum/*/
 !data/multilum/scenes.json
+data/mit_intrinsic/
