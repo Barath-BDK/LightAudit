@@ -3,6 +3,44 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 5 (15 Nov 2026): real curved objects (MIT Intrinsic Images)
+
+Benchmark: `eval/mit_bench.py` on the 20 objects of the MIT Intrinsic Images dataset (real, curved, 10 lamp
+positions each, linear images, ground-truth reflectance; fetched into `data/mit_intrinsic/`, not committed). The
+lamp was hand-held, so the test is built inside each object: the mask is cut into k spatial parts, a clean image
+has all parts under lamp i, a spliced image has one part under another lamp. Normals: pretrained models on the
+mean-over-lamps image. Splice angles are approximate (from whole-object light fits).
+
+| method (Depth Anything normals unless stated) | AUC |
+|---|---|
+| per-part light direction, likelihood-ratio test (k = 5) | 0.59-0.65 over normal sources |
+| same, chromaticity clusters projected out | 0.68-0.70 |
+| shared-material test, no albedo handling (k = 4) | 0.74 |
+| shared-material + jointly estimated paint levels (2-4 levels per segment) | 0.72-0.73 (no gain, dropped) |
+| shared-material + Retinex on each lamp's own image | 0.78-0.81 (optimistic: not what a composite gives) |
+| shared-material + Retinex on the actual composite | 0.66 (Retinex calls the paste-boundary step "paint") |
+| **shared-material + Retinex guarded at the known boundary, on the composite** | **0.86** (0.82-0.86 over thresholds) |
+| shared-material + ground-truth reflectance | 0.84 |
+
+Shared-material test: parts of one object share paint and light, so ONE shading model (light, gain, offset) is
+fitted on the other parts and must predict the part under test; T = log(RSS shared / RSS own fit).
+Guarded Retinex: gradients across the boundary of the area under test are never attributed to reflectance.
+
+Detection by lighting-angle difference (1600 splices, 200 clean images, threshold at 10% false alarms in-sample):
+
+| angle | no albedo: detected / AUC | guarded Retinex: detected / AUC |
+|---|---|---|
+| 0-25 deg | 0.20 / 0.62 | 0.54 / 0.81 |
+| 25-50 deg | 0.29 / 0.71 | 0.57 / 0.82 |
+| 50-80 deg | 0.36 / 0.77 | 0.69 / 0.88 |
+| >= 80 deg | 0.55 / 0.85 | 0.77 / 0.91 |
+
+Caveats: (1) these are within-object splices with a known boundary, i.e. the damage / panel use case, not whole
+objects pasted from another photo; (2) the guarded test reacts to any brightness step across the boundary that
+the shading model does not explain, so real paint damage or dirt confined to the checked area would also raise
+it; (3) top-1 localisation is only 0.45 with 4 parts; (4) objects vary: cups and the potato 0.83-0.94, apple,
+box and squirrel near chance without albedo handling.
+
 ## Update 4 (15 Nov 2026): real-image benchmark and a normals bug
 
 Benchmark: `eval/real_bench.py` on six scenes of the MIT Multi-Illumination dataset (real indoor scenes, 25 light

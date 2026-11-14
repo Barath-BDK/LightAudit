@@ -314,37 +314,7 @@ def bench_shared(nkey="normals_dsine", k=5, albedo="none", clamp=True, n_eff=40.
 
 
 # ----------------------------------------------------------------------- shared material + paint levels
-def retinex_albedo(lin: np.ndarray, mask: np.ndarray, thr: float = 0.10, lab=None) -> np.ndarray:
-    """Single-image albedo by Retinex (the classical baseline of Land & McCann / Grosse et al.): large gradients
-    of the log image are attributed to reflectance, small ones to shading; the reflectance gradients are
-    integrated with a Poisson solve (DCT, Neumann boundary). Returns albedo with median 1 inside the mask."""
-    from scipy.fft import dctn, idctn
-    L = np.where(mask, np.log(np.maximum(lin, 1e-3)), 0.0)
-    gx = np.zeros_like(L)
-    gy = np.zeros_like(L)
-    gx[:, :-1] = L[:, 1:] - L[:, :-1]
-    gy[:-1, :] = L[1:, :] - L[:-1, :]
-    inx = np.zeros_like(mask)
-    iny = np.zeros_like(mask)
-    inx[:, :-1] = mask[:, 1:] & mask[:, :-1]
-    iny[:-1, :] = mask[1:, :] & mask[:-1, :]
-    if lab is not None:  # known boundaries (the area under test): a step across them is never called reflectance
-        inx[:, :-1] &= lab[:, 1:] == lab[:, :-1]
-        iny[:-1, :] &= lab[1:, :] == lab[:-1, :]
-    gx = np.where(inx & (np.abs(gx) > thr), gx, 0.0)  # reflectance edges only; nothing crosses the mask boundary
-    gy = np.where(iny & (np.abs(gy) > thr), gy, 0.0)
-    div = gx.copy()
-    div[:, 1:] -= gx[:, :-1]
-    div += gy
-    div[1:, :] -= gy[:-1, :]
-    H, W = L.shape
-    den = (2 * np.cos(np.pi * np.arange(H) / H) - 2)[:, None] + (2 * np.cos(np.pi * np.arange(W) / W) - 2)[None, :]
-    den[0, 0] = 1.0
-    r = dctn(div, norm="ortho") / den
-    r[0, 0] = 0.0
-    r = idctn(r, norm="ortho")
-    a = np.exp(r - np.median(r[mask]))
-    return np.where(mask, a, 1.0)
+from lightaudit.residual import retinex_albedo  # noqa: E402
 
 
 def pixel_data(obj: str, nkey: str, k: int = 5, max_px: int = 1200, erode: int = 3, n_seg: int = 150, clamp=True,

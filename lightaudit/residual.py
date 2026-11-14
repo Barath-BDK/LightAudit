@@ -81,3 +81,92 @@ def panel_score(Y, normals, unc, labels, regions: list[dict], cfg: Config = Conf
     sigma = max(0.01, 1.4826 * float(np.median(np.abs(ref - np.median(ref)))))
     r = Y[rys, rxs] - apply_g(lut, np.maximum(normals[rys, rxs] @ l, 0))
     roi["panel_z"] = float(abs(r.mean()) / sigma)
+
+
+def retinex_albedo(lin: np.ndarray, mask: np.ndarray, thr: float = 0.10, lab=None) -> np.ndarray:
+    """Single-image albedo by Retinex: large gradients of the log image are attributed to reflectance, small ones
+    to shading; the reflectance gradients are integrated with a Poisson solve (DCT, Neumann boundary).
+
+    lab: label map of known boundaries (the area under test). A step across such a boundary is never attributed
+    to reflectance; without this guard Retinex explains a pasted region's brightness step as paint and hides it.
+    Returns albedo with median 1 inside the mask (1 outside)."""
+    from scipy.fft import dctn, idctn
+    L = np.where(mask, np.log(np.maximum(lin, 1e-3)), 0.0)
+    gx, gy = np.zeros_like(L), np.zeros_like(L)
+    gx[:, :-1] = L[:, 1:] - L[:, :-1]
+    gy[:-1, :] = L[1:, :] - L[:-1, :]
+    inx, iny = np.zeros_like(mask), np.zeros_like(mask)
+    inx[:, :-1] = mask[:, 1:] & mask[:, :-1]
+    iny[:-1, :] = mask[1:, :] & mask[:-1, :]
+    if lab is not None:
+        inx[:, :-1] &= lab[:, 1:] == lab[:, :-1]
+        iny[:-1, :] &= lab[1:, :] == lab[:-1, :]
+    gx = np.where(inx & (np.abs(gx) > thr), gx, 0.0)
+    gy = np.where(iny & (np.abs(gy) > thr), gy, 0.0)
+    div = gx.copy()
+    div[:, 1:] -= gx[:, :-1]
+    div += gy
+    div[1:, :] -= gy[:-1, :]
+    H, W = L.shape
+    den = (2 * np.cos(np.pi * np.arange(H) / H) - 2)[:, None] + (2 * np.cos(np.pi * np.arange(W) / W) - 2)[None, :]
+    den[0, 0] = 1.0
+    r = dctn(div, norm="ortho") / den
+    r[0, 0] = 0.0
+    r = idctn(r, norm="ortho")
+    return np.where(mask, np.exp(r - np.median(r[mask])), 1.0)
+
+
+def fit_light(S: np.ndarray, y: np.ndarray):
+    """Best light for y ~ a * s + b with a >= 0 over the directions in S (D, N): (index, a, b, rss per direction)."""
+    n = len(y)
+    A, B, SY, Ys = S.sum(1), (S * S).sum(1), S @ y, y.sum()
+    var = B - A * A / n
+    cov = SY - A * Ys / n
+    gain = np.where((var > 1e-9) & (cov > 0), cov / np.maximum(var, 1e-9), 0.0)
+    rss = (y @ y - Ys * Ys / n) - gain * cov
+    j = int(np.argmin(rss))
+    return j, float(gain[j]), float((Ys - gain[j] * A[j]) / n), rss
+
+
+def shared_material_T(S_ref, y_ref, S_roi, y_roi) -> float:
+    """Shared-material statistic: one shading model (light, gain, offset) is fitted on the reference pixels and
+    used to predict the test pixels; T = log(RSS of that prediction / RSS of the test pixels' own best fit).
+    Near 0 when the test area shares the reference's light and material, large when it does not."""
+    j, a, b, _ = fit_light(S_ref, y_ref)
+    r = y_roi - (a * S_roi[j] + b)
+    own = fit_light(S_roi, y_roi)[3]
+    return float(np.log(max(float(r @ r), 1e-12) / max(float(own.min()), 1e-12)))
+
+
+def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Config(), retinex: bool = True,
+                 thr: float = 0.10, max_px: int = 4000):
+    """Panel mode, shared-material test (validated on real curved objects, eval/mit_bench.py): the ROI must be
+    predicted by the ONE shading model (light, gain, offset) fitted on the ring and the panel remainder.
+    Albedo is removed first by Retinex, guarded so that a step across the ROI boundary is never called paint.
+    Returns T = log(RSS shared / RSS own) or None if it cannot be computed."""
+    from .grid import coarse_index, eq_dirs
+    from .validity import erode, erode_px, valid_mask
+    roi = next((r for r in regions if r["name"] == "ROI"), None)
+    ring = next((r for r in regions if r["name"] == "ring"), None)
+    rest = next((r for r in regions if r["name"].endswith("(rest)")), None)
+    if roi is None or ring is None or rest is None:
+        return None
+    lin = Y.astype(np.float64) ** 2.2
+    m_roi = labels == roi["id"]
+    panel = m_roi | (labels == ring["id"]) | (labels == rest["id"])
+    alb = retinex_albedo(lin, panel, thr, m_roi.astype(np.int8)) if retinex else np.ones_like(lin)
+    rys, rxs = np.nonzero(erode(m_roi, erode_px(*Y.shape, cfg)) & (normals[..., 2] >= cfg.nz_min) & (unc <= cfg.unc_max))
+    ys, xs = np.nonzero(valid_mask(Y, normals, unc, panel & ~m_roi, cfg))
+    if len(rys) < cfg.panel_min_px or len(ys) < 4 * cfg.panel_min_px:
+        return None
+    rng = np.random.default_rng(0)
+    if len(ys) > max_px:
+        pick = rng.choice(len(ys), max_px, replace=False)
+        ys, xs = ys[pick], xs[pick]
+    if len(rys) > max_px:
+        pick = rng.choice(len(rys), max_px, replace=False)
+        rys, rxs = rys[pick], rxs[pick]
+    dirs = eq_dirs()[coarse_index(cfg.coarse_step)].astype(np.float64)
+    S_ref = np.maximum(dirs @ normals[ys, xs].T.astype(np.float64), 0)
+    S_roi = np.maximum(dirs @ normals[rys, rxs].T.astype(np.float64), 0)
+    return shared_material_T(S_ref, lin[ys, xs] / alb[ys, xs], S_roi, lin[rys, rxs] / alb[rys, rxs])
