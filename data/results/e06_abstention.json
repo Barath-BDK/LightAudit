@@ -8,7 +8,7 @@
   "cov68": 0.6976744186046512,
   "cov95": 0.8985200845665962,
   "tau_img_05": 6.348225106140116,
-  "tau_img_10": 5.530738695362592,
+  "tau_img_10": 5.548991759968739,
   "w_min": 0.35,
   "n_cal": 200,
   "seeds": [
@@ -18,7 +18,7 @@
   "date": "2026-11-14",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T12:19:50+00:00",
+ "timestamp": "2026-11-14T14:14:00+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "conditions": [
@@ -74,34 +74,34 @@
    "pristine": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.6,
-     "SUSPICIOUS": 0.2,
-     "INSUFFICIENT": 0.0,
-     "CONFLICT": 0.2
+     "CONSISTENT": 0.2,
+     "SUSPICIOUS": 0.0,
+     "INSUFFICIENT": 0.8,
+     "CONFLICT": 0.0
     },
-    "decided": 4,
-    "coverage": 0.8,
-    "accuracy_decided": 0.75,
+    "decided": 1,
+    "coverage": 0.2,
+    "accuracy_decided": 1.0,
     "accuracy_decided_ci": [
-     0.3312500000000019,
+     1.0,
      1.0
     ],
-    "false_alarm_decided": 0.25
+    "false_alarm_decided": 0.0
    },
    "spliced": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.6,
-     "SUSPICIOUS": 0.2,
-     "INSUFFICIENT": 0.2,
+     "CONSISTENT": 0.2,
+     "SUSPICIOUS": 0.0,
+     "INSUFFICIENT": 0.8,
      "CONFLICT": 0.0
     },
-    "decided": 4,
-    "coverage": 0.8,
-    "accuracy_decided": 0.25,
+    "decided": 1,
+    "coverage": 0.2,
+    "accuracy_decided": 0.0,
     "accuracy_decided_ci": [
      0.0,
-     0.75
+     0.0
     ],
     "false_alarm_decided": null
    }
@@ -111,30 +111,30 @@
     "n": 5,
     "fractions": {
      "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.4,
-     "INSUFFICIENT": 0.2,
+     "SUSPICIOUS": 0.2,
+     "INSUFFICIENT": 0.4,
      "CONFLICT": 0.0
     },
-    "decided": 4,
-    "coverage": 0.8,
-    "accuracy_decided": 0.5,
+    "decided": 3,
+    "coverage": 0.6,
+    "accuracy_decided": 0.6666666666666666,
     "accuracy_decided_ci": [
      0.0,
      1.0
     ],
-    "false_alarm_decided": 0.5
+    "false_alarm_decided": 0.3333333333333333
    },
    "spliced": {
     "n": 5,
     "fractions": {
      "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.4,
-     "INSUFFICIENT": 0.0,
+     "SUSPICIOUS": 0.2,
+     "INSUFFICIENT": 0.2,
      "CONFLICT": 0.2
     },
-    "decided": 4,
-    "coverage": 0.8,
-    "accuracy_decided": 0.5,
+    "decided": 3,
+    "coverage": 0.6,
+    "accuracy_decided": 0.3333333333333333,
     "accuracy_decided_ci": [
      0.0,
      1.0
@@ -148,8 +148,8 @@
     "fractions": {
      "CONSISTENT": 0.4,
      "SUSPICIOUS": 0.2,
-     "INSUFFICIENT": 0.2,
-     "CONFLICT": 0.2
+     "INSUFFICIENT": 0.4,
+     "CONFLICT": 0.0
     },
     "decided": 3,
     "coverage": 0.6,
@@ -190,13 +190,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
-    "risk": 0.5,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.7,
-    "risk": 0.5714285714285714,
+    "coverage": 0.6,
+    "risk": 0.6666666666666666,
     "n": 10
    },
    "lowres": {
@@ -205,8 +205,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.675,
-    "risk": 0.5185185185185185,
+    "coverage": 0.5,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -220,13 +220,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.5,
+    "risk": 0.6,
     "n": 10
    },
    "lowres": {
@@ -235,8 +235,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.725,
-    "risk": 0.41379310344827586,
+    "coverage": 0.525,
+    "risk": 0.38095238095238093,
     "n": 40
    }
   },
@@ -250,12 +250,12 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
+    "coverage": 0.2,
     "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.8,
+    "coverage": 0.6,
     "risk": 0.5,
     "n": 10
    },
@@ -265,8 +265,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.775,
-    "risk": 0.41935483870967744,
+    "coverage": 0.575,
+    "risk": 0.391304347826087,
     "n": 40
    }
   },
@@ -280,23 +280,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -310,23 +310,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -340,23 +340,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -370,23 +370,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -400,23 +400,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -430,13 +430,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
-    "risk": 0.5,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.7,
-    "risk": 0.5714285714285714,
+    "coverage": 0.6,
+    "risk": 0.6666666666666666,
     "n": 10
    },
    "lowres": {
@@ -445,8 +445,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.675,
-    "risk": 0.5185185185185185,
+    "coverage": 0.5,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -460,13 +460,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.5,
+    "risk": 0.6,
     "n": 10
    },
    "lowres": {
@@ -475,8 +475,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.725,
-    "risk": 0.41379310344827586,
+    "coverage": 0.525,
+    "risk": 0.38095238095238093,
     "n": 40
    }
   },
@@ -490,12 +490,12 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
+    "coverage": 0.2,
     "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.8,
+    "coverage": 0.6,
     "risk": 0.5,
     "n": 10
    },
@@ -505,8 +505,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.775,
-    "risk": 0.41935483870967744,
+    "coverage": 0.575,
+    "risk": 0.391304347826087,
     "n": 40
    }
   },
@@ -520,23 +520,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -550,23 +550,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -580,23 +580,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -610,23 +610,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -640,23 +640,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -670,13 +670,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
-    "risk": 0.5,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.7,
-    "risk": 0.5714285714285714,
+    "coverage": 0.6,
+    "risk": 0.6666666666666666,
     "n": 10
    },
    "lowres": {
@@ -685,8 +685,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.675,
-    "risk": 0.5185185185185185,
+    "coverage": 0.5,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -700,13 +700,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.5,
+    "risk": 0.6,
     "n": 10
    },
    "lowres": {
@@ -715,8 +715,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.725,
-    "risk": 0.41379310344827586,
+    "coverage": 0.525,
+    "risk": 0.38095238095238093,
     "n": 40
    }
   },
@@ -730,12 +730,12 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
+    "coverage": 0.2,
     "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.8,
+    "coverage": 0.6,
     "risk": 0.5,
     "n": 10
    },
@@ -745,8 +745,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.775,
-    "risk": 0.41935483870967744,
+    "coverage": 0.575,
+    "risk": 0.391304347826087,
     "n": 40
    }
   },
@@ -760,23 +760,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -790,23 +790,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -820,23 +820,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -850,23 +850,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -880,23 +880,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -910,13 +910,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
-    "risk": 0.5,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.7,
-    "risk": 0.5714285714285714,
+    "coverage": 0.6,
+    "risk": 0.6666666666666666,
     "n": 10
    },
    "lowres": {
@@ -925,8 +925,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.675,
-    "risk": 0.48148148148148145,
+    "coverage": 0.5,
+    "risk": 0.45,
     "n": 40
    }
   },
@@ -940,13 +940,13 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.5,
+    "risk": 0.6,
     "n": 10
    },
    "lowres": {
@@ -955,8 +955,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.725,
-    "risk": 0.41379310344827586,
+    "coverage": 0.525,
+    "risk": 0.38095238095238093,
     "n": 40
    }
   },
@@ -970,12 +970,12 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.8,
+    "coverage": 0.2,
     "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.8,
+    "coverage": 0.6,
     "risk": 0.5,
     "n": 10
    },
@@ -985,8 +985,8 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.775,
-    "risk": 0.41935483870967744,
+    "coverage": 0.575,
+    "risk": 0.391304347826087,
     "n": 40
    }
   },
@@ -1000,23 +1000,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -1030,23 +1030,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -1060,23 +1060,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -1090,23 +1090,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   },
@@ -1120,23 +1120,23 @@
     "n": 10
    },
    "overcast": {
-    "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "coverage": 0.2,
+    "risk": 0.5,
     "n": 10
    },
    "multi": {
-    "coverage": 0.9,
-    "risk": 0.5555555555555556,
+    "coverage": 0.7,
+    "risk": 0.5714285714285714,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.6,
-    "risk": 0.3333333333333333,
+    "coverage": 0.5,
+    "risk": 0.4,
     "n": 10
    },
    "all": {
-    "coverage": 0.85,
-    "risk": 0.47058823529411764,
+    "coverage": 0.6,
+    "risk": 0.5,
     "n": 40
    }
   }

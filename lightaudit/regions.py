@@ -117,6 +117,8 @@ def auto_exclude(rgb, labels, meta, cfg: Config = Config()):
     """Marks sky, mostly-saturated and tiny regions as excluded (kept in the output with weight 0)."""
     Y = luminance(rgb)
     for m in meta:
+        if m.get("source") == "roi":  # the user asked for this area to be checked: never drop it automatically
+            continue
         mask = labels == m["id"]
         y = Y[mask]
         why = None

@@ -5,7 +5,7 @@ from collections import Counter
 
 import numpy as np
 
-CUE_NAMES = {"shading": "shading", "glint": "specular highlight", "contour": "silhouette", "shadow": "shadow pairs"}
+CUE_NAMES = {"shading": "shading", "glint": "specular highlight", "contour": "silhouette", "shadow": "shadow pairs", "panel": "panel comparison"}
 REVIEW = "A flag means \"send for human review\", never \"this is fraud\"."
 
 
@@ -23,6 +23,11 @@ def explain(fusion: dict, regions: list[dict], eps: float = 1e-3) -> str:
         out = []
         for k in fusion["flagged"]:
             p, r = per[k], regions[k]
+            if k in fusion.get("panel_flagged", []):
+                out.append(f"The brightness of **{r['name']}** does not follow the shading of the panel around it "
+                           f"(panel score {p['panel_z']:.1f} > alert {fusion['tau_panel']:.1f}): it looks lit "
+                           "differently from its surroundings.")
+                continue
             agree = float(np.exp(-p["shortfall"])) - eps
             cues = ", ".join(CUE_NAMES.get(c, c) for c in r["cues"])
             out.append(f"The estimate for **{r['name']}** points {p['angle_deg']:.0f}° away from where "

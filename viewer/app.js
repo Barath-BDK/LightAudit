@@ -109,7 +109,8 @@ function cfgFromManifest(m) {
   const c = m.calibration || {};
   return { ...DEFAULT_CFG, tau_img: c.tau_img ?? 2, tau_ref: c.tau_ref ?? c.tau_img ?? 2, w_min: c.w_min ?? 0.35, eps: c.eps ?? 1e-3,
     w_glint: c.w_glint ?? 0.5, w_contour: c.w_contour ?? 0.5, min_reliable: c.min_reliable ?? 3,
-    broad_consensus_frac: c.broad_consensus_frac ?? 0.35 };
+    broad_consensus_frac: c.broad_consensus_frac ?? 0.35,
+    soft_contrast: c.soft_contrast ?? Infinity, tau_panel: c.tau_panel ?? Infinity };
 }
 
 /** All regions entering the fusion: bundle regions + scene-level pseudo regions (shadow pairs). */
@@ -135,7 +136,8 @@ function recompute() {
   const weights = regs.map((r) => r.weight);
   const excluded = regs.map((r, i) => !state.use[i]);
   const centers = regs.map((r) => r.center);
-  const f = fuse(A, weights, excluded, state.cfg, centers, { lnA: lnCache });
+  const f = fuse(A, weights, excluded, state.cfg, centers,
+    { lnA: lnCache, contrast: regs.map((r) => r.contrast ?? null), panel_z: regs.map((r) => r.panel_z ?? null) });
   f.text = explain(f, regs.map((r, i) => ({ name: r.name, cues: r.cues || [], reason: f.per_region[i].reliable ? null : reasonOf(r) })), state.cfg.eps);
   state.fusion = f;
   state.maps = A;
@@ -586,7 +588,8 @@ async function showBundle(name) {
   state.cfg = cfgFromManifest(B.manifest);
   state.use = B.regions.map((r) => !r.excluded);
   const regs = B.regions;
-  exportFusion = fuse(B.A, regs.map((r) => r.weight), regs.map((r) => r.excluded), state.cfg, regs.map((r) => r.center));
+  exportFusion = fuse(B.A, regs.map((r) => r.weight), regs.map((r) => r.excluded), state.cfg, regs.map((r) => r.center),
+    { contrast: regs.map((r) => r.contrast ?? null), panel_z: regs.map((r) => r.panel_z ?? null) });
   if (B.ls) {
     const lsr = new Map(B.manifest.baseline_ls.regions.map((r) => [r.id, r]));
     lsFusion = fuse(lsMaps(), regs.map((r) => (lsr.get(r.id) || r).weight), regs.map((r) => r.excluded), state.cfg,

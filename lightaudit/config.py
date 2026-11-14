@@ -66,6 +66,11 @@ class Config:
     tau_ref_factor: float = 1.0
     min_reliable: int = 3
     broad_consensus_frac: float = 0.35
+    # soft-light abstention: median over reliable regions of P10/P90 of linearised luminance (calibrated)
+    soft_contrast: float = 0.34
+    # panel mode: |mean residual| of the ROI against the panel's own shading curve, in robust sigmas (calibrated)
+    tau_panel: float = 3.0
+    panel_min_px: int = 50
     # shading cue used by the audit: "ls" (least squares, default since it measured ~3x more accurate) or "rank"
     cue: str = "ls"
     # residual
@@ -117,4 +122,6 @@ def calibrated(cfg: Config | None = None, calib: dict | None = None, alpha: floa
     tau = calib["tau_img_05"] if alpha <= 0.05 else calib["tau_img_10"]
     return replace(cfg, kde_h=float(calib["h"]), T=float(calib["T"]), tau_img=float(tau),
                    tau_ref_factor=float(calib.get("tau_ref_factor", 1.0)),
-                   w_min=float(calib.get("w_min", cfg.w_min)), alpha=alpha)
+                   w_min=float(calib.get("w_min", cfg.w_min)), alpha=alpha,
+                   soft_contrast=float(calib.get("soft_contrast", cfg.soft_contrast)),
+                   tau_panel=float(calib.get("tau_panel_05" if alpha <= 0.05 else "tau_panel_10", cfg.tau_panel)))

@@ -47,3 +47,37 @@ def residual_maps(rgb, Y, normals, unc, regions: list[dict], cfg: Config = Confi
         heat[r["mask"]] = np.round(np.clip(out["z"] / 4, 0, 1) * 255)
         cf[r["mask"]] *= ((out["Yhat"] + 0.01) / (Y[r["mask"]] + 0.01))[:, None]
     return heat, np.round(np.clip(cf, 0, 1) * 255).astype(np.uint8)
+
+
+def panel_score(Y, normals, unc, labels, regions: list[dict], cfg: Config = Config()) -> None:
+    """Panel mode: does the ROI follow the shading of the panel it sits on? Fits the monotone curve g on the valid
+    pixels of the ring and of the panel remainder under the panel's own light estimate, predicts the ROI, and sets
+    roi["panel_z"] = |mean residual| / robust sigma of the reference residuals (None if it cannot be computed).
+    Same paint and same light on both sides, so this needs no light estimate from the small ROI itself."""
+    roi = next((r for r in regions if r["name"] == "ROI"), None)
+    ring = next((r for r in regions if r["name"] == "ring"), None)
+    rest = next((r for r in regions if r["name"].endswith("(rest)")), None)
+    if roi is None:
+        return
+    roi["panel_z"] = None
+    # Pixel sets come from the label map, not from the regions' stored samples, so this also works on regions
+    # re-used from a cache. Every usable-geometry pixel of the ROI counts, also very dark or saturated ones: an
+    # ROI that is black or blown out on a normally lit panel is exactly what this check is for.
+    from .validity import erode, erode_px, valid_mask
+    if ring is None or rest is None or rest.get("samples") is None:
+        return
+    rys, rxs = np.nonzero(erode(labels == roi["id"], erode_px(*Y.shape, cfg)) & (normals[..., 2] >= cfg.nz_min)
+                          & (unc <= cfg.unc_max))
+    ys, xs = np.nonzero(valid_mask(Y, normals, unc, (labels == ring["id"]) | (labels == rest["id"]), cfg))
+    n_ring = int(valid_mask(Y, normals, unc, labels == ring["id"], cfg).sum())
+    if min(len(rys), n_ring) < cfg.panel_min_px:
+        return
+    if len(ys) > 4000:
+        pick = np.random.default_rng(0).choice(len(ys), 4000, replace=False)
+        ys, xs = ys[pick], xs[pick]
+    l = np.asarray(rest["center"], np.float32)
+    lut = fit_g(np.maximum(normals[ys, xs] @ l, 0), Y[ys, xs], cfg)
+    ref = Y[ys, xs] - apply_g(lut, np.maximum(normals[ys, xs] @ l, 0))
+    sigma = max(0.01, 1.4826 * float(np.median(np.abs(ref - np.median(ref)))))
+    r = Y[rys, rxs] - apply_g(lut, np.maximum(normals[rys, rxs] @ l, 0))
+    roi["panel_z"] = float(abs(r.mean()) / sigma)

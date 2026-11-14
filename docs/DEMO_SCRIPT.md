@@ -2,7 +2,7 @@
 
 All verdicts and numbers below are the ones stored in the built bundles (`bundles/*/manifest.json`), made with
 the least-squares shading cue (calibration h = 14°, T = 1.5, alert level 6.35; the largest possible score is
-about 6.9). If you rebuild the bundles, re-check them.
+about 6.9; soft-light threshold 0.42; panel alert 3.9). If you rebuild the bundles, re-check them.
 
 Start: `.\.venv\Scripts\python.exe -m lightaudit.cli serve`, open `http://127.0.0.1:8000`.
 The first load of a bundle takes a few seconds.
@@ -62,17 +62,23 @@ Say, honestly:
 
 ## 5. Damage panel mode (40 s)
 
-- `Genuine dent (panel mode)`: dent and ring agree with the scene, **CONSISTENT** (score 2.61).
-- `Dent pasted from another light (panel mode)`: **SUSPICIOUS**, the dent is 100° off, shortfall 6.84. All five
-  attacks on it stay flagged in this scene. Be clear that it took 10 scenes to find a pasted dent that is
-  caught, and that in the evaluation pasted dents are detected at chance level.
+In panel mode the dent is compared directly with the panel around it: same paint, same light, so the panel's
+own shading curve should predict the dent's brightness.
+
+- `Genuine dent (panel mode)`: **CONSISTENT**. Panel score 0.47, alert level 3.9.
+- `Dent pasted from another light (panel mode)`: **SUSPICIOUS**. Panel score 5.5 > 3.9: "the brightness of the
+  ROI does not follow the shading of the panel around it". The direction test alone would have passed it
+  (shortfall 1.54), which is why this check exists.
+- Attack lab on the dent: the re-shade attacks (T3a, T4) are **still flagged**, because re-shading the dent with
+  its own curve does not make it match the panel. Colour transfer (T1) does pass here: matching the dent's
+  brightness to its surroundings is exactly what this check measures.
 
 ## 6. Abstention and limits (40 s)
 
-- `Overcast`: **INSUFFICIENT**, only 2 reliable regions. (Finding this took 12 scenes: most overcast scenes
-  come out CONSISTENT, because soft sky light looks like a broad light from above.)
+- `Overcast`: **INSUFFICIENT**, "the light looks diffuse". The shading contrast of the regions is 0.47, above
+  the soft-light threshold 0.42: without a sun there is no light direction to test.
 - `Two suns`: intended CONFLICT, actual verdict **CONSISTENT** (score 4.06). Two strong lights are outside the
-  one-light model and the tool does not notice. Shown as is.
+  one-light model and the tool does not notice. A second-light test was tried and did not work. Shown as is.
 
 ## 7. Failure example (20 s)
 

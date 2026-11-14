@@ -35,7 +35,7 @@ def _loo_shortfalls(lnA, L, idx, loo=True):
     return out
 
 
-def fuse(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: bool = True) -> dict:
+def _fuse_core(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: bool = True) -> dict:
     """A: (R, 8192) region maps with max 1; weights (R,); excluded (R,) bool; centers (R, 3) optional.
 
     Verdict step 3 (documented deviation): candidates = {s_k > tau}. If the remaining reliable regions (>= 2)
@@ -108,4 +108,38 @@ def fuse(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: b
     for k in flagged:
         per[k]["flagged"] = True
     res.update(verdict="SUSPICIOUS", reason="", flagged=[int(k) for k in flagged], top_region=int(flagged[0]))
+    return res
+
+
+SOFT_REASON = "the light looks diffuse (overcast, or everything in shade): shading carries no direction"
+
+
+def fuse(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: bool = True,
+         contrast=None, panel_z=None) -> dict:
+    """Consensus fusion plus two scene-level checks (mirrored in viewer/fusion.js):
+
+    contrast[k]: P10/P90 of region k's linearised luminance (or None). If the median over the reliable regions is
+      above cfg.soft_contrast the light is too diffuse to carry a direction -> INSUFFICIENT.
+    panel_z[k]: panel-residual score of an ROI region (or None). Above cfg.tau_panel the ROI is flagged, whatever
+      the direction test says (it needs only the panel the ROI sits on), unless the verdict is CONFLICT.
+    """
+    res = _fuse_core(A, weights, excluded, cfg, centers, loo)
+    per = res["per_region"]
+    c = sorted(contrast[k] for k in range(len(per)) if per[k]["reliable"] and contrast[k] is not None) if contrast else []
+    med = None if not c else (c[len(c) // 2] if len(c) % 2 else 0.5 * (c[len(c) // 2 - 1] + c[len(c) // 2]))
+    soft = med is not None and med > cfg.soft_contrast
+    res["soft_light"] = dict(contrast=med, threshold=cfg.soft_contrast, abstain=soft)
+    res["panel_flagged"] = []
+    if soft:
+        for q in per:
+            q["flagged"] = False
+        res.update(verdict="INSUFFICIENT", reason=SOFT_REASON, flagged=[])
+        return res
+    panel = [k for k in range(len(per)) if panel_z and panel_z[k] is not None and panel_z[k] > cfg.tau_panel
+             and not per[k]["excluded"]]
+    if panel and res["verdict"] != "CONFLICT":
+        for k in panel:
+            per[k]["flagged"] = True
+        res["flagged"] = list(dict.fromkeys(list(res["flagged"]) + panel))
+        res.update(verdict="SUSPICIOUS", reason="", top_region=res["flagged"][0], panel_flagged=panel)
     return res

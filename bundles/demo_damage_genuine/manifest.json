@@ -33,6 +33,8 @@
   "w_contour": 0.5,
   "min_reliable": 3,
   "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 3.91642,
   "source": "calib_default.json"
  },
  "regions": [
@@ -58,6 +60,8 @@
    "reliable": false,
    "reason": "mostly saturated",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -138,6 +142,8 @@
     "f_dir": 1.0,
     "f_norm": 0.87938
    },
+   "contrast": 0.03785,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -214,6 +220,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -288,6 +296,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -368,6 +378,8 @@
     "f_dir": 1.0,
     "f_norm": 0.63701
    },
+   "contrast": 0.09655,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -442,6 +454,8 @@
    "reliable": false,
    "reason": "smaller than the minimum region size",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -522,6 +536,8 @@
     "f_dir": 1.0,
     "f_norm": 0.78904
    },
+   "contrast": 0.02777,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -604,6 +620,8 @@
     "f_dir": 1.0,
     "f_norm": 0.73744
    },
+   "contrast": 0.96639,
+   "panel_z": null,
    "cues": [
     "shading",
     "glint"
@@ -686,8 +704,11 @@
     "f_dir": 1.0,
     "f_norm": 0.83992
    },
+   "contrast": 0.07767,
+   "panel_z": 0.46768,
    "cues": [
-    "shading"
+    "shading",
+    "panel"
    ],
    "center": [
     -0.26543,
@@ -766,6 +787,8 @@
     "f_dir": 1.0,
     "f_norm": 0.78244
    },
+   "contrast": 0.04693,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -900,6 +923,12 @@
     "flagged": false
    }
   ],
+  "soft_light": {
+   "contrast": 0.0623,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "panel_flagged": [],
   "text": "6 regions agree on one light direction (about -46\u00b0 azimuth, 49\u00b0 elevation). The largest disagreement is pole 1 at 59\u00b0 (below the alert level)."
  },
  "baseline_ls": {
@@ -986,6 +1015,12 @@
      "flagged": false
     }
    ],
+   "soft_light": {
+    "contrast": 0.04693,
+    "threshold": 0.42476,
+    "abstain": false
+   },
+   "panel_flagged": [],
    "text": "5 regions agree on one light direction (about -41\u00b0 azimuth, 58\u00b0 elevation). The largest disagreement is pole 1 at 73\u00b0 (below the alert level)."
   },
   "regions": [
@@ -1113,5 +1148,5 @@
  },
  "attacks": [],
  "backends_log": [],
- "created": "2026-11-14T11:54:30+00:00"
+ "created": "2026-11-14T14:00:19+00:00"
 }

@@ -1,7 +1,7 @@
 // Rule-based explanation sentences, generated only from the numbers (BUILD_SPEC 7.14). Mirror of
 // lightaudit/explain_text.py, plus the triage wording used across the viewer. No DOM.
 
-export const CUE_NAMES = { shading: 'shading', glint: 'specular highlight', contour: 'silhouette', shadow: 'shadow pairs' };
+export const CUE_NAMES = { shading: 'shading', glint: 'specular highlight', contour: 'silhouette', shadow: 'shadow pairs', panel: 'panel comparison' };
 export const REVIEW = 'A flag means "send for human review", never "this is fraud".';
 
 export const VERDICT_META = {
@@ -46,6 +46,10 @@ export function explain(fusion, regions, eps = 1e-3) {
   if (v === 'SUSPICIOUS') {
     const out = fusion.flagged.map((k) => {
       const p = per[k], r = regions[k];
+      if ((fusion.panel_flagged || []).includes(k)) {
+        return `The brightness of **${r.name}** does not follow the shading of the panel around it `
+          + `(panel score ${f1(p.panel_z)} > alert ${f1(fusion.tau_panel)}): it looks lit differently from its surroundings.`;
+      }
       const agree = Math.exp(-p.shortfall) - eps;
       const cues = r.cues.map((c) => CUE_NAMES[c] || c).join(', ');
       return `The estimate for **${r.name}** points ${r0(p.angle_deg ?? 0)}° away from where `

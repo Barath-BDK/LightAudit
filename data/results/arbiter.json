@@ -4,8 +4,8 @@
   2000,
   2059
  ],
- "n_rows": 517,
- "n_pos": 52,
+ "n_rows": 522,
+ "n_pos": 55,
  "features": [
   "s_k",
   "angle_k",
@@ -23,73 +23,68 @@
   "spread_deg",
   "is_largest_region"
  ],
- "threshold": 0.616728258307333,
+ "threshold": 0.751727110226979,
  "threshold_alpha": 0.05,
- "threshold_10": 0.35659756616669286,
+ "threshold_10": 0.5365749182439875,
  "threshold_note": null,
  "n_cal_scenes": 200,
  "cal_seeds": [
   1000,
   1199
  ],
- "n_cal_scored": 178,
- "cal_insufficient_rate": 0.10999999999999999,
+ "n_cal_scored": 166,
+ "cal_insufficient_rate": 0.17000000000000004,
  "heldout_scenes": 12,
  "heldout_rows": 107,
- "heldout_region_auc": 0.8977272727272728,
+ "heldout_region_auc": 0.8806818181818182,
  "permutation_importance": [
   {
    "feature": "angle_k",
-   "mean": 0.13697916666666676,
-   "std": 0.04823997388866815
-  },
-  {
-   "feature": "s_k",
-   "mean": 0.08016098484848493,
-   "std": 0.02970267482256462
+   "mean": 0.0913825757575758,
+   "std": 0.05394112625431566
   },
   {
    "feature": "spread_deg",
-   "mean": 0.06699810606060615,
-   "std": 0.025156041017018307
+   "mean": 0.05052083333333339,
+   "std": 0.026063652908901547
+  },
+  {
+   "feature": "s_k",
+   "mean": 0.01803977272727278,
+   "std": 0.02547062441696028
   },
   {
    "feature": "n_valid",
-   "mean": 0.015056818181818272,
-   "std": 0.01294580657310632
+   "mean": 0.007149621212121276,
+   "std": 0.012457151508618548
+  },
+  {
+   "feature": "f_norm",
+   "mean": 0.004640151515151558,
+   "std": 0.006821469114943931
   },
   {
    "feature": "w",
-   "mean": 0.00913825757575767,
-   "std": 0.006311927757749947
-  },
-  {
-   "feature": "f_sharp",
-   "mean": 0.0028409090909091717,
-   "std": 0.006887536570442494
-  },
-  {
-   "feature": "rho_max",
-   "mean": 0.0018939393939395033,
-   "std": 0.010168355829959175
-  },
-  {
-   "feature": "sharp_area",
-   "mean": 0.000568181818181901,
-   "std": 0.0025829889577624666
+   "mean": 0.0033617424242424867,
+   "std": 0.009035872505541984
   },
   {
    "feature": "has_glint",
-   "mean": 0.00037878787878797284,
-   "std": 0.0025125945381480217
+   "mean": 0.002130681818181851,
+   "std": 0.002050249535474518
   },
   {
-   "feature": "is_largest_region",
-   "mean": 0.0,
-   "std": 0.0
+   "feature": "f_sharp",
+   "mean": 0.0011837121212121716,
+   "std": 0.00570446088059566
   },
   {
    "feature": "f_spread",
+   "mean": 0.0008522727272728348,
+   "std": 0.00028409090909094496
+  },
+  {
+   "feature": "f_size",
    "mean": 0.0,
    "std": 0.0
   },
@@ -99,19 +94,24 @@
    "std": 0.0
   },
   {
-   "feature": "f_size",
-   "mean": -4.734848484841958e-05,
-   "std": 0.0009691993129952082
+   "feature": "is_largest_region",
+   "mean": 0.0,
+   "std": 0.0
+  },
+  {
+   "feature": "sharp_area",
+   "mean": -0.0001893939393938948,
+   "std": 0.0023881667069921442
   },
   {
    "feature": "mean_unc",
-   "mean": -0.001136363636363541,
-   "std": 0.001391755535672253
+   "mean": -0.0017045454545453974,
+   "std": 0.0013257575757575865
   },
   {
-   "feature": "f_norm",
-   "mean": -0.005160984848484751,
-   "std": 0.007584482428529808
+   "feature": "rho_max",
+   "mean": -0.004829545454545381,
+   "std": 0.014345575146559405
   }
  ],
  "calibration_file": "calib_default.json",
@@ -123,5 +123,5 @@
  },
  "model": "HistGradientBoostingClassifier(max_iter=200, learning_rate=0.05, max_leaf_nodes=15, l2=1.0)",
  "composites": "normal scenes: car (even i) / distractor (odd i); damage scenes (i % 10 >= 7): dent in panel mode; delta ~ U[20, 180] deg; plus the pristine audit of every scene",
- "timestamp": "2026-11-14T12:15:41+00:00"
+ "timestamp": "2026-11-14T14:05:00+00:00"
 }

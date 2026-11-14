@@ -11,7 +11,7 @@ from .fusion import combine_cues, fuse
 from .grid import eq_dirs, view_vectors
 from .imageio import luminance
 from .posterior import region_posterior
-from .residual import residual_maps
+from .residual import panel_score, residual_maps
 from .validity import valid_pixels
 
 ALL_CUES = ("shading", "glint", "contour")
@@ -21,7 +21,9 @@ LANDSCAPES = {"rank": rank_landscape, "ls": ls_landscape}
 def analyze_region(Y, normals, unc, mask, view, cfg: Config, seed: int, cue: str = "rank", scale: float = 1.0) -> dict:
     """All per-region evidence, independent of every other region (so experiments can cache it)."""
     ys, xs, n_valid = valid_pixels(Y, normals, unc, mask, cfg, seed)
-    r = dict(n_valid=int(n_valid), ys=ys, xs=xs, glint=None, contour=None, glint_blobs=[])
+    yl = Y[mask & (Y < cfg.sat_hi)] ** 2.2  # shading contrast, used by the soft-light check
+    contrast = float(np.percentile(yl, 10) / max(np.percentile(yl, 90), 1e-6)) if len(yl) >= 50 else None
+    r = dict(n_valid=int(n_valid), ys=ys, xs=xs, glint=None, contour=None, glint_blobs=[], contrast=contrast)
     if n_valid < cfg.Nmin:
         D = len(eq_dirs())
         r.update(P=np.ones(D, np.float32), S=np.zeros(D, np.float32), samples=None, rho_max=0.0, sharp_area=1.0,
@@ -49,9 +51,15 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
         g = r["glint"] if "glint" in cues else None
         c = r["contour"] if "contour" in cues else None
         r["A"] = combine_cues(r["P"], g, c, cfg)
-        r["cues"] = ["shading"] + (["glint"] if g is not None else []) + (["contour"] if c is not None else [])
+        r["cues"] = (["shading"] + (["glint"] if g is not None else []) + (["contour"] if c is not None else [])
+                     + (["panel"] if r.get("panel_z") is not None else []))
     fusion = fuse([r["A"] for r in regions], [r["weight"] for r in regions], [r["excluded"] for r in regions], cfg,
-                  centers=[r["center"] for r in regions], loo=loo)
+                  centers=[r["center"] for r in regions], loo=loo,
+                  contrast=[r.get("contrast") if r.get("kind") != "pseudo" else None for r in regions],
+                  panel_z=[r.get("panel_z") for r in regions])
+    fusion["tau_panel"] = cfg.tau_panel
+    for k in fusion["panel_flagged"]:
+        fusion["per_region"][k]["panel_z"] = regions[k]["panel_z"]
     for r, p in zip(regions, fusion["per_region"]):
         r.update(reliable=p["reliable"], shortfall=p["shortfall"], angle_deg=p["angle_deg"], flagged=p["flagged"])
         if p["reliable"]:
@@ -101,6 +109,7 @@ def audit(rgb, normals, unc, labels, meta, cfg: Config | None = None, fov_deg: f
                             weight=float(p["weight"]), reason=None, P=p["A"], A=p["A"], S=np.zeros(D, np.float32),
                             glint=None, contour=None, cues=[p.get("cue", "shadow")], r68_deg=0.0, r95_deg=0.0,
                             center=eq_dirs()[int(np.argmax(p["A"]))].astype(np.float64)))
+    panel_score(Y, normals, unc, labels, regions, cfg)
     fusion = fuse_regions(regions, cfg, cues, loo)
 
     out = dict(rgb=rgb, Y=Y, normals=normals, unc=unc, labels=labels, regions=regions, fusion=fusion, cfg=cfg,

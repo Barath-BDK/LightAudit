@@ -80,7 +80,16 @@ Backends disagree on axis directions, so each output passes a convention check t
 
 ---
 
-## 4. Cue C1 — tone-curve-invariant rank shading (main cue)
+## 4. Cue C1 — shading
+
+> **Changed after evaluation.** The default shading cue is now a least-squares fit (`Config.cue = "ls"`):
+> the light maximises the Pearson correlation between `max(0, n·l)` and the linearised luminance `Y^2.2`
+> (`lightaudit/cues/ls_baseline.py`). The rank cue described in the rest of this section was the original
+> proposal; it measured about three times less accurate (it discards brightness magnitudes, which hurts on
+> shapes with few distinct normals) and is kept as the evaluated baseline (`cue = "rank"`). Everything
+> downstream (bootstrap, KDE posterior, fusion, calibration) is identical for both cues.
+
+### 4.1 The original rank cue (baseline)
 
 **Model.** Inside one region (one material, roughly constant albedo):
 
@@ -269,6 +278,32 @@ Outputs: verdict, `S_img`, `k_top`, per-region `{s_k, angle_k, flagged}`, the co
 *Figure I9. The four verdicts and the recommended action in an insurance-claim workflow.*
 
 ---
+
+### 8.1 Two scene-level checks added after evaluation
+
+Both are applied after the consensus fusion, in `fusion.fuse` (Python) and `viewer/fusion.js`.
+
+**Soft-light abstention.** For every region, `contrast = P10 / P90` of the linearised luminance `Y^2.2` over its
+non-saturated pixels. Under a sun the shadowed side of an object is several times darker than the lit side
+(low ratio); under an overcast sky, or when everything visible is in shade, the ratio stays high. If the median
+contrast over the reliable regions exceeds `soft_contrast`, the verdict is `INSUFFICIENT` ("the light looks
+diffuse"), whatever the direction test says. Why: soft sky light shades a surface almost like a broad light
+from above, so the direction test finds a consistent "up" and would otherwise call the scene consistent, and a
+splice under such light is undetectable. `soft_contrast` is the split-conformal 95% quantile of the contrast of
+sun-lit calibration scenes, so about 5% of sunny scenes are additionally sent to `INSUFFICIENT`.
+
+**Panel residual (panel mode only).** A dent is small and shallow, so its own light estimate is too noisy to
+test. Instead the ROI is compared with the panel it sits on, which has the same paint and the same light: fit
+the monotone curve `g` (section 9) on the valid pixels of the ring and of the panel remainder under the panel's
+own light estimate, predict the ROI pixels, and take `panel_z = |mean residual| / sigma`, with `sigma` the robust
+(MAD) scale of the reference residuals. Dark and saturated ROI pixels are included on purpose. If
+`panel_z > tau_panel` the ROI is flagged (verdict `SUSPICIOUS`) unless the verdict is `CONFLICT` or the light is
+soft. `tau_panel` is the split-conformal quantile of `panel_z` on unedited damage scenes of the calibration
+split. Known blind spot: a dent that faces away from both lights looks the same under either, so pasting it
+changes nothing.
+
+A third check, for two light sources (does a second light explain a region's shading much better than one?),
+was tested and did not separate two-sun scenes from one-sun scenes (AUC 0.65), so it is not included.
 
 ## 9. Residual heatmap, counterfactual and the viewer's relighting
 

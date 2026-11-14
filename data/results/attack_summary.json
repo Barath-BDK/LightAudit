@@ -5,106 +5,106 @@
   {
    "tier": "T0",
    "label": "T0 naive paste",
-   "tpr_c1": 0.4166666666666667,
-   "tpr_fused": 0.5416666666666666,
+   "tpr_c1": 0.6666666666666666,
+   "tpr_fused": 0.625,
    "n": 24,
    "mean_abs_dY": null
   },
   {
    "tier": "T1",
    "label": "T1 colour transfer",
-   "tpr_c1": 0.45454545454545453,
-   "tpr_fused": 0.45454545454545453,
-   "n": 22,
-   "mean_abs_dY": 0.23893056505105711
+   "tpr_c1": 0.6956521739130435,
+   "tpr_fused": 0.6521739130434783,
+   "n": 23,
+   "mean_abs_dY": 0.23992009882045828
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (exact light)",
-   "tpr_c1": 0.0,
-   "tpr_fused": 0.045454545454545456,
-   "n": 22,
-   "mean_abs_dY": 0.15093691189858047
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.21739130434782608,
+   "n": 23,
+   "mean_abs_dY": 0.14979081398443037
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b15\u00b0 error)",
-   "tpr_c1": 0.0,
-   "tpr_fused": 0.09090909090909091,
-   "n": 22,
-   "mean_abs_dY": 0.14948891662061214
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.148489481324087
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b110\u00b0 error)",
-   "tpr_c1": 0.0,
-   "tpr_fused": 0.09090909090909091,
-   "n": 22,
-   "mean_abs_dY": 0.14941697013141078
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.21739130434782608,
+   "n": 23,
+   "mean_abs_dY": 0.1471807526667481
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b120\u00b0 error)",
-   "tpr_c1": 0.0,
-   "tpr_fused": 0.045454545454545456,
-   "n": 22,
-   "mean_abs_dY": 0.1397160692987117
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.21739130434782608,
+   "n": 23,
+   "mean_abs_dY": 0.1400854400480571
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b140\u00b0 error)",
-   "tpr_c1": 0.13636363636363635,
-   "tpr_fused": 0.18181818181818182,
-   "n": 22,
-   "mean_abs_dY": 0.12222306303341281
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.12683034591052844
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (exact light, independent normals)",
-   "tpr_c1": 0.045454545454545456,
-   "tpr_fused": 0.09090909090909091,
-   "n": 22,
-   "mean_abs_dY": 0.1542377799580043
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.15224209703181102
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b15\u00b0 error, independent normals)",
-   "tpr_c1": 0.045454545454545456,
-   "tpr_fused": 0.045454545454545456,
-   "n": 22,
-   "mean_abs_dY": 0.15245691272006792
+   "tpr_c1": 0.2608695652173913,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.15100961206885782
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b110\u00b0 error, independent normals)",
-   "tpr_c1": 0.09090909090909091,
-   "tpr_fused": 0.09090909090909091,
-   "n": 22,
-   "mean_abs_dY": 0.15077698065645315
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.14811931724619606
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b120\u00b0 error, independent normals)",
-   "tpr_c1": 0.09090909090909091,
-   "tpr_fused": 0.09090909090909091,
-   "n": 22,
-   "mean_abs_dY": 0.14224442318928512
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.1442231616086286
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b140\u00b0 error, independent normals)",
-   "tpr_c1": 0.18181818181818182,
-   "tpr_fused": 0.18181818181818182,
-   "n": 22,
-   "mean_abs_dY": 0.12194622164084153
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.2608695652173913,
+   "n": 23,
+   "mean_abs_dY": 0.12859938625732195
   },
   {
    "tier": "T4",
    "label": "T4 adaptive (white box)",
-   "tpr_c1": 0.0,
-   "tpr_fused": 0.045454545454545456,
-   "n": 22,
-   "mean_abs_dY": 0.16448782621459526
+   "tpr_c1": 0.21739130434782608,
+   "tpr_fused": 0.21739130434782608,
+   "n": 23,
+   "mean_abs_dY": 0.1582437871914843
   }
  ]
 }

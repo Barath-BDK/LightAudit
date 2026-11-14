@@ -37,6 +37,8 @@
   "w_contour": 0.5,
   "min_reliable": 3,
   "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 3.91642,
   "source": "calib_default.json"
  },
  "regions": [
@@ -68,6 +70,8 @@
     "f_dir": 0.0,
     "f_norm": 0.80698
    },
+   "contrast": 0.91233,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -148,6 +152,8 @@
     "f_dir": 1.0,
     "f_norm": 0.79303
    },
+   "contrast": 0.2602,
+   "panel_z": null,
    "cues": [
     "shading",
     "glint",
@@ -226,6 +232,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -300,6 +308,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -380,6 +390,8 @@
     "f_dir": 1.0,
     "f_norm": 0.97928
    },
+   "contrast": 0.09442,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -462,6 +474,8 @@
     "f_dir": 1.0,
     "f_norm": 0.76007
    },
+   "contrast": 0.03327,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -574,6 +588,12 @@
     "flagged": false
    }
   ],
+  "soft_light": {
+   "contrast": 0.09442,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "panel_flagged": [],
   "text": "3 regions agree on one light direction (about -24\u00b0 azimuth, 52\u00b0 elevation). The largest disagreement is car body at 55\u00b0 (below the alert level)."
  },
  "baseline_ls": {
@@ -636,6 +656,12 @@
      "flagged": false
     }
    ],
+   "soft_light": {
+    "contrast": 0.09442,
+    "threshold": 0.42476,
+    "abstain": false
+   },
+   "panel_flagged": [],
    "text": "3 regions agree on one light direction (about -27\u00b0 azimuth, 55\u00b0 elevation). The largest disagreement is car body at 42\u00b0 (below the alert level)."
   },
   "regions": [
@@ -715,5 +741,5 @@
  },
  "attacks": [],
  "backends_log": [],
- "created": "2026-11-14T11:55:55+00:00"
+ "created": "2026-11-14T14:01:11+00:00"
 }

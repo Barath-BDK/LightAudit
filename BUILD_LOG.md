@@ -3,6 +3,28 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 2 (14 Nov 2026): soft-light abstention and panel check
+
+- Tested three candidate checks on 30 calibration scenes each before building any: soft-light contrast
+  (overcast vs sunny AUC 0.98), dent-vs-panel residual (AUC 0.80-0.87 against 0.40 for the direction test), a
+  second-light test for two suns (AUC 0.65: not built).
+- Built the first two into `fusion.fuse` / `viewer/fusion.js`, `pipeline.py`, `residual.panel_score`, the
+  calibration, the bundle format, the explanation text and the eval cache (METHOD.md 8.1). ROI and ring regions
+  are no longer auto-excluded.
+- Recalibrated: soft-light threshold 0.42, panel alert 3.92 (alpha 0.05, 58 unedited damage scenes), alarm level
+  unchanged at 6.35; INSUFFICIENT on clean calibration scenes 17% (was 11%: the soft-light test abstains on about
+  5% of sunny scenes by construction).
+- Quick evaluation re-run (all ten experiments ok): overcast clean scenes INSUFFICIENT 4 of 5 (was 0 of 5);
+  pasted dent flagged at the calibrated level in 5 of 8 cases (was 0 of 8) and still 5 of 8 after the T3a and T4
+  re-shade attacks; dent false-alarm rate at the calibrated level 0.00-0.07 (n = 15). Car AUC 0.62-0.65 and
+  distractor 0.59-0.62 in this run (n = 15; lower than the previous run's 0.67-0.71, within the intervals).
+  Two-sun scenes: still 0 of 5 CONFLICT.
+- Demos: overcast and fake-dent demos now come out as intended on the first seed tried (were 12 and 10 seeds).
+  Fake dent: panel score 5.5 > 3.9 while its direction shortfall is only 1.54; T3a/T4 attacks stay flagged, T1
+  colour transfer passes. Two suns still CONSISTENT.
+- Tests: 62 pytest tests (two new) and the JS parity check (470 checks) pass.
+- Known blind spot of the panel check: a dent facing away from both lights does not change when pasted.
+
 ## Update 14 Nov 2026: least squares is the default cue
 
 Everything below this section describes the first build, where the rank cue was the default. Its quick results

@@ -100,3 +100,22 @@ def test_write_vectors():
                  broad_consensus_frac=CFG.broad_consensus_frac),
         note="A_b64 = base64 of little-endian float32 [R, 8192]; indices are 0-based region positions", cases=cases)))
     assert len({c["expected"]["verdict"] for c in cases}) >= 3
+
+
+def test_soft_light_abstains():
+    A, w, centers, _ = run([(30, 40), (33, 42), (28, 38), (-120, 30)])
+    cfg = replace(CFG, soft_contrast=0.34)
+    f = fuse(A, w, None, cfg, centers, contrast=[0.5, 0.6, 0.45, 0.7])
+    assert f["verdict"] == "INSUFFICIENT" and "diffuse" in f["reason"] and f["flagged"] == []
+    f = fuse(A, w, None, cfg, centers, contrast=[0.1, 0.2, 0.15, 0.7])  # sunny: the outlier is still flagged
+    assert f["verdict"] == "SUSPICIOUS" and f["flagged"] == [3]
+
+
+def test_panel_score_flags_roi():
+    A, w, centers, f0 = run([(30, 40), (33, 42), (28, 38), (31, 41)])
+    assert f0["verdict"] == "CONSISTENT"
+    cfg = replace(CFG, tau_panel=3.0)
+    f = fuse(A, w, None, cfg, centers, panel_z=[None, None, None, 5.0])
+    assert f["verdict"] == "SUSPICIOUS" and f["flagged"] == [3] and f["panel_flagged"] == [3]
+    assert fuse(A, w, None, cfg, centers, panel_z=[None, None, None, 1.0])["verdict"] == "CONSISTENT"
+    assert fuse(A, w, [False, False, False, True], cfg, centers, panel_z=[None, None, None, 5.0])["verdict"] == "CONSISTENT"

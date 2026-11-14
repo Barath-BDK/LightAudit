@@ -10,7 +10,7 @@
  {
   "name": "demo_damage_fake",
   "title": "Dent pasted from another light (panel mode)",
-  "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4039), simulated normals. Audit verdict: SUSPICIOUS.",
+  "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4030), simulated normals. Audit verdict: SUSPICIOUS.",
   "verdict": "SUSPICIOUS",
   "thumb": "demo_damage_fake/thumb.jpg",
   "source": "synthetic"
@@ -42,7 +42,7 @@
  {
   "name": "demo_overcast",
   "title": "Overcast",
-  "description": "An unedited scene under mostly diffuse sky light. Synthetic scene (seed 4061), simulated normals. Audit verdict: INSUFFICIENT.",
+  "description": "An unedited scene under mostly diffuse sky light. Synthetic scene (seed 4050), simulated normals. Audit verdict: INSUFFICIENT.",
   "verdict": "INSUFFICIENT",
   "thumb": "demo_overcast/thumb.jpg",
   "source": "synthetic"

@@ -103,8 +103,10 @@ if (existsSync(idxPath)) {
     const A = regs.map((r) => all.subarray(r.landscape_index * grid.D, (r.landscape_index + 1) * grid.D));
     const c = m.calibration;
     const bcfg = { ...DEFAULT_CFG, tau_img: c.tau_img, tau_ref: c.tau_ref, w_min: c.w_min, eps: c.eps ?? 1e-3,
-      min_reliable: c.min_reliable ?? 3, broad_consensus_frac: c.broad_consensus_frac ?? 0.35 };
-    const f = fuse(A, regs.map((r) => r.weight), regs.map((r) => r.excluded), bcfg, regs.map((r) => r.center));
+      min_reliable: c.min_reliable ?? 3, broad_consensus_frac: c.broad_consensus_frac ?? 0.35,
+      soft_contrast: c.soft_contrast ?? Infinity, tau_panel: c.tau_panel ?? Infinity };
+    const f = fuse(A, regs.map((r) => r.weight), regs.map((r) => r.excluded), bcfg, regs.map((r) => r.center),
+      { contrast: regs.map((r) => r.contrast ?? null), panel_z: regs.map((r) => r.panel_z ?? null) });
     check(f.verdict === m.fusion.verdict, `bundle ${b.name}: verdict ${f.verdict} vs ${m.fusion.verdict}`);
     // manifest weights are rounded to 5 decimals, so compare loosely
     check(close(f.S_img, m.fusion.S_img, 2e-3), `bundle ${b.name}: S_img ${f.S_img} vs ${m.fusion.S_img}`);

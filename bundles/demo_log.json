@@ -62,18 +62,18 @@
  {
   "name": "demo_damage_fake",
   "built": true,
-  "seed": 4039,
-  "seeds_tried": 10,
+  "seed": 4030,
+  "seeds_tried": 1,
   "intended": [
    "SUSPICIOUS"
   ],
   "verdict": "SUSPICIOUS",
   "matched": true,
-  "S_img": 6.839025080521418,
+  "S_img": 5.581043448711815,
   "attacks": [
    {
     "variant": "T1",
-    "verdict": "SUSPICIOUS"
+    "verdict": "CONSISTENT"
    },
    {
     "variant": "T3a_0",
@@ -110,14 +110,14 @@
  {
   "name": "demo_overcast",
   "built": true,
-  "seed": 4061,
-  "seeds_tried": 12,
+  "seed": 4050,
+  "seeds_tried": 1,
   "intended": [
    "INSUFFICIENT"
   ],
   "verdict": "INSUFFICIENT",
   "matched": true,
-  "S_img": 0.4970337240464414,
+  "S_img": 6.126356293698521,
   "attacks": []
  },
  {

@@ -13,7 +13,7 @@ export const VERDICTS = ['CONSISTENT', 'SUSPICIOUS', 'INSUFFICIENT', 'CONFLICT']
 
 export const DEFAULT_CFG = Object.freeze({
   eps: 1e-3, w_glint: 0.5, w_contour: 0.5, w_shadow: 0.7, w_min: 0.35, tau_img: 2.0, tau_ref: 2.0,
-  min_reliable: 3, broad_consensus_frac: 0.35,
+  min_reliable: 3, broad_consensus_frac: 0.35, soft_contrast: Infinity, tau_panel: Infinity,
 });
 
 function argmax(a) {
@@ -77,7 +77,7 @@ function looShortfalls(lnA, L, idx, loo = true) {
  * centers: R unit vectors (or null). Options: { lnA } to pass precomputed logMaps(A), { loo }.
  * Returns the same structure as fusion.fuse() in Python (indices are 0-based region positions).
  */
-export function fuse(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = null, opts = {}) {
+function fuseCore(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = null, opts = {}) {
   const R = weights.length;
   const loo = opts.loo !== false;
   const w = Float64Array.from(weights);
@@ -178,6 +178,40 @@ export function fuse(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = n
  * "What-if" at the user's light (BUILD_SPEC 12.4): each region's agreement A_k(l_user) and its shortfall
  * against l_user; a reliable region is flagged when that shortfall exceeds tau. Does not change the audit.
  */
+export const SOFT_REASON = 'the light looks diffuse (overcast, or everything in shade): shading carries no direction';
+
+/**
+ * Consensus fusion plus the two scene-level checks of fusion.fuse() in Python.
+ * opts.contrast[k]: P10/P90 shading contrast of region k (or null); opts.panel_z[k]: panel score of an ROI (or null).
+ */
+export function fuse(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = null, opts = {}) {
+  const res = fuseCore(A, weights, excluded, cfg, centers, opts);
+  const per = res.per_region;
+  const contrast = opts.contrast || null, panelZ = opts.panel_z || null;
+  const c = [];
+  if (contrast) per.forEach((p, k) => { if (p.reliable && contrast[k] != null) c.push(contrast[k]); });
+  c.sort((a, b) => a - b);
+  const h = c.length >> 1;
+  const med = c.length === 0 ? null : (c.length % 2 ? c[h] : 0.5 * (c[h - 1] + c[h]));
+  const soft = med !== null && med > cfg.soft_contrast;
+  res.soft_light = { contrast: med, threshold: cfg.soft_contrast, abstain: soft };
+  res.panel_flagged = [];
+  res.tau_panel = cfg.tau_panel;
+  if (soft) {
+    per.forEach((p) => { p.flagged = false; });
+    res.verdict = 'INSUFFICIENT'; res.reason = SOFT_REASON; res.flagged = [];
+    return res;
+  }
+  const panel = [];
+  if (panelZ) per.forEach((p, k) => { if (panelZ[k] != null && panelZ[k] > cfg.tau_panel && !p.excluded) panel.push(k); });
+  if (panel.length && res.verdict !== 'CONFLICT') {
+    for (const k of panel) { per[k].flagged = true; per[k].panel_z = panelZ[k]; }
+    res.flagged = [...new Set([...res.flagged, ...panel])];
+    res.verdict = 'SUSPICIOUS'; res.reason = ''; res.top_region = res.flagged[0]; res.panel_flagged = panel;
+  }
+  return res;
+}
+
 export function whatIf(A, weights, excluded, lUser, cfg = DEFAULT_CFG) {
   const R = weights.length;
   // bilinear lookup on the grid would hide the grid's discreteness; use the containing cell like the fusion

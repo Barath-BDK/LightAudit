@@ -17,9 +17,11 @@ An interactive WebGL viewer shows the evidence on a 3D light dome and re-lights 
 module re-shades a pasted region to measure how easily the check is defeated. The rank cue we proposed turned
 out to be about three times **less** accurate than a simple least-squares shading fit, so least squares is now
 the default cue and the rank cue is kept as the evaluated baseline. With it the system detects a pasted car lit
-from 120 degrees away in the demo, but measured detection rates remain modest, a physics re-shade defeats the
-detector almost completely, pasted dents are not detected, and real-photo results are qualitative only. We
-report these results as they are.
+from 120 degrees away in the demo, but measured detection rates remain modest and a physics re-shade of a whole
+object defeats the detector. Two checks were added after the first evaluation: a soft-light test that returns
+INSUFFICIENT under diffuse light, and a comparison of a damage region with the panel around it, which detects
+pasted dents that the direction test misses and survives the re-shade attack. Scenes with two lights are not
+recognised, and real-photo results are qualitative only. We report these results as they are.
 
 ## 1 Introduction and problem
 
@@ -77,6 +79,11 @@ The full derivation is in [docs/METHOD.md](../docs/METHOD.md). In brief:
   ![I6. Leave-one-out consensus and shortfall.](../docs/figures/shortfall_diagram.png)
 
 *I6. Leave-one-out consensus and shortfall.*
+- **Two scene-level checks** (added after the first evaluation; METHOD.md section 8.1). *Soft light:* if the
+  median shading contrast (P10/P90 of linearised luminance) of the reliable regions is above a calibrated
+  threshold, the light is too diffuse to carry a direction and the verdict is INSUFFICIENT. *Panel residual:*
+  in panel mode the ROI's brightness is predicted from the shading curve of the panel around it; a mean
+  residual above a calibrated number of robust sigmas flags the ROI.
 - **Calibration.** h and T are chosen for nominal coverage; the alarm level is the split-conformal quantile of
   pristine calibration scenes.
   ![I7. Conformal alarm level.](../docs/figures/conformal.png)
@@ -116,7 +123,7 @@ Normals are the ground truth perturbed by spatially correlated noise of 8 degree
 
 Calibration chose h = 14 degrees and T = 1.5; on the calibration split the 68% / 95% sets cover the true
 light 0.70 / 0.90 of the time (473 reliable regions). The alarm level is
-6.35 at alpha = 0.05 and 5.53 at alpha = 0.10; 11.0% of
+6.35 at alpha = 0.05 and 5.55 at alpha = 0.10; 17.0% of
 pristine calibration scenes return INSUFFICIENT.
 
 ### T2 - E3 coverage on the test split
@@ -132,6 +139,9 @@ Suite quick, n = 56 reliable regions / 15 scenes. Caveat: synthetic scenes with 
 
 *F3. Reliability diagram on the test split.*
 
+The soft-light threshold is 0.42 and the panel alert level is
+3.92 (from 58 unedited damage scenes); the INSUFFICIENT rate
+above includes the roughly 5% of sunny scenes that the soft-light test abstains on by construction.
 These are the values for the least-squares cue. The alarm level is close to the maximum possible shortfall
 (about 6.9): clean scenes often contain one region that disagrees strongly, so a 5% false-alarm rate forces a
 high threshold. For comparison the rank cue calibrated to h = 18, T = 1.5 and an alarm level of 4.95
@@ -180,16 +190,16 @@ changes: in the spliced-car demo a plain colour transfer now lowers the car's sh
 
 | target | cues | MDI@5%FPR (deg) | MDI@tau (deg) | TPR@5%FPR d=90 | FPR@tau | AUC d>=30 | top-1 loc. | n pos per delta / n neg |
 |---|---|---|---|---|---|---|---|---|
-| car | C1 | 135 | 135 | 0.47 [0.27, 0.87] | 0.00 | 0.69 [0.53, 0.85] | 0.78 | 15/15 |
-| car | C1+C2 | 60 | 90 | 0.67 [0.40, 0.87] | 0.00 | 0.71 [0.54, 0.86] | 0.77 | 15/15 |
-| car | C1+C2+C3 | 135 | 135 | 0.47 [0.20, 0.73] | 0.00 | 0.67 [0.50, 0.83] | 0.66 | 15/15 |
-| car | RANK | 180 | n/a | 0.47 [0.20, 0.73] | 0.00 | 0.64 [0.47, 0.79] | 0.52 | 15/15 |
-| distractor | C1 | 60 | 90 | 0.73 [0.53, 0.93] | 0.00 | 0.69 [0.55, 0.82] | 0.52 | 15/15 |
-| distractor | C1+C2 | 60 | 90 | 0.73 [0.53, 0.93] | 0.00 | 0.70 [0.55, 0.83] | 0.51 | 15/15 |
-| distractor | C1+C2+C3 | 90 | 90 | 0.73 [0.47, 0.93] | 0.00 | 0.67 [0.52, 0.81] | 0.47 | 15/15 |
-| dent | C1 | n/a | n/a | 0.07 [0.00, 0.20] | 0.07 | 0.42 [0.22, 0.61] | 0.23 | 15/15 |
-| dent | C1+C2 | n/a | n/a | 0.00 [0.00, 0.20] | 0.00 | 0.40 [0.22, 0.59] | 0.27 | 15/15 |
-| dent | C1+C2+C3 | n/a | n/a | 0.00 [0.00, 0.13] | 0.13 | 0.39 [0.20, 0.58] | 0.16 | 15/15 |
+| car | C1 | 135 | 135 | 0.40 [0.20, 0.80] | 0.00 | 0.63 [0.45, 0.80] | 0.78 | 15/15 |
+| car | C1+C2 | 60 | 90 | 0.60 [0.33, 0.80] | 0.00 | 0.65 [0.47, 0.82] | 0.77 | 15/15 |
+| car | C1+C2+C3 | 135 | 135 | 0.40 [0.13, 0.67] | 0.00 | 0.62 [0.43, 0.78] | 0.66 | 15/15 |
+| car | RANK | n/a | n/a | 0.40 [0.13, 0.67] | 0.00 | 0.57 [0.39, 0.73] | 0.52 | 15/15 |
+| distractor | C1 | 90 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.61 [0.48, 0.73] | 0.52 | 15/15 |
+| distractor | C1+C2 | 90 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.62 [0.48, 0.75] | 0.51 | 15/15 |
+| distractor | C1+C2+C3 | 90 | 90 | 0.60 [0.33, 0.87] | 0.00 | 0.59 [0.46, 0.73] | 0.47 | 15/15 |
+| dent | C1 | n/a | 60 | 0.07 [0.00, 0.27] | 0.00 | 0.41 [0.22, 0.61] | 0.63 | 15/15 |
+| dent | C1+C2 | n/a | 90 | 0.07 [0.00, 0.27] | 0.00 | 0.42 [0.22, 0.61] | 0.69 | 15/15 |
+| dent | C1+C2+C3 | n/a | 90 | 0.00 [0.00, 0.33] | 0.07 | 0.43 [0.22, 0.63] | 0.59 | 15/15 |
 
 Suite quick. 5%FPR threshold from the pristine TEST scores (labelled as such); tau = calibrated. 'fused' = C1+C2+C3: the shadow-pair cue C4 is manual-only (clicked in the viewer), so no automatic experiment can include it; 'fused' is therefore identical to C1+C2+C3. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -203,7 +213,9 @@ Suite quick. 5%FPR threshold from the pristine TEST scores (labelled as such); t
 
 In this table C1 is the default least-squares shading cue and RANK is the rank-cue baseline. Detection is
 modest: a pasted car or distractor needs a discrepancy of roughly 60 to 135 degrees to reach 50% detection at 5%
-false alarms, pasted dents are at chance, and the rank baseline is worse than least squares. Adding the glint cue
+false alarms, and the rank baseline is worse than least squares. For dents the AUC column (which scores only
+the direction test) stays at chance, but the verdict now also uses the panel comparison: see the MDI@tau
+column here and the dent rows of the attack table, where a naively pasted dent is flagged in 5 of 8 cases. Adding the glint cue
 helps a little in this sample; adding the silhouette cue does not. With 15 scenes per cell these differences are
 within the confidence intervals; read the exact values from the table.
 
@@ -215,11 +227,11 @@ within the confidence intervals; read the exact values from the table.
 |---|---|---|---|---|---|---|---|
 | normal | pristine | 5 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 [1.00, 1.00] |
 | normal | spliced | 5 | 0.40 | 0.60 | 0.00 | 0.00 | 0.60 [0.20, 1.00] |
-| overcast | pristine | 5 | 0.60 | 0.20 | 0.00 | 0.20 | 0.75 [0.33, 1.00] |
-| overcast | spliced | 5 | 0.60 | 0.20 | 0.20 | 0.00 | 0.25 [0.00, 0.75] |
-| multi | pristine | 5 | 0.40 | 0.40 | 0.20 | 0.00 | 0.50 [0.00, 1.00] |
-| multi | spliced | 5 | 0.40 | 0.40 | 0.00 | 0.20 | 0.50 [0.00, 1.00] |
-| lowres | pristine | 5 | 0.40 | 0.20 | 0.20 | 0.20 | 0.67 [0.00, 1.00] |
+| overcast | pristine | 5 | 0.20 | 0.00 | 0.80 | 0.00 | 1.00 [1.00, 1.00] |
+| overcast | spliced | 5 | 0.20 | 0.00 | 0.80 | 0.00 | 0.00 [0.00, 0.00] |
+| multi | pristine | 5 | 0.40 | 0.20 | 0.40 | 0.00 | 0.67 [0.00, 1.00] |
+| multi | spliced | 5 | 0.40 | 0.20 | 0.20 | 0.20 | 0.33 [0.00, 1.00] |
+| lowres | pristine | 5 | 0.40 | 0.20 | 0.40 | 0.00 | 0.67 [0.00, 1.00] |
 | lowres | spliced | 5 | 0.40 | 0.00 | 0.60 | 0.00 | 0.00 [0.00, 0.00] |
 
 Suite quick. Spliced = car at 90 deg. Caveat: synthetic scenes with simulated normal predictors unless stated.
@@ -228,10 +240,11 @@ Suite quick. Spliced = car at 90 deg. Caveat: synthetic scenes with simulated no
 
 *F6. Verdict distribution by condition.*
 
-The intended behaviour (overcast gives INSUFFICIENT, two suns give CONFLICT) is mostly **not** observed.
-Soft sky light shades a surface almost like a broad light from above, so overcast scenes keep a consistent "up"
-direction and are usually called CONSISTENT; shading alone cannot tell the two apart, and a splice under
-overcast light is not detected. Two-sun scenes rarely produce CONFLICT. We treat both as limits of the method.
+Overcast scenes are now mostly sent to INSUFFICIENT by the soft-light test (before it was added none were:
+soft sky light shades a surface almost like a broad light from above, so the direction test finds a consistent
+"up"). The cost is that a splice under overcast light is not examined at all. Two-sun scenes are still not
+recognised: they rarely produce CONFLICT, and a test for a second light source that we tried did not separate
+them from one-sun scenes (AUC 0.65 on 30 + 30 calibration scenes), so it was left out.
 
 ### 5.6 Robustness (E7)
 
@@ -247,17 +260,17 @@ Down-scaling the image hurts most: detection drops sharply at every resize facto
 
 | ablation | AUC d>=30 | TPR@5%FPR d=90 | MDI (deg) | abstain pristine | abstain composites |
 |---|---|---|---|---|---|
-| rule, C1 (shading) | 0.69 [0.58, 0.79] | 0.47 [0.27, 0.87] | 135 | 0.13 | 0.13 |
-| rule, C1+C2 | 0.71 [0.61, 0.81] | 0.67 [0.40, 0.87] | 60 | 0.13 | 0.13 |
-| rule, C1+C2+C3 (default) | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
-| RANK baseline (shading) | 0.64 [0.51, 0.75] | 0.47 [0.20, 0.73] | 180 | 0.13 | 0.12 |
-| KDE calibration off (h=10, T=1) | 0.65 [0.53, 0.78] | 0.27 [0.07, 0.60] | n/a | 0.13 | 0.12 |
-| w_min = 0.25 | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
-| w_min = 0.50 | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
-| no leave-one-out (global consensus) | 0.64 [0.52, 0.76] | 0.33 [0.13, 0.60] | 180 | 0.13 | 0.13 |
-| arbiter (C1+C2+C3) | 0.66 [0.53, 0.79] | 0.07 [0.00, 0.67] | n/a | 0.13 | 0.13 |
+| rule, C1 (shading) | 0.63 [0.52, 0.73] | 0.40 [0.20, 0.80] | 135 | 0.13 | 0.21 |
+| rule, C1+C2 | 0.65 [0.54, 0.74] | 0.60 [0.33, 0.87] | 60 | 0.13 | 0.21 |
+| rule, C1+C2+C3 (default) | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
+| RANK baseline (shading) | 0.57 [0.46, 0.69] | 0.40 [0.13, 0.67] | n/a | 0.13 | 0.20 |
+| KDE calibration off (h=10, T=1) | 0.59 [0.45, 0.72] | 0.20 [0.07, 0.53] | n/a | 0.13 | 0.20 |
+| w_min = 0.25 | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
+| w_min = 0.50 | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
+| no leave-one-out (global consensus) | 0.58 [0.46, 0.70] | 0.27 [0.07, 0.53] | 180 | 0.13 | 0.21 |
+| arbiter (C1+C2+C3) | 0.60 [0.48, 0.73] | 0.13 [0.00, 0.67] | n/a | 0.13 | 0.21 |
 | region backend gt | 0.67 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.00 | 0.00 |
-| region backend slic | 0.78 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.00 | 0.00 |
+| region backend slic | 0.78 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.67 | 0.33 |
 
 Suite quick; region-backend rows on 3+3 scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -302,19 +315,19 @@ tried. Seven images prove nothing either way: real-photo use needs a recalibrati
 
 | tier | n | detected, shading only | detected, all cues | mean abs dY |
 |---|---|---|---|---|
-| T0 naive paste | 24 | 0.42 | 0.54 | - |
-| T1 colour transfer | 22 | 0.45 | 0.45 | 0.239 |
-| T3a re-shade (exact light) | 22 | 0.00 | 0.05 | 0.151 |
-| T3a re-shade (±5° error) | 22 | 0.00 | 0.09 | 0.149 |
-| T3a re-shade (±10° error) | 22 | 0.00 | 0.09 | 0.149 |
-| T3a re-shade (±20° error) | 22 | 0.00 | 0.05 | 0.140 |
-| T3a re-shade (±40° error) | 22 | 0.14 | 0.18 | 0.122 |
-| T3a re-shade (exact light, independent normals) | 22 | 0.05 | 0.09 | 0.154 |
-| T3a re-shade (±5° error, independent normals) | 22 | 0.05 | 0.05 | 0.152 |
-| T3a re-shade (±10° error, independent normals) | 22 | 0.09 | 0.09 | 0.151 |
-| T3a re-shade (±20° error, independent normals) | 22 | 0.09 | 0.09 | 0.142 |
-| T3a re-shade (±40° error, independent normals) | 22 | 0.18 | 0.18 | 0.122 |
-| T4 adaptive (white box) | 22 | 0.00 | 0.05 | 0.164 |
+| T0 naive paste | 24 | 0.67 | 0.62 | - |
+| T1 colour transfer | 23 | 0.70 | 0.65 | 0.240 |
+| T3a re-shade (exact light) | 23 | 0.26 | 0.22 | 0.150 |
+| T3a re-shade (±5° error) | 23 | 0.26 | 0.26 | 0.148 |
+| T3a re-shade (±10° error) | 23 | 0.26 | 0.22 | 0.147 |
+| T3a re-shade (±20° error) | 23 | 0.30 | 0.22 | 0.140 |
+| T3a re-shade (±40° error) | 23 | 0.26 | 0.26 | 0.127 |
+| T3a re-shade (exact light, independent normals) | 23 | 0.26 | 0.26 | 0.152 |
+| T3a re-shade (±5° error, independent normals) | 23 | 0.26 | 0.26 | 0.151 |
+| T3a re-shade (±10° error, independent normals) | 23 | 0.30 | 0.26 | 0.148 |
+| T3a re-shade (±20° error, independent normals) | 23 | 0.30 | 0.26 | 0.144 |
+| T3a re-shade (±40° error, independent normals) | 23 | 0.30 | 0.26 | 0.129 |
+| T4 adaptive (white box) | 23 | 0.22 | 0.22 | 0.158 |
 
 Suite: quick. Synthetic scenes, simulated normals that do not react to the edit (best case for the attacker); detection = SUSPICIOUS at the calibrated tau; pooled over car, distractor and dent targets (delta 90-135 deg); suite 'quick'.
 
@@ -322,58 +335,58 @@ Suite: quick. Synthetic scenes, simulated normals that do not react to the edit 
 
 | tier | target | n | TPR@tau C1 | TPR@tau all cues | defence recovery | TPR@5%FPR all cues | mean |dY| | 1-SSIM |
 |---|---|---|---|---|---|---|---|---|
-| T0 naive paste | car | 8 | 0.50 | 0.88 | 0.38 | 0.50 | n/a | n/a |
-| T0 naive paste | distractor | 8 | 0.75 | 0.75 | 0.00 | 0.50 | n/a | n/a |
-| T0 naive paste | dent | 8 | 0.00 | 0.00 | 0.00 | 0.00 | n/a | n/a |
-| T0 naive paste | all | 24 | 0.42 | 0.54 | 0.12 | 0.33 | n/a | n/a |
-| T1 colour transfer | car | 8 | 0.50 | 0.50 | 0.00 | 0.50 | 0.190 | 0.253 |
-| T1 colour transfer | distractor | 7 | 0.86 | 0.86 | 0.00 | 0.57 | 0.180 | 0.188 |
-| T1 colour transfer | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.354 | 0.481 |
-| T1 colour transfer | all | 22 | 0.45 | 0.45 | 0.00 | 0.36 | 0.239 | 0.305 |
-| T3a re-shade (exact light) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.182 | 0.468 |
-| T3a re-shade (exact light) | distractor | 7 | 0.00 | 0.14 | 0.14 | 0.14 | 0.207 | 0.499 |
-| T3a re-shade (exact light) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.060 | 0.201 |
-| T3a re-shade (exact light) | all | 22 | 0.00 | 0.05 | 0.05 | 0.05 | 0.151 | 0.393 |
-| T3a re-shade (±5° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.179 | 0.463 |
-| T3a re-shade (±5° error) | distractor | 7 | 0.00 | 0.29 | 0.29 | 0.14 | 0.206 | 0.501 |
-| T3a re-shade (±5° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.059 | 0.198 |
-| T3a re-shade (±5° error) | all | 22 | 0.00 | 0.09 | 0.09 | 0.05 | 0.149 | 0.391 |
-| T3a re-shade (±10° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.179 | 0.463 |
-| T3a re-shade (±10° error) | distractor | 7 | 0.00 | 0.29 | 0.29 | 0.14 | 0.203 | 0.494 |
-| T3a re-shade (±10° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.062 | 0.203 |
-| T3a re-shade (±10° error) | all | 22 | 0.00 | 0.09 | 0.09 | 0.05 | 0.149 | 0.390 |
-| T3a re-shade (±20° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.172 | 0.456 |
-| T3a re-shade (±20° error) | distractor | 7 | 0.00 | 0.14 | 0.14 | 0.00 | 0.188 | 0.496 |
-| T3a re-shade (±20° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.055 | 0.198 |
-| T3a re-shade (±20° error) | all | 22 | 0.00 | 0.05 | 0.05 | 0.00 | 0.140 | 0.387 |
-| T3a re-shade (±40° error) | car | 8 | 0.25 | 0.25 | 0.00 | 0.12 | 0.154 | 0.416 |
-| T3a re-shade (±40° error) | distractor | 7 | 0.14 | 0.29 | 0.14 | 0.14 | 0.162 | 0.416 |
-| T3a re-shade (±40° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.047 | 0.162 |
-| T3a re-shade (±40° error) | all | 22 | 0.14 | 0.18 | 0.05 | 0.09 | 0.122 | 0.335 |
-| T3a re-shade (exact light, independent normals) | car | 8 | 0.00 | 0.12 | 0.12 | 0.00 | 0.180 | 0.461 |
-| T3a re-shade (exact light, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.213 | 0.500 |
-| T3a re-shade (exact light, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.215 |
-| T3a re-shade (exact light, independent normals) | all | 22 | 0.05 | 0.09 | 0.05 | 0.05 | 0.154 | 0.395 |
-| T3a re-shade (±5° error, independent normals) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.177 | 0.459 |
-| T3a re-shade (±5° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.211 | 0.495 |
-| T3a re-shade (±5° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.213 |
-| T3a re-shade (±5° error, independent normals) | all | 22 | 0.05 | 0.05 | 0.00 | 0.05 | 0.152 | 0.392 |
-| T3a re-shade (±10° error, independent normals) | car | 8 | 0.12 | 0.12 | 0.00 | 0.00 | 0.177 | 0.464 |
-| T3a re-shade (±10° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.206 | 0.494 |
-| T3a re-shade (±10° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.212 |
-| T3a re-shade (±10° error, independent normals) | all | 22 | 0.09 | 0.09 | 0.00 | 0.05 | 0.151 | 0.393 |
-| T3a re-shade (±20° error, independent normals) | car | 8 | 0.12 | 0.12 | 0.00 | 0.12 | 0.172 | 0.447 |
-| T3a re-shade (±20° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.187 | 0.491 |
-| T3a re-shade (±20° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.064 | 0.205 |
-| T3a re-shade (±20° error, independent normals) | all | 22 | 0.09 | 0.09 | 0.00 | 0.09 | 0.142 | 0.384 |
-| T3a re-shade (±40° error, independent normals) | car | 8 | 0.25 | 0.25 | 0.00 | 0.12 | 0.151 | 0.419 |
-| T3a re-shade (±40° error, independent normals) | distractor | 7 | 0.29 | 0.29 | 0.00 | 0.14 | 0.164 | 0.412 |
-| T3a re-shade (±40° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.047 | 0.175 |
-| T3a re-shade (±40° error, independent normals) | all | 22 | 0.18 | 0.18 | 0.00 | 0.09 | 0.122 | 0.339 |
-| T4 adaptive (white box) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.184 | 0.470 |
-| T4 adaptive (white box) | distractor | 7 | 0.00 | 0.00 | 0.00 | 0.14 | 0.210 | 0.504 |
-| T4 adaptive (white box) | dent | 7 | 0.00 | 0.14 | 0.14 | 0.00 | 0.097 | 0.234 |
-| T4 adaptive (white box) | all | 22 | 0.00 | 0.05 | 0.05 | 0.05 | 0.164 | 0.406 |
+| T0 naive paste | car | 8 | 0.75 | 0.62 | -0.12 | 0.75 | n/a | n/a |
+| T0 naive paste | distractor | 8 | 0.62 | 0.62 | 0.00 | 0.62 | n/a | n/a |
+| T0 naive paste | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | n/a | n/a |
+| T0 naive paste | all | 24 | 0.67 | 0.62 | -0.04 | 0.46 | n/a | n/a |
+| T1 colour transfer | car | 8 | 0.88 | 0.75 | -0.12 | 0.88 | 0.190 | 0.253 |
+| T1 colour transfer | distractor | 7 | 0.71 | 0.71 | 0.00 | 0.71 | 0.180 | 0.188 |
+| T1 colour transfer | dent | 8 | 0.50 | 0.50 | 0.00 | 0.00 | 0.342 | 0.506 |
+| T1 colour transfer | all | 23 | 0.70 | 0.65 | -0.04 | 0.52 | 0.240 | 0.321 |
+| T3a re-shade (exact light) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.181 | 0.463 |
+| T3a re-shade (exact light) | distractor | 7 | 0.14 | 0.00 | -0.14 | 0.00 | 0.218 | 0.519 |
+| T3a re-shade (exact light) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.059 | 0.197 |
+| T3a re-shade (exact light) | all | 23 | 0.26 | 0.22 | -0.04 | 0.00 | 0.150 | 0.388 |
+| T3a re-shade (±5° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.177 | 0.455 |
+| T3a re-shade (±5° error) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.219 | 0.519 |
+| T3a re-shade (±5° error) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.058 | 0.192 |
+| T3a re-shade (±5° error) | all | 23 | 0.26 | 0.26 | 0.00 | 0.04 | 0.148 | 0.383 |
+| T3a re-shade (±10° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.178 | 0.460 |
+| T3a re-shade (±10° error) | distractor | 7 | 0.14 | 0.00 | -0.14 | 0.00 | 0.213 | 0.503 |
+| T3a re-shade (±10° error) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.059 | 0.195 |
+| T3a re-shade (±10° error) | all | 23 | 0.26 | 0.22 | -0.04 | 0.00 | 0.147 | 0.381 |
+| T3a re-shade (±20° error) | car | 8 | 0.12 | 0.00 | -0.12 | 0.00 | 0.175 | 0.443 |
+| T3a re-shade (±20° error) | distractor | 7 | 0.14 | 0.00 | -0.14 | 0.00 | 0.194 | 0.507 |
+| T3a re-shade (±20° error) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.058 | 0.196 |
+| T3a re-shade (±20° error) | all | 23 | 0.30 | 0.22 | -0.09 | 0.00 | 0.140 | 0.377 |
+| T3a re-shade (±40° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.163 | 0.428 |
+| T3a re-shade (±40° error) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.176 | 0.432 |
+| T3a re-shade (±40° error) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.048 | 0.173 |
+| T3a re-shade (±40° error) | all | 23 | 0.26 | 0.26 | 0.00 | 0.04 | 0.127 | 0.341 |
+| T3a re-shade (exact light, independent normals) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.181 | 0.460 |
+| T3a re-shade (exact light, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.215 | 0.501 |
+| T3a re-shade (exact light, independent normals) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.068 | 0.207 |
+| T3a re-shade (exact light, independent normals) | all | 23 | 0.26 | 0.26 | 0.00 | 0.04 | 0.152 | 0.385 |
+| T3a re-shade (±5° error, independent normals) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.178 | 0.448 |
+| T3a re-shade (±5° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.216 | 0.496 |
+| T3a re-shade (±5° error, independent normals) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.067 | 0.205 |
+| T3a re-shade (±5° error, independent normals) | all | 23 | 0.26 | 0.26 | 0.00 | 0.04 | 0.151 | 0.378 |
+| T3a re-shade (±10° error, independent normals) | car | 8 | 0.12 | 0.00 | -0.12 | 0.00 | 0.178 | 0.462 |
+| T3a re-shade (±10° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.206 | 0.492 |
+| T3a re-shade (±10° error, independent normals) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.068 | 0.210 |
+| T3a re-shade (±10° error, independent normals) | all | 23 | 0.30 | 0.26 | -0.04 | 0.04 | 0.148 | 0.383 |
+| T3a re-shade (±20° error, independent normals) | car | 8 | 0.12 | 0.00 | -0.12 | 0.00 | 0.176 | 0.438 |
+| T3a re-shade (±20° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.194 | 0.480 |
+| T3a re-shade (±20° error, independent normals) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.068 | 0.208 |
+| T3a re-shade (±20° error, independent normals) | all | 23 | 0.30 | 0.26 | -0.04 | 0.04 | 0.144 | 0.371 |
+| T3a re-shade (±40° error, independent normals) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.160 | 0.429 |
+| T3a re-shade (±40° error, independent normals) | distractor | 7 | 0.29 | 0.14 | -0.14 | 0.14 | 0.176 | 0.428 |
+| T3a re-shade (±40° error, independent normals) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.056 | 0.191 |
+| T3a re-shade (±40° error, independent normals) | all | 23 | 0.30 | 0.26 | -0.04 | 0.04 | 0.129 | 0.346 |
+| T4 adaptive (white box) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.180 | 0.458 |
+| T4 adaptive (white box) | distractor | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.221 | 0.522 |
+| T4 adaptive (white box) | dent | 8 | 0.62 | 0.62 | 0.00 | 0.00 | 0.081 | 0.213 |
+| T4 adaptive (white box) | all | 23 | 0.22 | 0.22 | 0.00 | 0.00 | 0.158 | 0.392 |
 
 Suite quick. the defender's simulated normals are independent of the edit (best case for the attacker); an attacked region that becomes not assessable counts as passing. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -383,9 +396,10 @@ Suite quick. the defender's simulated normals are independent of the edit (best 
 
 Colour and brightness harmonisation (T1) leaves the pooled detection rate about where it was, although with the
 least-squares cue it can flip individual cases (the spliced-car demo passes after colour transfer; the rank cue
-was immune to that by construction). A physics re-shade (T3a) defeats the detector almost completely, even when
+was immune to that by construction). A physics re-shade (T3a) of a whole object (car, distractor) defeats the detector almost completely, even when
 the forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a
-few percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
+few percent. Pasted dents behave differently: the panel comparison keeps flagging them after T3a and T4,
+because re-shading the dent with its own curve does not make it match the panel around it. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
 forger's cost. Caveat: the defender's simulated normals do not react to the edit, the best case for the attacker.
 
 ## 7 Limitations and ethics
@@ -397,8 +411,9 @@ forger's cost. Caveat: the defender's simulated normals do not react to the edit
 *I9. The four verdicts and the recommended action.*
 
 Further limits found in this work: the rank cue we proposed loses to a simple least-squares fit; the alarm level
-that keeps false alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents
-carry too little evidence; overcast and two-light scenes are not recognised as such. A tool like this must not
+that keeps false alarms at 5% on synthetic scenes misses many splices; a dent that faces away from both lights
+looks the same under either and cannot be detected; two-light scenes are not recognised; under diffuse light
+the tool abstains, so nothing is checked. A tool like this must not
 be used to accuse anyone: it produces one signal for a human reviewer.
 
 ## 8 Conclusion
@@ -406,9 +421,11 @@ be used to accuse anyone: it produces one signal for a human reviewer.
 We built a complete, inspectable lighting-consistency auditor with an interactive 3D evidence viewer and a
 self-attack lab, and evaluated it honestly. The viewer and the analysis-by-synthesis views do what they were
 designed to do. The detector itself is modest: the rank cue we proposed was less accurate than least squares
-and was replaced as the default, detection still needs large lighting discrepancies, re-shading defeats it, and
-real-photo behaviour is untested beyond seven images. The most useful next steps are a full-size evaluation,
-calibration and testing on real photos, and an explicit test for soft or multiple light sources.
+and was replaced as the default, detection of whole pasted objects still needs large lighting discrepancies and
+is defeated by re-shading, and real-photo behaviour is untested beyond seven images. The two checks added late,
+soft-light abstention and the panel comparison for damage regions, fixed the two failures they target. The most
+useful next steps are a full-size evaluation, calibration and testing on real photos, and a test for multiple
+light sources.
 
 ## References
 

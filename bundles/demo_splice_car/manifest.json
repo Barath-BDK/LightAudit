@@ -37,6 +37,8 @@
   "w_contour": 0.5,
   "min_reliable": 3,
   "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 3.91642,
   "source": "calib_default.json"
  },
  "regions": [
@@ -68,6 +70,8 @@
     "f_dir": 0.0,
     "f_norm": 0.82945
    },
+   "contrast": 0.92727,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -148,6 +152,8 @@
     "f_dir": 1.0,
     "f_norm": 0.81192
    },
+   "contrast": 0.11033,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -222,6 +228,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -296,6 +304,8 @@
    "reliable": false,
    "reason": "glass or tyre (not a diffuse surface)",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -370,6 +380,8 @@
    "reliable": false,
    "reason": "smaller than the minimum region size",
    "factors": null,
+   "contrast": null,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -450,6 +462,8 @@
     "f_dir": 1.0,
     "f_norm": 0.81971
    },
+   "contrast": 0.61364,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -532,6 +546,8 @@
     "f_dir": 1.0,
     "f_norm": 0.71436
    },
+   "contrast": 0.12066,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -614,6 +630,8 @@
     "f_dir": 1.0,
     "f_norm": 0.85598
    },
+   "contrast": 0.32946,
+   "panel_z": null,
    "cues": [
     "shading",
     "contour"
@@ -696,6 +714,8 @@
     "f_dir": 1.0,
     "f_norm": 0.83862
    },
+   "contrast": 0.26019,
+   "panel_z": null,
    "cues": [
     "shading"
    ],
@@ -826,6 +846,12 @@
     "flagged": false
    }
   ],
+  "soft_light": {
+   "contrast": 0.26019,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "panel_flagged": [],
   "text": "The estimate for **car body** points 86\u00b0 away from where 4 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
  },
  "baseline_ls": {
@@ -906,6 +932,12 @@
      "flagged": false
     }
    ],
+   "soft_light": {
+    "contrast": 0.26019,
+    "threshold": 0.42476,
+    "abstain": false
+   },
+   "panel_flagged": [],
    "text": "5 regions agree on one light direction (about 18\u00b0 azimuth, 30\u00b0 elevation). The largest disagreement is car body at 53\u00b0 (below the alert level)."
   },
   "regions": [
@@ -1082,5 +1114,5 @@
   }
  ],
  "backends_log": [],
- "created": "2026-11-14T11:54:22+00:00"
+ "created": "2026-11-14T14:00:12+00:00"
 }

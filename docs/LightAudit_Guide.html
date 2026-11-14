@@ -93,6 +93,8 @@ SUSPICIOUS. Too little evidence gives INSUFFICIENT; references that disagree amo
 <figure><img src="figures/viewer_residual.png"><figcaption>Residual view: where the image does not match what the consensus light predicts.</figcaption></figure>
 <figure><img src="figures/viewer_explain.png"><figcaption>Explain stepper: how the verdict was made, in seven steps.</figcaption></figure>
 <figure><img src="figures/viewer_attack.png"><figcaption>Attack lab: the fake is re-shaded to match the scene and audited again.</figcaption></figure>
+<figure><img src="figures/viewer_dent.png"><figcaption>Damage photo: the pasted dent is flagged because its brightness does not follow the panel around it.</figcaption></figure>
+<figure><img src="figures/viewer_overcast.png"><figcaption>Overcast scene: the tool abstains ("the light looks diffuse").</figcaption></figure>
 <figure><img src="figures/viewer_real.png"><figcaption>Real photo (unedited Peugeot), audited with two surface-direction models.</figcaption></figure>
 <figure><img src="figures/viewer_real_splice.png"><figcaption>Real splice: part of the Peugeot photo pasted into a car-park photo. With the current settings it is not flagged.</figcaption></figure>
 
@@ -105,21 +107,22 @@ accurate (22&ndash;26&deg; median error against 6&ndash;8&deg;) and is kept only
 <tr><td>Clean sunny scene</td><td>CONSISTENT</td><td class="ok">CONSISTENT</td></tr>
 <tr><td>Car pasted from another light (120&deg;)</td><td>SUSPICIOUS</td><td class="ok">SUSPICIOUS</td></tr>
 <tr><td>Genuine dent</td><td>CONSISTENT</td><td class="ok">CONSISTENT</td></tr>
-<tr><td>Dent pasted from another light</td><td>SUSPICIOUS</td><td class="ok">SUSPICIOUS (took 10 scenes to find one that is caught)</td></tr>
+<tr><td>Dent pasted from another light</td><td>SUSPICIOUS</td><td class="ok">SUSPICIOUS (caught by the new panel check)</td></tr>
 <tr><td>Two suns</td><td>CONFLICT</td><td class="bad">CONSISTENT</td></tr>
-<tr><td>Overcast</td><td>INSUFFICIENT</td><td class="ok">INSUFFICIENT (took 12 scenes)</td></tr>
+<tr><td>Overcast</td><td>INSUFFICIENT</td><td class="ok">INSUFFICIENT ("the light looks diffuse")</td></tr>
 <tr><td>Failure example: 120&deg; splice</td><td>a miss, on purpose</td><td>CONSISTENT (missed)</td></tr>
 </table>
 <h3>Evaluation (quick suite: 5&ndash;15 scenes per cell, so provisional)</h3>
 <table>
 <tr><th>Question</th><th>Result</th></tr>
-<tr><td>Detection of a pasted car (AUC, 0.5 = chance)</td><td>0.67&ndash;0.71 with least squares; 0.64 with the rank baseline. A separate 40-scene check at 90&deg;: 0.83 against 0.75</td></tr>
+<tr><td>Detection of a pasted car (AUC, 0.5 = chance)</td><td>0.62&ndash;0.71 with least squares across two quick runs; 0.57&ndash;0.64 with the rank baseline. A separate 40-scene check at 90&deg;: 0.83 against 0.75</td></tr>
 <tr><td>Clean scenes wrongly flagged / spliced scenes caught</td><td class="ok">0 of 5 &nbsp;/&nbsp; 3 of 5</td></tr>
-<tr><td>Detection of a pasted dent</td><td class="bad">about 0.40, at chance</td></tr>
+<tr><td>Pasted dent flagged (new panel check)</td><td class="ok">5 of 8, and still 5 of 8 after the re-shade attack; before the check 0 of 8</td></tr>
 <tr><td>Calibration: does the 68% / 95% region contain the true light?</td><td class="ok">0.64 / 0.89 on test scenes</td></tr>
 <tr><td>Attack by colour matching</td><td>pooled detection unchanged (0.45), but it flips the spliced-car demo</td></tr>
 <tr><td>Attack by re-shading to the scene light</td><td class="bad">detection falls to 0&ndash;0.05</td></tr>
-<tr><td>Overcast and two-light scenes</td><td class="bad">mostly not recognised as such</td></tr>
+<tr><td>Overcast scenes</td><td class="ok">4 of 5 now return INSUFFICIENT (before: 0 of 5)</td></tr>
+<tr><td>Two-light scenes</td><td class="bad">still not recognised</td></tr>
 </table>
 <h3>Real photos (now with two surface-direction models, DSINE and Depth Anything)</h3>
 <table>
@@ -133,16 +136,14 @@ the splice is missed. Seven images are not evidence either way.</p>
 
 <h2>6. Where we are struggling</h2>
 <ol>
-<li><b>Detection needs large lighting differences</b> (roughly 60&ndash;135&deg; for half of the pasted cars to be caught), and
-small shallow regions such as dents carry too little evidence.</li>
+<li><b>Detection of whole pasted objects needs large lighting differences</b> (roughly 60&ndash;135&deg; for half of the pasted cars to be caught).</li>
 <li><b>The alert threshold is close to the top of the scale</b> (6.35 of about 6.9). Clean scenes often contain one
 region that disagrees strongly, so keeping false alarms at 5% leaves little room to flag anything.</li>
 <li><b>Per-region light estimates are noisy</b>: about 25&deg; median error once the surface directions carry realistic
 noise. Poles and flat-faced buildings are the worst.</li>
-<li><b>Re-shading defeats it.</b> The highlight and silhouette cues were meant to catch this and recover almost nothing.</li>
+<li><b>Re-shading a whole object defeats it.</b> The highlight and silhouette cues recover almost nothing. (Pasted dents are different: the panel check still catches them after re-shading.)</li>
 <li><b>Least squares can be nudged by colour matching</b>, which the rank cue could not.</li>
-<li><b>Overcast and two-light scenes</b> are usually called CONSISTENT. Soft sky light shades a surface almost like a
-broad light from above, so shading alone cannot separate them.</li>
+<li><b>Two-light scenes</b> are usually called CONSISTENT; a test for a second light was tried and did not work. Under overcast light the tool now abstains, so nothing is checked there.</li>
 <li><b>Real photos are untested</b> beyond seven images, with a threshold calibrated on synthetic scenes.</li>
 <li><b>Evidence is thin:</b> only the quick evaluation has been run.</li>
 </ol>
@@ -154,10 +155,10 @@ broad light from above, so shading alone cannot separate them.</li>
 <tr><td>2</td><td>Collect 20+ unedited real photos and recalibrate the alert threshold on them (<code>tools/calibrate_on_folder.py</code>)</td><td>The synthetic threshold does not transfer</td><td>about 2 h of CPU</td></tr>
 <tr><td>3</td><td>Build a small real test set: 10 clean photos and 10 splices</td><td>To measure real-photo accuracy instead of guessing</td><td>half a day</td></tr>
 <tr><td>4</td><td>Down-weight shapes that leave the light direction unconstrained (poles, flat-faced boxes)</td><td>They cause most false disagreement in clean scenes</td><td>a day</td></tr>
-<tr><td>5</td><td>Add a cast-shadow check for soft or multiple lights</td><td>Shading alone cannot detect overcast or two suns</td><td>a few days</td></tr>
+<tr><td>5</td><td>Add a cast-shadow check for multiple lights</td><td>Shading alone did not reveal a second sun</td><td>a few days</td></tr>
 <tr><td>6</td><td>Decide whether the silhouette cue stays in the default</td><td>In the quick suite it did not help</td><td>after step 1</td></tr>
 </table>
-<p>Done since the first version: least squares made the default cue, DSINE running on CPU, real photos re-audited
+<p>Done since the first version: a soft-light test (overcast now returns INSUFFICIENT), a dent-against-panel check for damage photos, least squares made the default cue, DSINE running on CPU, real photos re-audited
 with both surface-direction models. Tried and dropped: a different way of building the light maps, which gave no gain.</p>
 
 <h2>8. Fixed in this step</h2>

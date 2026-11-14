@@ -83,9 +83,11 @@ An interactive WebGL viewer shows the evidence on a 3D light dome and re-lights 
 module re-shades a pasted region to measure how easily the check is defeated. The rank cue we proposed turned
 out to be about three times **less** accurate than a simple least-squares shading fit, so least squares is now
 the default cue and the rank cue is kept as the evaluated baseline. With it the system detects a pasted car lit
-from 120 degrees away in the demo, but measured detection rates remain modest, a physics re-shade defeats the
-detector almost completely, pasted dents are not detected, and real-photo results are qualitative only. We
-report these results as they are.
+from 120 degrees away in the demo, but measured detection rates remain modest and a physics re-shade of a whole
+object defeats the detector. Two checks were added after the first evaluation: a soft-light test that returns
+INSUFFICIENT under diffuse light, and a comparison of a damage region with the panel around it, which detects
+pasted dents that the direction test misses and survives the re-shade attack. Scenes with two lights are not
+recognised, and real-photo results are qualitative only. We report these results as they are.
 
 ## 1 Introduction and problem
 
@@ -133,6 +135,11 @@ The full derivation is in [docs/METHOD.md](../docs/METHOD.md). In brief:
 - **Fusion and verdict.** Weighted sum of log maps, leave-one-out consensus, shortfall
   `s_k = -ln(eps + A_k(l*_-k))`.
   {fig("shortfall_diagram.png", "I6. Leave-one-out consensus and shortfall.")}
+- **Two scene-level checks** (added after the first evaluation; METHOD.md section 8.1). *Soft light:* if the
+  median shading contrast (P10/P90 of linearised luminance) of the reliable regions is above a calibrated
+  threshold, the light is too diffuse to carry a direction and the verdict is INSUFFICIENT. *Panel residual:*
+  in panel mode the ROI's brightness is predicted from the shading curve of the panel around it; a mean
+  residual above a calibrated number of robust sigmas flags the ROI.
 - **Calibration.** h and T are chosen for nominal coverage; the alarm level is the split-conformal quantile of
   pristine calibration scenes.
   {fig("conformal.png", "I7. Conformal alarm level.")}
@@ -171,6 +178,9 @@ pristine calibration scenes return INSUFFICIENT.
 
 {fig("F3_calibration.png", "F3. Reliability diagram on the test split.")}
 
+The soft-light threshold is {c.get('soft_contrast', float('nan')):.2f} and the panel alert level is
+{c.get('tau_panel_05', float('nan')):.2f} (from {c.get('n_panel', 0)} unedited damage scenes); the INSUFFICIENT rate
+above includes the roughly 5% of sunny scenes that the soft-light test abstains on by construction.
 These are the values for the least-squares cue. The alarm level is close to the maximum possible shortfall
 (about 6.9): clean scenes often contain one region that disagrees strongly, so a 5% false-alarm rate forces a
 high threshold. For comparison the rank cue calibrated to h = 18, T = 1.5 and an alarm level of 4.95
@@ -209,7 +219,9 @@ changes: in the spliced-car demo a plain colour transfer now lowers the car's sh
 
 In this table C1 is the default least-squares shading cue and RANK is the rank-cue baseline. Detection is
 modest: a pasted car or distractor needs a discrepancy of roughly 60 to 135 degrees to reach 50% detection at 5%
-false alarms, pasted dents are at chance, and the rank baseline is worse than least squares. Adding the glint cue
+false alarms, and the rank baseline is worse than least squares. For dents the AUC column (which scores only
+the direction test) stays at chance, but the verdict now also uses the panel comparison: see the MDI@tau
+column here and the dent rows of the attack table, where a naively pasted dent is flagged in 5 of 8 cases. Adding the glint cue
 helps a little in this sample; adding the silhouette cue does not. With 15 scenes per cell these differences are
 within the confidence intervals; read the exact values from the table.
 
@@ -219,10 +231,11 @@ within the confidence intervals; read the exact values from the table.
 
 {fig("F6_abstention.png", "F6. Verdict distribution by condition.")}
 
-The intended behaviour (overcast gives INSUFFICIENT, two suns give CONFLICT) is mostly **not** observed.
-Soft sky light shades a surface almost like a broad light from above, so overcast scenes keep a consistent "up"
-direction and are usually called CONSISTENT; shading alone cannot tell the two apart, and a splice under
-overcast light is not detected. Two-sun scenes rarely produce CONFLICT. We treat both as limits of the method.
+Overcast scenes are now mostly sent to INSUFFICIENT by the soft-light test (before it was added none were:
+soft sky light shades a surface almost like a broad light from above, so the direction test finds a consistent
+"up"). The cost is that a splice under overcast light is not examined at all. Two-sun scenes are still not
+recognised: they rarely produce CONFLICT, and a test for a second light source that we tried did not separate
+them from one-sun scenes (AUC 0.65 on 30 + 30 calibration scenes), so it was left out.
 
 ### 5.6 Robustness (E7)
 
@@ -269,9 +282,10 @@ tried. Seven images prove nothing either way: real-photo use needs a recalibrati
 
 Colour and brightness harmonisation (T1) leaves the pooled detection rate about where it was, although with the
 least-squares cue it can flip individual cases (the spliced-car demo passes after colour transfer; the rank cue
-was immune to that by construction). A physics re-shade (T3a) defeats the detector almost completely, even when
+was immune to that by construction). A physics re-shade (T3a) of a whole object (car, distractor) defeats the detector almost completely, even when
 the forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a
-few percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
+few percent. Pasted dents behave differently: the panel comparison keeps flagging them after T3a and T4,
+because re-shading the dent with its own curve does not make it match the panel around it. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
 forger's cost. Caveat: the defender's simulated normals do not react to the edit, the best case for the attacker.
 
 ## 7 Limitations and ethics
@@ -281,8 +295,9 @@ forger's cost. Caveat: the defender's simulated normals do not react to the edit
 {fig("triage.png", "I9. The four verdicts and the recommended action.")}
 
 Further limits found in this work: the rank cue we proposed loses to a simple least-squares fit; the alarm level
-that keeps false alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents
-carry too little evidence; overcast and two-light scenes are not recognised as such. A tool like this must not
+that keeps false alarms at 5% on synthetic scenes misses many splices; a dent that faces away from both lights
+looks the same under either and cannot be detected; two-light scenes are not recognised; under diffuse light
+the tool abstains, so nothing is checked. A tool like this must not
 be used to accuse anyone: it produces one signal for a human reviewer.
 
 ## 8 Conclusion
@@ -290,9 +305,11 @@ be used to accuse anyone: it produces one signal for a human reviewer.
 We built a complete, inspectable lighting-consistency auditor with an interactive 3D evidence viewer and a
 self-attack lab, and evaluated it honestly. The viewer and the analysis-by-synthesis views do what they were
 designed to do. The detector itself is modest: the rank cue we proposed was less accurate than least squares
-and was replaced as the default, detection still needs large lighting discrepancies, re-shading defeats it, and
-real-photo behaviour is untested beyond seven images. The most useful next steps are a full-size evaluation,
-calibration and testing on real photos, and an explicit test for soft or multiple light sources.
+and was replaced as the default, detection of whole pasted objects still needs large lighting discrepancies and
+is defeated by re-shading, and real-photo behaviour is untested beyond seven images. The two checks added late,
+soft-light abstention and the panel comparison for damage regions, fixed the two failures they target. The most
+useful next steps are a full-size evaluation, calibration and testing on real photos, and a test for multiple
+light sources.
 
 ## References
 
