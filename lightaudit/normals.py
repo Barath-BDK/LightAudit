@@ -196,7 +196,12 @@ def _run_dsine(rgb: np.ndarray, fov_deg: float) -> np.ndarray:
     img = _small(rgb, 640)
     with torch.no_grad():
         out = model.infer_cv2(np.ascontiguousarray(img[..., ::-1]))  # the hub wrapper takes an OpenCV BGR image
-    return _to_hwc(out)
+    out = np.array(_to_hwc(out), np.float32)
+    # DSINE's x axis points left; ours points right. Verified on the gray calibration sphere of two real scenes
+    # (MIT multi-illumination): median normal error 46 deg as-is, 18-25 deg with x negated. fix_convention cannot
+    # decide x by itself, which is why this is hard-coded here.
+    out[..., 0] *= -1
+    return out
 
 
 def _run_stablenormal(rgb: np.ndarray, fov_deg: float) -> np.ndarray:
@@ -279,7 +284,7 @@ BACKENDS = {"dsine": _run_dsine, "stablenormal": _run_stablenormal, "marigold": 
 def _cached_backend(name: str, rgb: np.ndarray, fov_deg: float, log: list) -> np.ndarray:
     """Run one backend (with on-disk cache) and return convention-fixed normals at the image size."""
     H, W = rgb.shape[:2]
-    path = CACHE / "normals" / f"{name}_{_image_key(rgb, name, round(float(fov_deg), 3))}.npz"
+    path = CACHE / "normals" / f"{name}_v2_{_image_key(rgb, name, round(float(fov_deg), 3))}.npz"  # v2: DSINE x fix
     if path.exists():
         n = np.load(path)["n"].astype(np.float32)
         log.append(f"{name}: loaded cached prediction {path.name}")

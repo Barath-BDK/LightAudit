@@ -3,6 +3,39 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 4 (15 Nov 2026): real-image benchmark and a normals bug
+
+Benchmark: `eval/real_bench.py` on six scenes of the MIT Multi-Illumination dataset (real indoor scenes, 25 light
+directions each, gray + chrome ball in view; fetched into `data/multilum/`, not committed). Regions (SAM) and
+normals are computed once per scene on the mean image; the true light of each image is the least-squares light
+of the gray-ball crop with analytic sphere normals; a lighting-only splice is one region taken from another
+lighting of the same scene.
+
+- **Bug found and fixed:** DSINE's x axis is mirrored relative to the pipeline. On the gray ball its median normal
+  error is 46 deg as delivered and 18-25 deg with x negated (two scenes). `fix_convention` cannot decide x, so the
+  flip is now hard-coded in `normals._run_dsine`. All earlier real-photo results that used DSINE were affected.
+- **The estimator is right on real photos:** with the ball's analytic normals the light error is 1-3 deg in all
+  six scenes. With predicted normals on the same ball: DSINE 17-22 deg in four scenes (57 and 82 in two),
+  Depth Anything 11-27 deg, their mean 14-32 deg (102 in one scene).
+- **Real normal models on the synthetic scenes** (12 scenes, 41 regions): median normal error DSINE 10.1 deg,
+  Depth Anything 15.3, mean of both 11.0, simulated `noisy_gt(8)` 9.4. Median light error: exact normals 9.2 deg,
+  simulated 18.2, DSINE 21.1, mean of both 27.5, Depth Anything 37.3. So the simulated normals used in the
+  synthetic evaluation are about as good as DSINE on those renders; averaging the two models is not better than
+  DSINE alone there.
+- **Simulated splices on the real scenes are near chance:** AUC 0.49-0.59 over estimators (clamped least squares,
+  unclamped first-order SH, chromaticity-cluster variants) and normal sources; 0.64 for splices with a >= 90 deg
+  light difference (Depth Anything normals). Region light estimates are 45-62 deg off the gray-ball light
+  (median) and follow light changes only weakly (r 0.3-0.4).
+- **Why:** almost every region in these scenes is flat. The smallest eigenvalue of the normal covariance is about
+  0 for most regions (a few reach 0.005-0.02; curved synthetic objects sit around 0.006-0.017). A flat region has
+  one orientation and an unknown albedo, so it says nothing about the light direction. The lighting is also
+  near-field bounce light, not a distant sun.
+- **Region-count effect confirmed:** the max correlation-drop score correlates 0.43 with the number of regions per
+  image; a per-region likelihood-ratio test (shared light vs own light, chi-square with 2 dof) with Holm
+  correction removes it (0.09). Implemented in the benchmark (`lr_scores`), not yet in the pipeline.
+- Not yet done: outdoor real photos with ground truth, detection rate vs angle on real splices, rank vs least
+  squares on real images, moving the likelihood-ratio test and the normal-diversity gate into the pipeline.
+
 ## Update 3 (15 Nov 2026): silhouette cue off by default
 
 60-scene check on the calibration split (car pasted at 45 and 90 deg): shading + glints catches 60% of the 90 deg
