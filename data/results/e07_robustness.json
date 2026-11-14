@@ -3,22 +3,22 @@
  "suite": "quick",
  "caveat": "synthetic scenes with simulated normal predictors unless stated",
  "calibration": {
-  "h": 18,
+  "h": 14,
   "T": 1.5,
-  "cov68": 0.6636971046770601,
-  "cov95": 0.9265033407572383,
-  "tau_img_05": 4.945745134208296,
-  "tau_img_10": 4.259643944992111,
+  "cov68": 0.6976744186046512,
+  "cov95": 0.8985200845665962,
+  "tau_img_05": 6.348225106140116,
+  "tau_img_10": 5.530738695362592,
   "w_min": 0.35,
   "n_cal": 200,
   "seeds": [
    1000,
    1199
   ],
-  "date": "2026-11-12",
+  "date": "2026-11-14",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T10:39:49+00:00",
+ "timestamp": "2026-11-14T12:20:01+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "n_pristine": 5,
@@ -30,9 +30,9 @@
   "none:None": {
    "kind": "none",
    "param": null,
-   "tpr_C1": 0.6,
+   "tpr_C1": 0.8,
    "tpr_C1_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_C1": 0.0,
@@ -42,16 +42,16 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.8,
+   "tpr_fused": 0.6,
    "tpr_fused_ci": [
-    0.4,
+    0.2,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
-   "fpr_fused": 0.2,
+   "fpr_fused": 0.0,
    "fpr_fused_ci": [
     0.0,
-    0.6
+    0.0
    ],
    "abstain_pristine_fused": 0.0
   },
@@ -70,9 +70,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.8,
+   "tpr_fused": 0.6,
    "tpr_fused_ci": [
-    0.4,
+    0.2,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -86,9 +86,9 @@
   "jpeg:75": {
    "kind": "jpeg",
    "param": 75,
-   "tpr_C1": 0.6,
+   "tpr_C1": 0.8,
    "tpr_C1_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_C1": 0.0,
@@ -114,9 +114,9 @@
   "jpeg:50": {
    "kind": "jpeg",
    "param": 50,
-   "tpr_C1": 0.6,
+   "tpr_C1": 0.8,
    "tpr_C1_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_C1": 0.0,
@@ -126,16 +126,16 @@
     0.6
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
-   "fpr_fused": 0.0,
+   "fpr_fused": 0.2,
    "fpr_fused_ci": [
     0.0,
-    0.0
+    0.6
    ],
    "abstain_pristine_fused": 0.0
   },
@@ -154,9 +154,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -182,12 +182,12 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.2,
+   "tpr_fused": 0.4,
    "tpr_fused_ci": [
     0.0,
-    0.6
+    0.8
    ],
-   "abstain_spliced_fused": 0.4,
+   "abstain_spliced_fused": 0.2,
    "fpr_fused": 0.0,
    "fpr_fused_ci": [
     0.0,
@@ -198,10 +198,10 @@
   "resize:0.5": {
    "kind": "resize",
    "param": 0.5,
-   "tpr_C1": 0.2,
+   "tpr_C1": 0.4,
    "tpr_C1_ci": [
     0.0,
-    0.6
+    0.8
    ],
    "abstain_spliced_C1": 0.6,
    "fpr_C1": 0.0,
@@ -266,10 +266,10 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.4,
    "tpr_fused_ci": [
-    0.2,
-    1.0
+    0.0,
+    0.8
    ],
    "abstain_spliced_fused": 0.0,
    "fpr_fused": 0.2,
@@ -294,10 +294,10 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.4,
+   "tpr_fused": 0.6,
    "tpr_fused_ci": [
-    0.0,
-    0.8
+    0.2,
+    1.0
    ],
    "abstain_spliced_fused": 0.0,
    "fpr_fused": 0.0,
@@ -338,10 +338,10 @@
   "tone:gamma1.5": {
    "kind": "tone",
    "param": "gamma1.5",
-   "tpr_C1": 0.4,
+   "tpr_C1": 0.6,
    "tpr_C1_ci": [
-    0.0,
-    0.8
+    0.2,
+    1.0
    ],
    "abstain_spliced_C1": 0.0,
    "fpr_C1": 0.0,
@@ -350,9 +350,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -406,9 +406,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.6,
-   "tpr_fused": 0.8,
+   "tpr_fused": 0.6,
    "tpr_fused_ci": [
-    0.4,
+    0.2,
     1.0
    ],
    "abstain_spliced_fused": 0.0,

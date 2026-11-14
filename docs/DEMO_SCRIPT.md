@@ -1,7 +1,8 @@
 # Demo script (about 5 minutes)
 
-All verdicts and numbers below are the ones stored in the built bundles (`bundles/*/manifest.json`,
-calibration h = 18°, T = 1.5, alert level 4.95). If you rebuild the bundles, re-check them.
+All verdicts and numbers below are the ones stored in the built bundles (`bundles/*/manifest.json`), made with
+the least-squares shading cue (calibration h = 14°, T = 1.5, alert level 6.35; the largest possible score is
+about 6.9). If you rebuild the bundles, re-check them.
 
 Start: `.\.venv\Scripts\python.exe -m lightaudit.cli serve`, open `http://127.0.0.1:8000`.
 The first load of a bundle takes a few seconds.
@@ -10,35 +11,32 @@ The first load of a bundle takes a few seconds.
 
 Say: "LightAudit checks one physical thing: does a single light direction explain every part of the photo?
 It is not an AI-image detector, and a flag only means *send for human review*."
-Point at the verdict chips on the cards: four possible outcomes.
 
 ## 1. Clean scene — `Clean sunny scene` (30 s)
 
-- Verdict **CONSISTENT**, image score 0.77 against the alert level 4.95, 3 reliable regions.
+- Verdict **CONSISTENT**, image score 0.81 against the alert level 6.35, 3 reliable regions.
 - On the dome, the cones of the regions overlap around the consensus marker.
-- Region table: ground is "unreliable" (flat surface, no directional information); windows and wheels are
-  excluded (glass and tyres are not diffuse). Say that the tool states what it could not use.
+- Region table: ground is "unreliable" (flat, no directional information); windows and wheels are excluded
+  (glass and tyres are not diffuse). The tool states what it could not use.
 
 ## 2. Spliced car — `Car pasted from another light` (90 s)
 
 The car was rendered under a light 120° away from the scene's sun and pasted in.
 
-- Verdict **SUSPICIOUS**: car body, shortfall 5.91 > 4.95; its estimate is 90° away from where the 4 other
+- Verdict **SUSPICIOUS**: car body, shortfall 6.86 > 6.35; its estimate is 86° away from where the other
   regions agree.
-- Dome: click the car body row. Its light map sits on the other side of the sphere from the consensus.
-- Press `5` (Residual): the heat map shows where the car does not fit the consensus light. The small note under
-  the image confirms that the live shader reproduces the exported heat map.
+- Dome: click the car body row. Its light map sits far from the consensus.
+- Press `5` (Residual): the heat map shows where the car does not fit the consensus light.
 - Press `4` (Counterfactual): how the car would look under the consensus light.
-- Press `3` (Relit) and drag the orange handle on the dome: the image re-lights live, and the "at your light"
-  bars in the table show which regions like that direction. "Snap to selected" puts the light where the car
-  thinks it is; the other regions' bars collapse.
+- Press `3` (Relit) and move the orange light (arrow keys or drag): the image re-lights live, and the
+  "at your light" bars show which regions like that direction.
 - Untick the car body row: the live fusion recomputes and the verdict changes. Tick it again.
+- "Audit cue / Baseline cue" above the dome switches between the least-squares maps and the rank-cue maps.
 
 ## 3. Explain stepper — press `E` (40 s)
 
 Walk the seven steps: photo → regions → surface directions → usable pixels → per-region light maps → do they
-overlap → where it does not fit. Stop at the tone-curve illustration: the shading cue only uses the *rank
-order* of brightness, so gamma, tone mapping and exposure do not matter.
+overlap → where it does not fit.
 
 ## 4. Attack lab — press `A` (60 s)
 
@@ -46,52 +44,47 @@ order* of brightness, so gamma, tone mapping and exposure do not matter.
 
 | Attack | Verdict after | Car body off the consensus | Shortfall |
 |---|---|---|---|
-| none (T0) | SUSPICIOUS | 90° | 5.9 |
-| T1 colour transfer | SUSPICIOUS | 92° | 6.9 |
-| T3a re-shade, exact light | CONSISTENT | 16° | 0.2 |
-| T3a re-shade, ±10° error | CONSISTENT | 9° | 0.2 |
-| T3a re-shade, ±20° error | CONSISTENT | 20° | 0.8 |
-| T4 adaptive | CONSISTENT | 10° | 0.1 |
+| none (T0) | SUSPICIOUS | 86° | 6.9 |
+| T1 colour transfer | CONSISTENT | 88° | 5.9 |
+| T3a re-shade, exact light | CONSISTENT | 16° | 0.0 |
+| T3a re-shade, ±10° error | CONSISTENT | 20° | 0.4 |
+| T3a re-shade, ±20° error | CONSISTENT | 34° | 0.7 |
+| T4 adaptive | CONSISTENT | 10–16° | 0.0 |
 
 Say, honestly:
-- Colour and brightness harmonisation does **not** help the forger: it is a monotone change and the rank order
-  of the shading stays the same.
-- A physics re-shade **does** fool the detector, even with a 20° error in the forger's light estimate. In this
-  scene the highlight and silhouette cues do not rescue the verdict.
-- The price: the re-shade changes the region's brightness by 0.16–0.18 on average (scale 0–1), above the 0.08
-  fidelity budget, so the edit is visible when the original is at hand. Use the swipe slider to show it.
-- Caveat to say out loud: the defender's surface normals here are simulated and independent of the edit, which
-  is the best case for the attacker.
+- A physics re-shade moves the car's estimate onto the consensus and fools the detector, even with a 20° error
+  in the forger's light estimate. It changes the region's brightness by about 0.2 on a 0–1 scale, so the edit
+  is visible when the original is at hand (swipe slider).
+- Colour transfer does not move the estimate (86° → 88°), but it lowers the score just under the alert level,
+  so this case passes too. That is a cost of the least-squares cue; the rank cue was immune to it.
+- Caveat: the defender's surface normals are simulated and do not react to the edit, the best case for the
+  attacker.
 
 ## 5. Damage panel mode (40 s)
 
-- `Genuine dent (panel mode)`: the dent ROI and its ring agree with the scene, **CONSISTENT** (score 2.18).
-- `Dent pasted from another light (panel mode)`: **SUSPICIOUS**, the ROI is 98° off, shortfall 5.44.
-  Note that it took 10 seeds to find a scene where a pasted dent is caught: a dent is a small, shallow region
-  and carries little shading evidence. The same attack table applies (T1 still flagged; T3a/T4 pass, but with
-  the exact light the dent's estimate barely moves, 98° → 94°: the verdict flips because the evidence gets weak).
+- `Genuine dent (panel mode)`: dent and ring agree with the scene, **CONSISTENT** (score 2.61).
+- `Dent pasted from another light (panel mode)`: **SUSPICIOUS**, the dent is 100° off, shortfall 6.84. All five
+  attacks on it stay flagged in this scene. Be clear that it took 10 scenes to find a pasted dent that is
+  caught, and that in the evaluation pasted dents are detected at chance level.
 
 ## 6. Abstention and limits (40 s)
 
-- `Overcast`: **INSUFFICIENT** — only 2 reliable regions. The tool asks for a better photo instead of guessing.
-  (Finding this took 12 seeds: many overcast scenes come out CONSISTENT, because the sky light still gives every
-  region the same "up" direction.)
-- `Two suns`: intended CONFLICT, actual verdict **CONSISTENT** (score 4.06, just under the alert level). Two
-  strong lights are outside the one-light model, and at this alert level the tool does not notice. Shown as is.
+- `Overcast`: **INSUFFICIENT**, only 2 reliable regions. (Finding this took 12 scenes: most overcast scenes
+  come out CONSISTENT, because soft sky light looks like a broad light from above.)
+- `Two suns`: intended CONFLICT, actual verdict **CONSISTENT** (score 4.06). Two strong lights are outside the
+  one-light model and the tool does not notice. Shown as is.
 
 ## 7. Failure example (20 s)
 
 `Failure example: a splice that passes`: the car was pasted from a light 120° away, verdict **CONSISTENT**. The
-car body's shortfall is 3.48 (39° off the consensus), below the alert level 4.95. The alert level is set so that
-5% of clean calibration scenes are flagged; the cost of that low false-alarm rate is missed splices like this.
+car body is 55° off the consensus with shortfall 3.80, below the alert level.
 
-## 8. Close (20 s)
+## 8. Real photos (30 s, optional)
 
-Open Help (`?` button): read the first and the bold sentence of the limitations text. Mention the report for
-the measured detection rates.
+Open one `real_*` card. Say that six unedited photos and one splice were tried: one unedited photo is flagged
+(false alarm) and the splice is not flagged. Real-photo results are qualitative only.
 
-## Screenshots for the report
+## 9. Close (20 s)
 
-If `docs/figures/viewer_*.png` are missing, capture at 1440×900: the gallery (`viewer_gallery.png`), the
-spliced-car bundle (`viewer_main.png`), the dome with the car selected (`viewer_dome.png`), the explain stepper
-(`viewer_explain.png`) and the attack lab (`viewer_attack.png`).
+Open Help: read the first and the bold sentence of the limitations text. Point to the report for the measured
+detection rates.

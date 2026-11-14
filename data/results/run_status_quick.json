@@ -1,42 +1,42 @@
 {
  "E1": {
   "ok": true,
-  "seconds": 112.6
+  "seconds": 8.6
  },
  "E2": {
   "ok": true,
-  "seconds": 195.8
+  "seconds": 52.8
  },
  "E3": {
   "ok": true,
-  "seconds": 7.6
+  "seconds": 5.9
  },
  "E4": {
   "ok": true,
-  "seconds": 524.4
+  "seconds": 145.8
  },
  "E5": {
   "ok": true,
-  "seconds": 1.5
+  "seconds": 1.2
  },
  "E6": {
   "ok": true,
-  "seconds": 192.3
+  "seconds": 34.0
  },
  "E7": {
   "ok": true,
-  "seconds": 265.3
+  "seconds": 10.7
  },
  "E8": {
   "ok": true,
-  "seconds": 40.1
+  "seconds": 8.4
  },
  "E9": {
   "ok": true,
-  "seconds": 236.3
+  "seconds": 1.1
  },
  "E10": {
   "ok": true,
-  "seconds": 0.3
+  "seconds": 0.0
  }
 }

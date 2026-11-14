@@ -14,11 +14,12 @@ map of plausible light directions from shading (a rank-correlation cue that is i
 curve), specular highlights and silhouettes; it fuses the regions, measures each region's leave-one-out
 disagreement ("shortfall"), and raises a flag when the largest shortfall exceeds a split-conformal threshold.
 An interactive WebGL viewer shows the evidence on a 3D light dome and re-lights the image live, and an attack
-module re-shades a pasted region to measure how easily the check is defeated. On synthetic scenes the system
-detects a pasted car lit from 120 degrees away in the demo, but the measured detection rates are modest, the
-proposed rank cue is **less** accurate than a simple least-squares baseline, a physics re-shade defeats the
-detector almost completely, and on unedited real photos the tool raises false alarms. We report these results
-as they are.
+module re-shades a pasted region to measure how easily the check is defeated. The rank cue we proposed turned
+out to be about three times **less** accurate than a simple least-squares shading fit, so least squares is now
+the default cue and the rank cue is kept as the evaluated baseline. With it the system detects a pasted car lit
+from 120 degrees away in the demo, but measured detection rates remain modest, a physics re-shade defeats the
+detector almost completely, pasted dents are not detected, and real-photo results are qualitative only. We
+report these results as they are.
 
 ## 1 Introduction and problem
 
@@ -53,8 +54,10 @@ The full derivation is in [docs/METHOD.md](../docs/METHOD.md). In brief:
 
 - **Conventions.** Camera space with +x right, +y up, +z toward the viewer; all direction maps live on one
   128 x 64 equirectangular grid shared by Python and JavaScript.
-- **C1, rank shading.** Within a region `Y = g(max(0, n.l))` for an unknown monotone `g`. The light maximises the
-  Spearman correlation between `max(0, n.l)` and `Y`, with all attached-shadow pixels tied.
+- **C1, shading.** Default (`Config.cue = "ls"`): the light maximises the Pearson correlation between
+  `max(0, n.l)` and the linearised luminance `Y^2.2`. Original proposal, kept as the baseline (`cue = "rank"`):
+  `Y = g(max(0, n.l))` for an unknown monotone `g`, light = maximiser of the Spearman correlation with all
+  attached-shadow pixels tied.
   ![I2. The rank cue ignores the tone curve.](../docs/figures/rank_invariance.png)
 
 *I2. The rank cue ignores the tone curve.*
@@ -111,17 +114,17 @@ Normals are the ground truth perturbed by spatially correlated noise of 8 degree
 
 ### 5.1 Calibration (E3)
 
-Calibration chose h = 18 degrees and T = 1.5; on the calibration split the 68% / 95% sets cover the true
-light 0.66 / 0.93 of the time (449 reliable regions). The alarm level is
-4.95 at alpha = 0.05 and 4.26 at alpha = 0.10; 11.5% of
+Calibration chose h = 14 degrees and T = 1.5; on the calibration split the 68% / 95% sets cover the true
+light 0.70 / 0.90 of the time (473 reliable regions). The alarm level is
+6.35 at alpha = 0.05 and 5.53 at alpha = 0.10; 11.0% of
 pristine calibration scenes return INSUFFICIENT.
 
 ### T2 - E3 coverage on the test split
 
 |  | h | T | cov68 | cov95 | mean r68 (deg) |
 |---|---|---|---|---|---|
-| before | 10.0 | 1.0 | 0.48 [0.36, 0.62] | 0.71 [0.63, 0.80] | 28.0 |
-| after | 18.0 | 1.5 | 0.66 [0.57, 0.74] | 0.93 [0.85, 1.00] | 45.0 |
+| before | 10.0 | 1.0 | 0.54 [0.38, 0.68] | 0.70 [0.62, 0.77] | 24.6 |
+| after | 14.0 | 1.5 | 0.64 [0.56, 0.73] | 0.89 [0.82, 0.95] | 36.5 |
 
 Suite quick, n = 56 reliable regions / 15 scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -129,8 +132,10 @@ Suite quick, n = 56 reliable regions / 15 scenes. Caveat: synthetic scenes with 
 
 *F3. Reliability diagram on the test split.*
 
-The wide bandwidth is needed because every region's estimate is biased in the same direction (sky light,
-back-lit scenes), so narrow posteriors miss the true sun even when the regions agree with each other.
+These are the values for the least-squares cue. The alarm level is close to the maximum possible shortfall
+(about 6.9): clean scenes often contain one region that disagrees strongly, so a 5% false-alarm rate forces a
+high threshold. For comparison the rank cue calibrated to h = 18, T = 1.5 and an alarm level of 4.95
+(`data/results_rank_quick/calib_rank.json`).
 
 ### 5.2 Cue accuracy under camera non-linearity (E1) - hypothesis H1 fails
 
@@ -158,6 +163,10 @@ brightness differences. For shapes with few distinct normals (the box-like car, 
 produce the same ordering of the faces, so the rank landscape has a wide plateau, whereas the least-squares fit
 uses the brightness ratios between faces. The tone curves in the test set are mild enough that assuming gamma 2.2
 costs the baseline little. The tone-curve invariance is real, but in this benchmark it does not pay for itself.
+**Consequence: least squares became the default cue.** A separate 40-scene check on the calibration split gave
+an AUC of about 0.83 for a car pasted from 90 degrees away with least squares against 0.75 with the rank cue
+(about 0.66 for both at 45 degrees). The price is that least squares is not invariant to monotone brightness
+changes: in the spliced-car demo a plain colour transfer now lowers the car's shortfall below the alarm level.
 
 ### 5.3 Normal quality (E2)
 
@@ -171,16 +180,16 @@ costs the baseline little. The tone-curve invariance is real, but in this benchm
 
 | target | cues | MDI@5%FPR (deg) | MDI@tau (deg) | TPR@5%FPR d=90 | FPR@tau | AUC d>=30 | top-1 loc. | n pos per delta / n neg |
 |---|---|---|---|---|---|---|---|---|
-| car | C1 | 180 | n/a | 0.40 [0.13, 0.67] | 0.00 | 0.62 [0.45, 0.79] | 0.62 | 15/15 |
-| car | C1+C2 | n/a | n/a | 0.40 [0.20, 0.73] | 0.07 | 0.64 [0.47, 0.79] | 0.63 | 15/15 |
-| car | C1+C2+C3 | 180 | 180 | 0.40 [0.13, 0.67] | 0.13 | 0.65 [0.49, 0.80] | 0.61 | 15/15 |
-| car | LS | 90 | 135 | 0.67 [0.40, 0.87] | 0.00 | 0.71 [0.55, 0.86] | 0.78 | 15/15 |
-| distractor | C1 | 60 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.65 [0.50, 0.81] | 0.48 | 15/15 |
-| distractor | C1+C2 | 135 | n/a | 0.47 [0.27, 0.80] | 0.07 | 0.66 [0.50, 0.81] | 0.47 | 15/15 |
-| distractor | C1+C2+C3 | n/a | n/a | 0.47 [0.20, 0.73] | 0.13 | 0.65 [0.50, 0.80] | 0.39 | 15/15 |
-| dent | C1 | n/a | n/a | 0.13 [0.00, 0.33] | 0.00 | 0.46 [0.25, 0.66] | 0.13 | 15/15 |
-| dent | C1+C2 | n/a | n/a | 0.07 [0.00, 0.27] | 0.00 | 0.43 [0.25, 0.62] | 0.07 | 15/15 |
-| dent | C1+C2+C3 | n/a | n/a | 0.00 [0.00, 0.27] | 0.07 | 0.40 [0.21, 0.59] | 0.13 | 15/15 |
+| car | C1 | 135 | 135 | 0.47 [0.27, 0.87] | 0.00 | 0.69 [0.53, 0.85] | 0.78 | 15/15 |
+| car | C1+C2 | 60 | 90 | 0.67 [0.40, 0.87] | 0.00 | 0.71 [0.54, 0.86] | 0.77 | 15/15 |
+| car | C1+C2+C3 | 135 | 135 | 0.47 [0.20, 0.73] | 0.00 | 0.67 [0.50, 0.83] | 0.66 | 15/15 |
+| car | RANK | 180 | n/a | 0.47 [0.20, 0.73] | 0.00 | 0.64 [0.47, 0.79] | 0.52 | 15/15 |
+| distractor | C1 | 60 | 90 | 0.73 [0.53, 0.93] | 0.00 | 0.69 [0.55, 0.82] | 0.52 | 15/15 |
+| distractor | C1+C2 | 60 | 90 | 0.73 [0.53, 0.93] | 0.00 | 0.70 [0.55, 0.83] | 0.51 | 15/15 |
+| distractor | C1+C2+C3 | 90 | 90 | 0.73 [0.47, 0.93] | 0.00 | 0.67 [0.52, 0.81] | 0.47 | 15/15 |
+| dent | C1 | n/a | n/a | 0.07 [0.00, 0.20] | 0.07 | 0.42 [0.22, 0.61] | 0.23 | 15/15 |
+| dent | C1+C2 | n/a | n/a | 0.00 [0.00, 0.20] | 0.00 | 0.40 [0.22, 0.59] | 0.27 | 15/15 |
+| dent | C1+C2+C3 | n/a | n/a | 0.00 [0.00, 0.13] | 0.13 | 0.39 [0.20, 0.58] | 0.16 | 15/15 |
 
 Suite quick. 5%FPR threshold from the pristine TEST scores (labelled as such); tau = calibrated. 'fused' = C1+C2+C3: the shadow-pair cue C4 is manual-only (clicked in the viewer), so no automatic experiment can include it; 'fused' is therefore identical to C1+C2+C3. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -192,10 +201,11 @@ Suite quick. 5%FPR threshold from the pristine TEST scores (labelled as such); t
 
 *F5. ROC curves, discrepancy of 30 degrees or more against pristine.*
 
-Detection is modest. In the quick suite a pasted car only reaches 50% detection at 5% false alarms for very
-large discrepancies, pasted dents are at chance, and the least-squares baseline does better than the rank cue.
-The glint and silhouette cues add little. The headline "minimum detectable inconsistency" is therefore large;
-read the exact values, with their sample sizes, from the table.
+In this table C1 is the default least-squares shading cue and RANK is the rank-cue baseline. Detection is
+modest: a pasted car or distractor needs a discrepancy of roughly 60 to 135 degrees to reach 50% detection at 5%
+false alarms, pasted dents are at chance, and the rank baseline is worse than least squares. Adding the glint cue
+helps a little in this sample; adding the silhouette cue does not. With 15 scenes per cell these differences are
+within the confidence intervals; read the exact values from the table.
 
 ### 5.5 Abstention and hard conditions (E6)
 
@@ -203,13 +213,13 @@ read the exact values, with their sample sizes, from the table.
 
 | condition | set | n | CONSISTENT | SUSPICIOUS | INSUFFICIENT | CONFLICT | accuracy (decided) |
 |---|---|---|---|---|---|---|---|
-| normal | pristine | 5 | 0.80 | 0.20 | 0.00 | 0.00 | 0.80 [0.40, 1.00] |
-| normal | spliced | 5 | 0.20 | 0.80 | 0.00 | 0.00 | 0.80 [0.40, 1.00] |
-| overcast | pristine | 5 | 0.80 | 0.20 | 0.00 | 0.00 | 0.80 [0.40, 1.00] |
-| overcast | spliced | 5 | 0.80 | 0.00 | 0.20 | 0.00 | 0.00 [0.00, 0.00] |
-| multi | pristine | 5 | 0.60 | 0.20 | 0.20 | 0.00 | 0.75 [0.25, 1.00] |
-| multi | spliced | 5 | 0.80 | 0.20 | 0.00 | 0.00 | 0.20 [0.00, 0.60] |
-| lowres | pristine | 5 | 0.60 | 0.00 | 0.20 | 0.20 | 1.00 [1.00, 1.00] |
+| normal | pristine | 5 | 1.00 | 0.00 | 0.00 | 0.00 | 1.00 [1.00, 1.00] |
+| normal | spliced | 5 | 0.40 | 0.60 | 0.00 | 0.00 | 0.60 [0.20, 1.00] |
+| overcast | pristine | 5 | 0.60 | 0.20 | 0.00 | 0.20 | 0.75 [0.33, 1.00] |
+| overcast | spliced | 5 | 0.60 | 0.20 | 0.20 | 0.00 | 0.25 [0.00, 0.75] |
+| multi | pristine | 5 | 0.40 | 0.40 | 0.20 | 0.00 | 0.50 [0.00, 1.00] |
+| multi | spliced | 5 | 0.40 | 0.40 | 0.00 | 0.20 | 0.50 [0.00, 1.00] |
+| lowres | pristine | 5 | 0.40 | 0.20 | 0.20 | 0.20 | 0.67 [0.00, 1.00] |
 | lowres | spliced | 5 | 0.40 | 0.00 | 0.60 | 0.00 | 0.00 [0.00, 0.00] |
 
 Suite quick. Spliced = car at 90 deg. Caveat: synthetic scenes with simulated normal predictors unless stated.
@@ -219,8 +229,9 @@ Suite quick. Spliced = car at 90 deg. Caveat: synthetic scenes with simulated no
 *F6. Verdict distribution by condition.*
 
 The intended behaviour (overcast gives INSUFFICIENT, two suns give CONFLICT) is mostly **not** observed.
-Overcast scenes keep a consistent "up" direction from the sky light and are usually called CONSISTENT, and a
-splice under overcast light is not detected. Two-sun scenes rarely produce CONFLICT at this alarm level.
+Soft sky light shades a surface almost like a broad light from above, so overcast scenes keep a consistent "up"
+direction and are usually called CONSISTENT; shading alone cannot tell the two apart, and a splice under
+overcast light is not detected. Two-sun scenes rarely produce CONFLICT. We treat both as limits of the method.
 
 ### 5.6 Robustness (E7)
 
@@ -236,17 +247,17 @@ Down-scaling the image hurts most: detection drops sharply at every resize facto
 
 | ablation | AUC d>=30 | TPR@5%FPR d=90 | MDI (deg) | abstain pristine | abstain composites |
 |---|---|---|---|---|---|
-| rule, C1 (shading) | 0.62 [0.51, 0.73] | 0.40 [0.13, 0.67] | 180 | 0.13 | 0.14 |
-| rule, C1+C2 | 0.64 [0.51, 0.74] | 0.40 [0.13, 0.73] | n/a | 0.13 | 0.14 |
-| rule, C1+C2+C3 (default) | 0.65 [0.52, 0.77] | 0.40 [0.13, 0.67] | 180 | 0.13 | 0.12 |
-| LS baseline (shading) | 0.71 [0.61, 0.81] | 0.67 [0.40, 0.87] | 90 | 0.13 | 0.12 |
-| KDE calibration off (h=10, T=1) | 0.53 [0.37, 0.69] | 0.07 [0.00, 0.40] | n/a | 0.13 | 0.13 |
-| w_min = 0.25 | 0.65 [0.52, 0.77] | 0.40 [0.13, 0.67] | 180 | 0.13 | 0.12 |
-| w_min = 0.50 | 0.65 [0.51, 0.76] | 0.40 [0.13, 0.67] | 180 | 0.13 | 0.12 |
-| no leave-one-out (global consensus) | 0.58 [0.43, 0.72] | 0.33 [0.13, 0.60] | n/a | 0.13 | 0.12 |
-| arbiter (C1+C2+C3) | 0.67 [0.55, 0.79] | 0.33 [0.13, 0.73] | 180 | 0.13 | 0.12 |
-| region backend gt | 0.78 | TPR@tau 0.67, FPR@tau 0.00 | - | 0.00 | 0.00 |
-| region backend slic | 0.89 | TPR@tau 0.67, FPR@tau 0.00 | - | 0.00 | 0.00 |
+| rule, C1 (shading) | 0.69 [0.58, 0.79] | 0.47 [0.27, 0.87] | 135 | 0.13 | 0.13 |
+| rule, C1+C2 | 0.71 [0.61, 0.81] | 0.67 [0.40, 0.87] | 60 | 0.13 | 0.13 |
+| rule, C1+C2+C3 (default) | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
+| RANK baseline (shading) | 0.64 [0.51, 0.75] | 0.47 [0.20, 0.73] | 180 | 0.13 | 0.12 |
+| KDE calibration off (h=10, T=1) | 0.65 [0.53, 0.78] | 0.27 [0.07, 0.60] | n/a | 0.13 | 0.12 |
+| w_min = 0.25 | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
+| w_min = 0.50 | 0.67 [0.56, 0.77] | 0.47 [0.20, 0.73] | 135 | 0.13 | 0.13 |
+| no leave-one-out (global consensus) | 0.64 [0.52, 0.76] | 0.33 [0.13, 0.60] | 180 | 0.13 | 0.13 |
+| arbiter (C1+C2+C3) | 0.66 [0.53, 0.79] | 0.07 [0.00, 0.67] | n/a | 0.13 | 0.13 |
+| region backend gt | 0.67 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.00 | 0.00 |
+| region backend slic | 0.78 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.00 | 0.00 |
 
 Suite quick; region-backend rows on 3+3 scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -255,31 +266,33 @@ Suite quick; region-backend rows on 3+3 scenes. Caveat: synthetic scenes with si
 *F9. Ablations and arbiter feature importance.*
 
 Calibrating the posterior shape and the leave-one-out test both help; the reliability floor barely matters; the
-gradient-boosted arbiter is slightly better than the rule but is not the default because the rule is explainable.
+gradient-boosted arbiter is not better than the explainable rule in this sample.
 
 ### 5.8 Real normal predictor in the loop (E10)
 
-Run on 2 scenes with a depth-derived predictor (Depth Anything) only, so it is a smoke test, not a measurement.
-DSINE could not be loaded in the evaluation run. Region light errors were around 49 degrees.
+A smoke test on 2 scenes, not a measurement; see `data/results/e10_real_normals.json` for what ran.
 
 ### 5.9 Real photos (qualitative)
 
-Unedited outdoor car photos from Wikimedia Commons, SAM regions, Depth Anything normals (DSINE needs the
-`geffnet` package, which was not installed), alarm level calibrated on synthetic scenes only:
+Six unedited outdoor car photos from Wikimedia Commons and one splice made from them (a rectangle of one photo
+pasted into another, audited with the paste mask as the region of interest). SAM regions, DSINE + Depth
+Anything normal ensemble, alarm level calibrated on synthetic scenes only:
 
 | bundle | normals | regions | regions found | reliable | verdict | image score |
 |---|---|---|---|---|---|---|
-| real_airfield_car | depth_anything | sam | 13 | 6 | CONSISTENT | 3.00 |
-| real_carpark_sunny | depth_anything | sam | 26 | 8 | CONSISTENT | 2.86 |
-| real_mini_parking | depth_anything | sam | 26 | 11 | SUSPICIOUS | 6.45 |
-| real_peugeot_104 | depth_anything | sam | 38 | 26 | SUSPICIOUS | 6.04 |
-| real_splice_carpark_sunny_from_peugeot_104 | depth_anything | sam | 26 | 9 | SUSPICIOUS | 6.27 |
-| real_street_car | depth_anything | sam | 20 | 15 | SUSPICIOUS | 6.84 |
-| real_supermarket_carpark | depth_anything | sam | 17 | 8 | SUSPICIOUS | 6.89 |
+| real_airfield_car | dsine+depth_anything | sam | 13 | 7 | CONSISTENT | 5.60 |
+| real_carpark_sunny | dsine+depth_anything | sam | 26 | 5 | CONSISTENT | 5.81 |
+| real_mini_parking | dsine+depth_anything | sam | 26 | 7 | SUSPICIOUS | 6.91 |
+| real_peugeot_104 | dsine+depth_anything | sam | 38 | 12 | CONSISTENT | 2.63 |
+| real_splice_carpark_sunny_from_peugeot_104 | dsine+depth_anything | sam | 26 | 5 | CONSISTENT | 3.01 |
+| real_street_car | dsine+depth_anything | sam | 20 | 7 | CONSISTENT | 2.25 |
+| real_supermarket_carpark | dsine+depth_anything | sam | 17 | 6 | CONSISTENT | 4.74 |
 
-Every photo here is unedited, so each SUSPICIOUS or CONFLICT is a false alarm. The real-photo path runs end to
-end, but its verdicts are not trustworthy without better normals and a recalibration on real unedited photos
-(`tools/calibrate_on_folder.py`).
+Among the six unedited photos one is flagged (a false alarm); with the earlier rank cue and a single normal
+estimator four of the six were flagged. The splice (`real_splice_*`), which the earlier configuration flagged,
+is **not** flagged now. So the current settings are quieter on real photos but also miss the one real splice we
+tried. Seven images prove nothing either way: real-photo use needs a recalibration on real unedited photos
+(`tools/calibrate_on_folder.py`) and a proper test set.
 
 ## 6 Attack evaluation and discussion
 
@@ -309,22 +322,22 @@ Suite: quick. Synthetic scenes, simulated normals that do not react to the edit 
 
 | tier | target | n | TPR@tau C1 | TPR@tau all cues | defence recovery | TPR@5%FPR all cues | mean |dY| | 1-SSIM |
 |---|---|---|---|---|---|---|---|---|
-| T0 naive paste | car | 8 | 0.50 | 0.88 | 0.38 | 0.75 | n/a | n/a |
-| T0 naive paste | distractor | 8 | 0.75 | 0.75 | 0.00 | 0.75 | n/a | n/a |
+| T0 naive paste | car | 8 | 0.50 | 0.88 | 0.38 | 0.50 | n/a | n/a |
+| T0 naive paste | distractor | 8 | 0.75 | 0.75 | 0.00 | 0.50 | n/a | n/a |
 | T0 naive paste | dent | 8 | 0.00 | 0.00 | 0.00 | 0.00 | n/a | n/a |
-| T0 naive paste | all | 24 | 0.42 | 0.54 | 0.12 | 0.50 | n/a | n/a |
-| T1 colour transfer | car | 8 | 0.50 | 0.50 | 0.00 | 0.62 | 0.190 | 0.253 |
-| T1 colour transfer | distractor | 7 | 0.86 | 0.86 | 0.00 | 0.86 | 0.180 | 0.188 |
+| T0 naive paste | all | 24 | 0.42 | 0.54 | 0.12 | 0.33 | n/a | n/a |
+| T1 colour transfer | car | 8 | 0.50 | 0.50 | 0.00 | 0.50 | 0.190 | 0.253 |
+| T1 colour transfer | distractor | 7 | 0.86 | 0.86 | 0.00 | 0.57 | 0.180 | 0.188 |
 | T1 colour transfer | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.354 | 0.481 |
-| T1 colour transfer | all | 22 | 0.45 | 0.45 | 0.00 | 0.50 | 0.239 | 0.305 |
+| T1 colour transfer | all | 22 | 0.45 | 0.45 | 0.00 | 0.36 | 0.239 | 0.305 |
 | T3a re-shade (exact light) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.182 | 0.468 |
 | T3a re-shade (exact light) | distractor | 7 | 0.00 | 0.14 | 0.14 | 0.14 | 0.207 | 0.499 |
 | T3a re-shade (exact light) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.060 | 0.201 |
 | T3a re-shade (exact light) | all | 22 | 0.00 | 0.05 | 0.05 | 0.05 | 0.151 | 0.393 |
 | T3a re-shade (±5° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.179 | 0.463 |
-| T3a re-shade (±5° error) | distractor | 7 | 0.00 | 0.29 | 0.29 | 0.29 | 0.206 | 0.501 |
+| T3a re-shade (±5° error) | distractor | 7 | 0.00 | 0.29 | 0.29 | 0.14 | 0.206 | 0.501 |
 | T3a re-shade (±5° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.059 | 0.198 |
-| T3a re-shade (±5° error) | all | 22 | 0.00 | 0.09 | 0.09 | 0.09 | 0.149 | 0.391 |
+| T3a re-shade (±5° error) | all | 22 | 0.00 | 0.09 | 0.09 | 0.05 | 0.149 | 0.391 |
 | T3a re-shade (±10° error) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.179 | 0.463 |
 | T3a re-shade (±10° error) | distractor | 7 | 0.00 | 0.29 | 0.29 | 0.14 | 0.203 | 0.494 |
 | T3a re-shade (±10° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.062 | 0.203 |
@@ -333,34 +346,34 @@ Suite: quick. Synthetic scenes, simulated normals that do not react to the edit 
 | T3a re-shade (±20° error) | distractor | 7 | 0.00 | 0.14 | 0.14 | 0.00 | 0.188 | 0.496 |
 | T3a re-shade (±20° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.055 | 0.198 |
 | T3a re-shade (±20° error) | all | 22 | 0.00 | 0.05 | 0.05 | 0.00 | 0.140 | 0.387 |
-| T3a re-shade (±40° error) | car | 8 | 0.25 | 0.25 | 0.00 | 0.25 | 0.154 | 0.416 |
-| T3a re-shade (±40° error) | distractor | 7 | 0.14 | 0.29 | 0.14 | 0.29 | 0.162 | 0.416 |
+| T3a re-shade (±40° error) | car | 8 | 0.25 | 0.25 | 0.00 | 0.12 | 0.154 | 0.416 |
+| T3a re-shade (±40° error) | distractor | 7 | 0.14 | 0.29 | 0.14 | 0.14 | 0.162 | 0.416 |
 | T3a re-shade (±40° error) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.047 | 0.162 |
-| T3a re-shade (±40° error) | all | 22 | 0.14 | 0.18 | 0.05 | 0.18 | 0.122 | 0.335 |
-| T3a re-shade (exact light, independent normals) | car | 8 | 0.00 | 0.12 | 0.12 | 0.12 | 0.180 | 0.461 |
+| T3a re-shade (±40° error) | all | 22 | 0.14 | 0.18 | 0.05 | 0.09 | 0.122 | 0.335 |
+| T3a re-shade (exact light, independent normals) | car | 8 | 0.00 | 0.12 | 0.12 | 0.00 | 0.180 | 0.461 |
 | T3a re-shade (exact light, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.213 | 0.500 |
 | T3a re-shade (exact light, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.215 |
-| T3a re-shade (exact light, independent normals) | all | 22 | 0.05 | 0.09 | 0.05 | 0.09 | 0.154 | 0.395 |
+| T3a re-shade (exact light, independent normals) | all | 22 | 0.05 | 0.09 | 0.05 | 0.05 | 0.154 | 0.395 |
 | T3a re-shade (±5° error, independent normals) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.177 | 0.459 |
 | T3a re-shade (±5° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.211 | 0.495 |
 | T3a re-shade (±5° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.213 |
 | T3a re-shade (±5° error, independent normals) | all | 22 | 0.05 | 0.05 | 0.00 | 0.05 | 0.152 | 0.392 |
-| T3a re-shade (±10° error, independent normals) | car | 8 | 0.12 | 0.12 | 0.00 | 0.12 | 0.177 | 0.464 |
+| T3a re-shade (±10° error, independent normals) | car | 8 | 0.12 | 0.12 | 0.00 | 0.00 | 0.177 | 0.464 |
 | T3a re-shade (±10° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.206 | 0.494 |
 | T3a re-shade (±10° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.066 | 0.212 |
-| T3a re-shade (±10° error, independent normals) | all | 22 | 0.09 | 0.09 | 0.00 | 0.09 | 0.151 | 0.393 |
+| T3a re-shade (±10° error, independent normals) | all | 22 | 0.09 | 0.09 | 0.00 | 0.05 | 0.151 | 0.393 |
 | T3a re-shade (±20° error, independent normals) | car | 8 | 0.12 | 0.12 | 0.00 | 0.12 | 0.172 | 0.447 |
 | T3a re-shade (±20° error, independent normals) | distractor | 7 | 0.14 | 0.14 | 0.00 | 0.14 | 0.187 | 0.491 |
 | T3a re-shade (±20° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.064 | 0.205 |
 | T3a re-shade (±20° error, independent normals) | all | 22 | 0.09 | 0.09 | 0.00 | 0.09 | 0.142 | 0.384 |
 | T3a re-shade (±40° error, independent normals) | car | 8 | 0.25 | 0.25 | 0.00 | 0.12 | 0.151 | 0.419 |
-| T3a re-shade (±40° error, independent normals) | distractor | 7 | 0.29 | 0.29 | 0.00 | 0.29 | 0.164 | 0.412 |
+| T3a re-shade (±40° error, independent normals) | distractor | 7 | 0.29 | 0.29 | 0.00 | 0.14 | 0.164 | 0.412 |
 | T3a re-shade (±40° error, independent normals) | dent | 7 | 0.00 | 0.00 | 0.00 | 0.00 | 0.047 | 0.175 |
-| T3a re-shade (±40° error, independent normals) | all | 22 | 0.18 | 0.18 | 0.00 | 0.14 | 0.122 | 0.339 |
+| T3a re-shade (±40° error, independent normals) | all | 22 | 0.18 | 0.18 | 0.00 | 0.09 | 0.122 | 0.339 |
 | T4 adaptive (white box) | car | 8 | 0.00 | 0.00 | 0.00 | 0.00 | 0.184 | 0.470 |
 | T4 adaptive (white box) | distractor | 7 | 0.00 | 0.00 | 0.00 | 0.14 | 0.210 | 0.504 |
-| T4 adaptive (white box) | dent | 7 | 0.00 | 0.14 | 0.14 | 0.14 | 0.097 | 0.234 |
-| T4 adaptive (white box) | all | 22 | 0.00 | 0.05 | 0.05 | 0.09 | 0.164 | 0.406 |
+| T4 adaptive (white box) | dent | 7 | 0.00 | 0.14 | 0.14 | 0.00 | 0.097 | 0.234 |
+| T4 adaptive (white box) | all | 22 | 0.00 | 0.05 | 0.05 | 0.05 | 0.164 | 0.406 |
 
 Suite quick. the defender's simulated normals are independent of the edit (best case for the attacker); an attacked region that becomes not assessable counts as passing. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -368,10 +381,11 @@ Suite quick. the defender's simulated normals are independent of the edit (best 
 
 *F8. Detection by attack tier, shading only against all cues.*
 
-Colour and brightness harmonisation (T1) does not help the forger, because a monotone change leaves the rank
-order of the shading intact. A physics re-shade (T3a) defeats the detector almost completely, even when the
-forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a few
-percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
+Colour and brightness harmonisation (T1) leaves the pooled detection rate about where it was, although with the
+least-squares cue it can flip individual cases (the spliced-car demo passes after colour transfer; the rank cue
+was immune to that by construction). A physics re-shade (T3a) defeats the detector almost completely, even when
+the forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a
+few percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
 forger's cost. Caveat: the defender's simulated normals do not react to the edit, the best case for the attacker.
 
 ## 7 Limitations and ethics
@@ -382,19 +396,19 @@ forger's cost. Caveat: the defender's simulated normals do not react to the edit
 
 *I9. The four verdicts and the recommended action.*
 
-Further limits found in this work: the rank cue loses to a simple baseline; the alarm level that keeps false
-alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents carry too little
-evidence; the abstention logic does not catch overcast or two-light scenes reliably. A tool like this must not
+Further limits found in this work: the rank cue we proposed loses to a simple least-squares fit; the alarm level
+that keeps false alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents
+carry too little evidence; overcast and two-light scenes are not recognised as such. A tool like this must not
 be used to accuse anyone: it produces one signal for a human reviewer.
 
 ## 8 Conclusion
 
 We built a complete, inspectable lighting-consistency auditor with an interactive 3D evidence viewer and a
 self-attack lab, and evaluated it honestly. The viewer and the analysis-by-synthesis views do what they were
-designed to do. The detector itself is weak: the proposed rank cue is less accurate than least squares, detection
-needs large lighting discrepancies, re-shading defeats it, and real photos produce false alarms. The most useful
-next steps are to make least squares (or a hybrid of the two cues) the default and recalibrate, to use a strong
-normal estimator, and to calibrate on real unedited photos.
+designed to do. The detector itself is modest: the rank cue we proposed was less accurate than least squares
+and was replaced as the default, detection still needs large lighting discrepancies, re-shading defeats it, and
+real-photo behaviour is untested beyond seven images. The most useful next steps are a full-size evaluation,
+calibration and testing on real photos, and an explicit test for soft or multiple light sources.
 
 ## References
 

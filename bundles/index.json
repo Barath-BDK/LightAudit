@@ -82,8 +82,8 @@
  {
   "name": "real_peugeot_104",
   "title": "peugeot_104.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
-  "verdict": "SUSPICIOUS",
+  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
   "thumb": "real_peugeot_104/thumb.jpg",
   "source": "real"
  },
@@ -91,23 +91,23 @@
   "name": "real_splice_carpark_sunny_from_peugeot_104",
   "title": "carpark_sunny_from_peugeot_104.png",
   "description": "Real photo with a region pasted from another photo (made by tools/make_real_splice.py).",
-  "verdict": "SUSPICIOUS",
+  "verdict": "CONSISTENT",
   "thumb": "real_splice_carpark_sunny_from_peugeot_104/thumb.jpg",
   "source": "real"
  },
  {
   "name": "real_street_car",
   "title": "street_car.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
-  "verdict": "SUSPICIOUS",
+  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
   "thumb": "real_street_car/thumb.jpg",
   "source": "real"
  },
  {
   "name": "real_supermarket_carpark",
   "title": "supermarket_carpark.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
-  "verdict": "SUSPICIOUS",
+  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
   "thumb": "real_supermarket_carpark/thumb.jpg",
   "source": "real"
  }

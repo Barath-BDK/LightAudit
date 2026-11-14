@@ -36,9 +36,10 @@ also works (no upload, no live attack).
 | Image processing | Validity filtering, block bootstrap, isotonic fits, Reinhard colour transfer, JPEG / resize / noise robustness |
 | ML | Pretrained SAM and normal estimators as black boxes, ensemble disagreement as uncertainty, gradient-boosted arbiter (ablation only), split-conformal alarm threshold |
 
-Method in one paragraph: within a region, brightness is assumed to be an unknown *monotone* function of
-`max(0, n·l)`. The light is the direction that maximises the rank correlation between the two (cue C1), which is
-invariant to gamma, tone mapping, exposure and albedo scale. A spatial block bootstrap turns that into a
+Method in one paragraph: within a region, brightness should rise with `max(0, n·l)`. The light is the direction
+that best fits the region's linearised brightness (least squares, the default cue C1). The rank-correlation cue
+the project first proposed (invariant to gamma and tone mapping) measured about three times less accurate and
+is kept as a baseline (`Config.cue = "rank"`). A spatial block bootstrap turns that into a
 posterior map on an equirectangular direction grid; specular glints (C2), silhouettes (C3) and optional manual
 shadow pairs (C4) refine it. Regions are fused by a weighted product; each region's leave-one-out *shortfall*
 measures how badly it disagrees with the consensus of the others; the alarm level is a split-conformal quantile

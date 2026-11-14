@@ -2,7 +2,7 @@
 
 |  | h | T | cov68 | cov95 | mean r68 (deg) |
 |---|---|---|---|---|---|
-| before | 10.0 | 1.0 | 0.48 [0.36, 0.62] | 0.71 [0.63, 0.80] | 28.0 |
-| after | 18.0 | 1.5 | 0.66 [0.57, 0.74] | 0.93 [0.85, 1.00] | 45.0 |
+| before | 10.0 | 1.0 | 0.54 [0.38, 0.68] | 0.70 [0.62, 0.77] | 24.6 |
+| after | 14.0 | 1.5 | 0.64 [0.56, 0.73] | 0.89 [0.82, 0.95] | 36.5 |
 
 Suite quick, n = 56 reliable regions / 15 scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.

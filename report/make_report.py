@@ -80,11 +80,12 @@ map of plausible light directions from shading (a rank-correlation cue that is i
 curve), specular highlights and silhouettes; it fuses the regions, measures each region's leave-one-out
 disagreement ("shortfall"), and raises a flag when the largest shortfall exceeds a split-conformal threshold.
 An interactive WebGL viewer shows the evidence on a 3D light dome and re-lights the image live, and an attack
-module re-shades a pasted region to measure how easily the check is defeated. On synthetic scenes the system
-detects a pasted car lit from 120 degrees away in the demo, but the measured detection rates are modest, the
-proposed rank cue is **less** accurate than a simple least-squares baseline, a physics re-shade defeats the
-detector almost completely, and on unedited real photos the tool raises false alarms. We report these results
-as they are.
+module re-shades a pasted region to measure how easily the check is defeated. The rank cue we proposed turned
+out to be about three times **less** accurate than a simple least-squares shading fit, so least squares is now
+the default cue and the rank cue is kept as the evaluated baseline. With it the system detects a pasted car lit
+from 120 degrees away in the demo, but measured detection rates remain modest, a physics re-shade defeats the
+detector almost completely, pasted dents are not detected, and real-photo results are qualitative only. We
+report these results as they are.
 
 ## 1 Introduction and problem
 
@@ -117,8 +118,10 @@ The full derivation is in [docs/METHOD.md](../docs/METHOD.md). In brief:
 
 - **Conventions.** Camera space with +x right, +y up, +z toward the viewer; all direction maps live on one
   128 x 64 equirectangular grid shared by Python and JavaScript.
-- **C1, rank shading.** Within a region `Y = g(max(0, n.l))` for an unknown monotone `g`. The light maximises the
-  Spearman correlation between `max(0, n.l)` and `Y`, with all attached-shadow pixels tied.
+- **C1, shading.** Default (`Config.cue = "ls"`): the light maximises the Pearson correlation between
+  `max(0, n.l)` and the linearised luminance `Y^2.2`. Original proposal, kept as the baseline (`cue = "rank"`):
+  `Y = g(max(0, n.l))` for an unknown monotone `g`, light = maximiser of the Spearman correlation with all
+  attached-shadow pixels tied.
   {fig("rank_invariance.png", "I2. The rank cue ignores the tone curve.")}
 - **C2 glints, C3 silhouettes, C4 shadow pairs.**
   {fig("cue_geometry.png", "I3. Geometry of the extra cues.")}
@@ -168,8 +171,10 @@ pristine calibration scenes return INSUFFICIENT.
 
 {fig("F3_calibration.png", "F3. Reliability diagram on the test split.")}
 
-The wide bandwidth is needed because every region's estimate is biased in the same direction (sky light,
-back-lit scenes), so narrow posteriors miss the true sun even when the regions agree with each other.
+These are the values for the least-squares cue. The alarm level is close to the maximum possible shortfall
+(about 6.9): clean scenes often contain one region that disagrees strongly, so a 5% false-alarm rate forces a
+high threshold. For comparison the rank cue calibrated to h = 18, T = 1.5 and an alarm level of 4.95
+(`data/results_rank_quick/calib_rank.json`).
 
 ### 5.2 Cue accuracy under camera non-linearity (E1) - hypothesis H1 fails
 
@@ -185,6 +190,10 @@ brightness differences. For shapes with few distinct normals (the box-like car, 
 produce the same ordering of the faces, so the rank landscape has a wide plateau, whereas the least-squares fit
 uses the brightness ratios between faces. The tone curves in the test set are mild enough that assuming gamma 2.2
 costs the baseline little. The tone-curve invariance is real, but in this benchmark it does not pay for itself.
+**Consequence: least squares became the default cue.** A separate 40-scene check on the calibration split gave
+an AUC of about 0.83 for a car pasted from 90 degrees away with least squares against 0.75 with the rank cue
+(about 0.66 for both at 45 degrees). The price is that least squares is not invariant to monotone brightness
+changes: in the spliced-car demo a plain colour transfer now lowers the car's shortfall below the alarm level.
 
 ### 5.3 Normal quality (E2)
 
@@ -198,10 +207,11 @@ costs the baseline little. The tone-curve invariance is real, but in this benchm
 
 {fig("F5_roc.png", "F5. ROC curves, discrepancy of 30 degrees or more against pristine.")}
 
-Detection is modest. In the quick suite a pasted car only reaches 50% detection at 5% false alarms for very
-large discrepancies, pasted dents are at chance, and the least-squares baseline does better than the rank cue.
-The glint and silhouette cues add little. The headline "minimum detectable inconsistency" is therefore large;
-read the exact values, with their sample sizes, from the table.
+In this table C1 is the default least-squares shading cue and RANK is the rank-cue baseline. Detection is
+modest: a pasted car or distractor needs a discrepancy of roughly 60 to 135 degrees to reach 50% detection at 5%
+false alarms, pasted dents are at chance, and the rank baseline is worse than least squares. Adding the glint cue
+helps a little in this sample; adding the silhouette cue does not. With 15 scenes per cell these differences are
+within the confidence intervals; read the exact values from the table.
 
 ### 5.5 Abstention and hard conditions (E6)
 
@@ -210,8 +220,9 @@ read the exact values, with their sample sizes, from the table.
 {fig("F6_abstention.png", "F6. Verdict distribution by condition.")}
 
 The intended behaviour (overcast gives INSUFFICIENT, two suns give CONFLICT) is mostly **not** observed.
-Overcast scenes keep a consistent "up" direction from the sky light and are usually called CONSISTENT, and a
-splice under overcast light is not detected. Two-sun scenes rarely produce CONFLICT at this alarm level.
+Soft sky light shades a surface almost like a broad light from above, so overcast scenes keep a consistent "up"
+direction and are usually called CONSISTENT; shading alone cannot tell the two apart, and a splice under
+overcast light is not detected. Two-sun scenes rarely produce CONFLICT. We treat both as limits of the method.
 
 ### 5.6 Robustness (E7)
 
@@ -226,23 +237,25 @@ Down-scaling the image hurts most: detection drops sharply at every resize facto
 {fig("F9_ablations.png", "F9. Ablations and arbiter feature importance.")}
 
 Calibrating the posterior shape and the leave-one-out test both help; the reliability floor barely matters; the
-gradient-boosted arbiter is slightly better than the rule but is not the default because the rule is explainable.
+gradient-boosted arbiter is not better than the explainable rule in this sample.
 
 ### 5.8 Real normal predictor in the loop (E10)
 
-Run on 2 scenes with a depth-derived predictor (Depth Anything) only, so it is a smoke test, not a measurement.
-DSINE could not be loaded in the evaluation run. Region light errors were around 49 degrees.
+A smoke test on 2 scenes, not a measurement; see `data/results/e10_real_normals.json` for what ran.
 
 ### 5.9 Real photos (qualitative)
 
-Unedited outdoor car photos from Wikimedia Commons, SAM regions, Depth Anything normals (DSINE needs the
-`geffnet` package, which was not installed), alarm level calibrated on synthetic scenes only:
+Six unedited outdoor car photos from Wikimedia Commons and one splice made from them (a rectangle of one photo
+pasted into another, audited with the paste mask as the region of interest). SAM regions, DSINE + Depth
+Anything normal ensemble, alarm level calibrated on synthetic scenes only:
 
 {real_rows()}
 
-Every photo here is unedited, so each SUSPICIOUS or CONFLICT is a false alarm. The real-photo path runs end to
-end, but its verdicts are not trustworthy without better normals and a recalibration on real unedited photos
-(`tools/calibrate_on_folder.py`).
+Among the six unedited photos one is flagged (a false alarm); with the earlier rank cue and a single normal
+estimator four of the six were flagged. The splice (`real_splice_*`), which the earlier configuration flagged,
+is **not** flagged now. So the current settings are quieter on real photos but also miss the one real splice we
+tried. Seven images prove nothing either way: real-photo use needs a recalibration on real unedited photos
+(`tools/calibrate_on_folder.py`) and a proper test set.
 
 ## 6 Attack evaluation and discussion
 
@@ -254,10 +267,11 @@ end, but its verdicts are not trustworthy without better normals and a recalibra
 
 {fig("F8_attacks.png", "F8. Detection by attack tier, shading only against all cues.")}
 
-Colour and brightness harmonisation (T1) does not help the forger, because a monotone change leaves the rank
-order of the shading intact. A physics re-shade (T3a) defeats the detector almost completely, even when the
-forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a few
-percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
+Colour and brightness harmonisation (T1) leaves the pooled detection rate about where it was, although with the
+least-squares cue it can flip individual cases (the spliced-car demo passes after colour transfer; the rank cue
+was immune to that by construction). A physics re-shade (T3a) defeats the detector almost completely, even when
+the forger's estimate of the scene light is 20 degrees off, and the highlight and silhouette cues recover only a
+few percent. The re-shade changes the region's brightness noticeably (see the mean |dY| column), which is the
 forger's cost. Caveat: the defender's simulated normals do not react to the edit, the best case for the attacker.
 
 ## 7 Limitations and ethics
@@ -266,19 +280,19 @@ forger's cost. Caveat: the defender's simulated normals do not react to the edit
 
 {fig("triage.png", "I9. The four verdicts and the recommended action.")}
 
-Further limits found in this work: the rank cue loses to a simple baseline; the alarm level that keeps false
-alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents carry too little
-evidence; the abstention logic does not catch overcast or two-light scenes reliably. A tool like this must not
+Further limits found in this work: the rank cue we proposed loses to a simple least-squares fit; the alarm level
+that keeps false alarms at 5% on synthetic scenes misses many splices; small or shallow regions such as dents
+carry too little evidence; overcast and two-light scenes are not recognised as such. A tool like this must not
 be used to accuse anyone: it produces one signal for a human reviewer.
 
 ## 8 Conclusion
 
 We built a complete, inspectable lighting-consistency auditor with an interactive 3D evidence viewer and a
 self-attack lab, and evaluated it honestly. The viewer and the analysis-by-synthesis views do what they were
-designed to do. The detector itself is weak: the proposed rank cue is less accurate than least squares, detection
-needs large lighting discrepancies, re-shading defeats it, and real photos produce false alarms. The most useful
-next steps are to make least squares (or a hybrid of the two cues) the default and recalibrate, to use a strong
-normal estimator, and to calibrate on real unedited photos.
+designed to do. The detector itself is modest: the rank cue we proposed was less accurate than least squares
+and was replaced as the default, detection still needs large lighting discrepancies, re-shading defeats it, and
+real-photo behaviour is untested beyond seven images. The most useful next steps are a full-size evaluation,
+calibration and testing on real photos, and an explicit test for soft or multiple light sources.
 
 ## References
 

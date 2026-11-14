@@ -3,7 +3,36 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
-## Results so far
+## Update 14 Nov 2026: least squares is the default cue
+
+Everything below this section describes the first build, where the rank cue was the default. Its quick results
+are archived in `data/results_rank_quick/`. What changed:
+
+- `Config.cue = "ls"`; the rank cue stays available (`cue="rank"`) and is the baseline in the evaluation and in
+  the viewer's "Baseline cue" toggle.
+- Recalibrated: h = 14 deg, T = 1.5, coverage 0.70 / 0.90, alarm level 6.35 at alpha 0.05 (5.53 at 0.10),
+  11.0% of clean calibration scenes INSUFFICIENT. The alarm level is close to the maximum score (about 6.9).
+- 40-scene check on the calibration split, car pasted at 90 deg: AUC about 0.83 with least squares, 0.75 with
+  rank; about 0.66 for both at 45 deg.
+- Quick evaluation re-run (same small N): car AUC 0.69 shading only, 0.71 with glints, 0.67 with all cues, 0.64
+  for the rank baseline; distractor 0.67-0.70; dent about 0.40 (chance). Clean normal scenes: 0 of 5 flagged;
+  spliced: 3 of 5 flagged. Attacks: T0 0.42 -> 0.54 (shading -> all cues), T1 0.45 -> 0.45, T3a exact 0.00 -> 0.05,
+  T4 0.00 -> 0.05.
+- Demo bundles rebuilt: consistent, spliced car, genuine dent, fake dent, overcast and the failure example match
+  their intent; two suns is still CONSISTENT. New with least squares: colour transfer makes the spliced-car demo
+  pass (shortfall 6.9 -> 5.9, just under the alarm level).
+- Tried and removed: sampling several lights per bootstrap draw from the draw's likelihood (to represent the
+  unconstrained directions of poles and boxes). No gain at the calibrated bandwidth, so the code was dropped.
+- DSINE now runs on CPU (the hub wrapper hard-codes CUDA; `normals.py` remaps it while loading; needs the
+  `geffnet` package, now installed). Default real-photo normals: DSINE + Depth Anything.
+- Real photos re-audited with that ensemble: 1 of 6 unedited photos flagged (was 4 of 6), but the real splice
+  is no longer flagged. Seven images are not evidence either way.
+- Dome photo was drawn upside down in the viewer: fixed.
+- Not fixed, by decision: overcast scenes (soft sky light is not separable from a broad overhead light using
+  shading alone), two-light scenes, re-shading attacks. All three are stated as limits in the report.
+- Tests: 60 pytest tests pass with the new default.
+
+## Results so far (first build, rank cue)
 
 **Calibration** (`python -m lightaudit.cli calibrate --n-cal 200`, seeds 1000-1199, `noisy_gt(8)`):
 
