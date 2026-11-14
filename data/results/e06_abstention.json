@@ -7,8 +7,8 @@
   "T": 1.5,
   "cov68": 0.6976744186046512,
   "cov95": 0.8985200845665962,
-  "tau_img_05": 6.348225106140116,
-  "tau_img_10": 5.548991759968739,
+  "tau_img_05": 6.2943088485391545,
+  "tau_img_10": 5.530738695362592,
   "w_min": 0.35,
   "n_cal": 200,
   "seeds": [
@@ -18,7 +18,7 @@
   "date": "2026-11-14",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T14:14:00+00:00",
+ "timestamp": "2026-11-14T16:35:36+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "conditions": [
@@ -31,7 +31,7 @@
  "splice": "car pasted at delta = 90 deg",
  "operating_point": {
   "w_min": 0.35,
-  "tau": 6.348225106140116
+  "tau": 6.2943088485391545
  },
  "verdict_distribution": {
   "normal": {
@@ -55,16 +55,16 @@
    "spliced": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.6,
+     "CONSISTENT": 0.2,
+     "SUSPICIOUS": 0.8,
      "INSUFFICIENT": 0.0,
      "CONFLICT": 0.0
     },
     "decided": 5,
     "coverage": 1.0,
-    "accuracy_decided": 0.6,
+    "accuracy_decided": 0.8,
     "accuracy_decided_ci": [
-     0.2,
+     0.4,
      1.0
     ],
     "false_alarm_decided": null
@@ -91,17 +91,17 @@
    "spliced": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.2,
-     "SUSPICIOUS": 0.0,
+     "CONSISTENT": 0.0,
+     "SUSPICIOUS": 0.2,
      "INSUFFICIENT": 0.8,
      "CONFLICT": 0.0
     },
     "decided": 1,
     "coverage": 0.2,
-    "accuracy_decided": 0.0,
+    "accuracy_decided": 1.0,
     "accuracy_decided_ci": [
-     0.0,
-     0.0
+     1.0,
+     1.0
     ],
     "false_alarm_decided": null
    }
@@ -110,34 +110,34 @@
    "pristine": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.2,
+     "CONSISTENT": 0.6,
+     "SUSPICIOUS": 0.0,
      "INSUFFICIENT": 0.4,
      "CONFLICT": 0.0
     },
     "decided": 3,
     "coverage": 0.6,
-    "accuracy_decided": 0.6666666666666666,
+    "accuracy_decided": 1.0,
     "accuracy_decided_ci": [
-     0.0,
+     1.0,
      1.0
     ],
-    "false_alarm_decided": 0.3333333333333333
+    "false_alarm_decided": 0.0
    },
    "spliced": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.4,
+     "CONSISTENT": 0.6,
      "SUSPICIOUS": 0.2,
      "INSUFFICIENT": 0.2,
-     "CONFLICT": 0.2
+     "CONFLICT": 0.0
     },
-    "decided": 3,
-    "coverage": 0.6,
-    "accuracy_decided": 0.3333333333333333,
+    "decided": 4,
+    "coverage": 0.8,
+    "accuracy_decided": 0.25,
     "accuracy_decided_ci": [
      0.0,
-     1.0
+     0.75
     ],
     "false_alarm_decided": null
    }
@@ -146,34 +146,34 @@
    "pristine": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.2,
+     "CONSISTENT": 0.6,
+     "SUSPICIOUS": 0.0,
      "INSUFFICIENT": 0.4,
      "CONFLICT": 0.0
     },
     "decided": 3,
     "coverage": 0.6,
-    "accuracy_decided": 0.6666666666666666,
+    "accuracy_decided": 1.0,
     "accuracy_decided_ci": [
-     0.0,
+     1.0,
      1.0
     ],
-    "false_alarm_decided": 0.3333333333333333
+    "false_alarm_decided": 0.0
    },
    "spliced": {
     "n": 5,
     "fractions": {
-     "CONSISTENT": 0.4,
-     "SUSPICIOUS": 0.0,
+     "CONSISTENT": 0.2,
+     "SUSPICIOUS": 0.2,
      "INSUFFICIENT": 0.6,
      "CONFLICT": 0.0
     },
     "decided": 2,
     "coverage": 0.4,
-    "accuracy_decided": 0.0,
+    "accuracy_decided": 0.5,
     "accuracy_decided_ci": [
      0.0,
-     0.0
+     1.0
     ],
     "false_alarm_decided": null
    }
@@ -183,10 +183,10 @@
   {
    "w_min": 0.25,
    "tau_mult": 0.5,
-   "tau": 3.174112553070058,
+   "tau": 3.1471544242695773,
    "normal": {
     "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "risk": 0.2222222222222222,
     "n": 10
    },
    "overcast": {
@@ -196,27 +196,27 @@
    },
    "multi": {
     "coverage": 0.6,
-    "risk": 0.6666666666666666,
+    "risk": 0.5,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.3,
-    "risk": 0.6666666666666666,
+    "coverage": 0.4,
+    "risk": 0.25,
     "n": 10
    },
    "all": {
-    "coverage": 0.5,
-    "risk": 0.5,
+    "coverage": 0.525,
+    "risk": 0.2857142857142857,
     "n": 40
    }
   },
   {
    "w_min": 0.25,
    "tau_mult": 0.75,
-   "tau": 4.7611688296050865,
+   "tau": 4.720731636404366,
    "normal": {
-    "coverage": 0.9,
-    "risk": 0.3333333333333333,
+    "coverage": 1.0,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
@@ -235,45 +235,45 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.525,
-    "risk": 0.38095238095238093,
+    "coverage": 0.55,
+    "risk": 0.2727272727272727,
     "n": 40
    }
   },
   {
    "w_min": 0.25,
    "tau_mult": 1.0,
-   "tau": 6.348225106140116,
+   "tau": 6.2943088485391545,
    "normal": {
     "coverage": 1.0,
-    "risk": 0.2,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
     "coverage": 0.2,
-    "risk": 0.5,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.7,
+    "risk": 0.42857142857142855,
     "n": 10
    },
    "lowres": {
     "coverage": 0.5,
-    "risk": 0.6,
+    "risk": 0.2,
     "n": 10
    },
    "all": {
-    "coverage": 0.575,
-    "risk": 0.391304347826087,
+    "coverage": 0.6,
+    "risk": 0.20833333333333334,
     "n": 40
    }
   },
   {
    "w_min": 0.25,
    "tau_mult": 1.25,
-   "tau": 7.935281382675145,
+   "tau": 7.867886060673943,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -303,7 +303,7 @@
   {
    "w_min": 0.25,
    "tau_mult": 1.5,
-   "tau": 9.522337659210173,
+   "tau": 9.441463272808733,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -333,7 +333,7 @@
   {
    "w_min": 0.25,
    "tau_mult": 2.0,
-   "tau": 12.696450212280231,
+   "tau": 12.588617697078309,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -363,7 +363,7 @@
   {
    "w_min": 0.25,
    "tau_mult": 3.0,
-   "tau": 19.044675318420346,
+   "tau": 18.882926545617465,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -393,7 +393,7 @@
   {
    "w_min": 0.25,
    "tau_mult": 5.0,
-   "tau": 31.74112553070058,
+   "tau": 31.47154424269577,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -423,10 +423,10 @@
   {
    "w_min": 0.35,
    "tau_mult": 0.5,
-   "tau": 3.174112553070058,
+   "tau": 3.1471544242695773,
    "normal": {
     "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "risk": 0.2222222222222222,
     "n": 10
    },
    "overcast": {
@@ -436,27 +436,27 @@
    },
    "multi": {
     "coverage": 0.6,
-    "risk": 0.6666666666666666,
+    "risk": 0.5,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.3,
-    "risk": 0.6666666666666666,
+    "coverage": 0.4,
+    "risk": 0.25,
     "n": 10
    },
    "all": {
-    "coverage": 0.5,
-    "risk": 0.5,
+    "coverage": 0.525,
+    "risk": 0.2857142857142857,
     "n": 40
    }
   },
   {
    "w_min": 0.35,
    "tau_mult": 0.75,
-   "tau": 4.7611688296050865,
+   "tau": 4.720731636404366,
    "normal": {
-    "coverage": 0.9,
-    "risk": 0.3333333333333333,
+    "coverage": 1.0,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
@@ -475,45 +475,45 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.525,
-    "risk": 0.38095238095238093,
+    "coverage": 0.55,
+    "risk": 0.2727272727272727,
     "n": 40
    }
   },
   {
    "w_min": 0.35,
    "tau_mult": 1.0,
-   "tau": 6.348225106140116,
+   "tau": 6.2943088485391545,
    "normal": {
     "coverage": 1.0,
-    "risk": 0.2,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
     "coverage": 0.2,
-    "risk": 0.5,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.7,
+    "risk": 0.42857142857142855,
     "n": 10
    },
    "lowres": {
     "coverage": 0.5,
-    "risk": 0.6,
+    "risk": 0.2,
     "n": 10
    },
    "all": {
-    "coverage": 0.575,
-    "risk": 0.391304347826087,
+    "coverage": 0.6,
+    "risk": 0.20833333333333334,
     "n": 40
    }
   },
   {
    "w_min": 0.35,
    "tau_mult": 1.25,
-   "tau": 7.935281382675145,
+   "tau": 7.867886060673943,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -543,7 +543,7 @@
   {
    "w_min": 0.35,
    "tau_mult": 1.5,
-   "tau": 9.522337659210173,
+   "tau": 9.441463272808733,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -573,7 +573,7 @@
   {
    "w_min": 0.35,
    "tau_mult": 2.0,
-   "tau": 12.696450212280231,
+   "tau": 12.588617697078309,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -603,7 +603,7 @@
   {
    "w_min": 0.35,
    "tau_mult": 3.0,
-   "tau": 19.044675318420346,
+   "tau": 18.882926545617465,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -633,7 +633,7 @@
   {
    "w_min": 0.35,
    "tau_mult": 5.0,
-   "tau": 31.74112553070058,
+   "tau": 31.47154424269577,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -663,10 +663,10 @@
   {
    "w_min": 0.5,
    "tau_mult": 0.5,
-   "tau": 3.174112553070058,
+   "tau": 3.1471544242695773,
    "normal": {
     "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "risk": 0.2222222222222222,
     "n": 10
    },
    "overcast": {
@@ -676,27 +676,27 @@
    },
    "multi": {
     "coverage": 0.6,
-    "risk": 0.6666666666666666,
+    "risk": 0.5,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.3,
-    "risk": 0.6666666666666666,
+    "coverage": 0.4,
+    "risk": 0.25,
     "n": 10
    },
    "all": {
-    "coverage": 0.5,
-    "risk": 0.5,
+    "coverage": 0.525,
+    "risk": 0.2857142857142857,
     "n": 40
    }
   },
   {
    "w_min": 0.5,
    "tau_mult": 0.75,
-   "tau": 4.7611688296050865,
+   "tau": 4.720731636404366,
    "normal": {
-    "coverage": 0.9,
-    "risk": 0.3333333333333333,
+    "coverage": 1.0,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
@@ -715,45 +715,45 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.525,
-    "risk": 0.38095238095238093,
+    "coverage": 0.55,
+    "risk": 0.2727272727272727,
     "n": 40
    }
   },
   {
    "w_min": 0.5,
    "tau_mult": 1.0,
-   "tau": 6.348225106140116,
+   "tau": 6.2943088485391545,
    "normal": {
     "coverage": 1.0,
-    "risk": 0.2,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
     "coverage": 0.2,
-    "risk": 0.5,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.7,
+    "risk": 0.42857142857142855,
     "n": 10
    },
    "lowres": {
     "coverage": 0.5,
-    "risk": 0.6,
+    "risk": 0.2,
     "n": 10
    },
    "all": {
-    "coverage": 0.575,
-    "risk": 0.391304347826087,
+    "coverage": 0.6,
+    "risk": 0.20833333333333334,
     "n": 40
    }
   },
   {
    "w_min": 0.5,
    "tau_mult": 1.25,
-   "tau": 7.935281382675145,
+   "tau": 7.867886060673943,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -783,7 +783,7 @@
   {
    "w_min": 0.5,
    "tau_mult": 1.5,
-   "tau": 9.522337659210173,
+   "tau": 9.441463272808733,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -813,7 +813,7 @@
   {
    "w_min": 0.5,
    "tau_mult": 2.0,
-   "tau": 12.696450212280231,
+   "tau": 12.588617697078309,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -843,7 +843,7 @@
   {
    "w_min": 0.5,
    "tau_mult": 3.0,
-   "tau": 19.044675318420346,
+   "tau": 18.882926545617465,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -873,7 +873,7 @@
   {
    "w_min": 0.5,
    "tau_mult": 5.0,
-   "tau": 31.74112553070058,
+   "tau": 31.47154424269577,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -903,10 +903,10 @@
   {
    "w_min": 0.65,
    "tau_mult": 0.5,
-   "tau": 3.174112553070058,
+   "tau": 3.1471544242695773,
    "normal": {
     "coverage": 0.9,
-    "risk": 0.4444444444444444,
+    "risk": 0.2222222222222222,
     "n": 10
    },
    "overcast": {
@@ -916,27 +916,27 @@
    },
    "multi": {
     "coverage": 0.6,
-    "risk": 0.6666666666666666,
+    "risk": 0.5,
     "n": 10
    },
    "lowres": {
-    "coverage": 0.3,
-    "risk": 0.3333333333333333,
+    "coverage": 0.4,
+    "risk": 0.25,
     "n": 10
    },
    "all": {
-    "coverage": 0.5,
-    "risk": 0.45,
+    "coverage": 0.525,
+    "risk": 0.2857142857142857,
     "n": 40
    }
   },
   {
    "w_min": 0.65,
    "tau_mult": 0.75,
-   "tau": 4.7611688296050865,
+   "tau": 4.720731636404366,
    "normal": {
-    "coverage": 0.9,
-    "risk": 0.3333333333333333,
+    "coverage": 1.0,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
@@ -955,45 +955,45 @@
     "n": 10
    },
    "all": {
-    "coverage": 0.525,
-    "risk": 0.38095238095238093,
+    "coverage": 0.55,
+    "risk": 0.2727272727272727,
     "n": 40
    }
   },
   {
    "w_min": 0.65,
    "tau_mult": 1.0,
-   "tau": 6.348225106140116,
+   "tau": 6.2943088485391545,
    "normal": {
     "coverage": 1.0,
-    "risk": 0.2,
+    "risk": 0.1,
     "n": 10
    },
    "overcast": {
     "coverage": 0.2,
-    "risk": 0.5,
+    "risk": 0.0,
     "n": 10
    },
    "multi": {
-    "coverage": 0.6,
-    "risk": 0.5,
+    "coverage": 0.7,
+    "risk": 0.42857142857142855,
     "n": 10
    },
    "lowres": {
     "coverage": 0.5,
-    "risk": 0.6,
+    "risk": 0.2,
     "n": 10
    },
    "all": {
-    "coverage": 0.575,
-    "risk": 0.391304347826087,
+    "coverage": 0.6,
+    "risk": 0.20833333333333334,
     "n": 40
    }
   },
   {
    "w_min": 0.65,
    "tau_mult": 1.25,
-   "tau": 7.935281382675145,
+   "tau": 7.867886060673943,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -1023,7 +1023,7 @@
   {
    "w_min": 0.65,
    "tau_mult": 1.5,
-   "tau": 9.522337659210173,
+   "tau": 9.441463272808733,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -1053,7 +1053,7 @@
   {
    "w_min": 0.65,
    "tau_mult": 2.0,
-   "tau": 12.696450212280231,
+   "tau": 12.588617697078309,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -1083,7 +1083,7 @@
   {
    "w_min": 0.65,
    "tau_mult": 3.0,
-   "tau": 19.044675318420346,
+   "tau": 18.882926545617465,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,
@@ -1113,7 +1113,7 @@
   {
    "w_min": 0.65,
    "tau_mult": 5.0,
-   "tau": 31.74112553070058,
+   "tau": 31.47154424269577,
    "normal": {
     "coverage": 1.0,
     "risk": 0.5,

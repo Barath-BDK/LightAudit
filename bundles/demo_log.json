@@ -9,7 +9,7 @@
   ],
   "verdict": "CONSISTENT",
   "matched": true,
-  "S_img": 0.8057032969435464,
+  "S_img": 0.1862765145177183,
   "attacks": []
  },
  {
@@ -22,11 +22,11 @@
   ],
   "verdict": "SUSPICIOUS",
   "matched": true,
-  "S_img": 6.858349375021832,
+  "S_img": 6.899811962867758,
   "attacks": [
    {
     "variant": "T1",
-    "verdict": "CONSISTENT"
+    "verdict": "SUSPICIOUS"
    },
    {
     "variant": "T3a_0",
@@ -69,7 +69,7 @@
   ],
   "verdict": "SUSPICIOUS",
   "matched": true,
-  "S_img": 5.581043448711815,
+  "S_img": 5.821237862687098,
   "attacks": [
    {
     "variant": "T1",
@@ -104,7 +104,7 @@
   ],
   "verdict": "CONSISTENT",
   "matched": false,
-  "S_img": 4.0624662664107305,
+  "S_img": 2.7997940880388996,
   "attacks": []
  },
  {
@@ -117,7 +117,7 @@
   ],
   "verdict": "INSUFFICIENT",
   "matched": true,
-  "S_img": 6.126356293698521,
+  "S_img": 5.267250700461327,
   "attacks": []
  },
  {
@@ -130,7 +130,7 @@
   ],
   "verdict": "CONSISTENT",
   "matched": true,
-  "S_img": 3.7976965165281773,
+  "S_img": 3.4536071981518495,
   "attacks": []
  }
 ]

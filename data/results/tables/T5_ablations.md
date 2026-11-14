@@ -4,14 +4,15 @@
 |---|---|---|---|---|---|
 | rule, C1 (shading) | 0.63 [0.52, 0.73] | 0.40 [0.20, 0.80] | 135 | 0.13 | 0.21 |
 | rule, C1+C2 | 0.65 [0.54, 0.74] | 0.60 [0.33, 0.87] | 60 | 0.13 | 0.21 |
-| rule, C1+C2+C3 (default) | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
+| rule, default (silhouette weight 0, same as C1+C2) | 0.65 [0.54, 0.74] | 0.60 [0.33, 0.87] | 60 | 0.13 | 0.21 |
+| with silhouette cue (w_contour = 0.5) | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
 | RANK baseline (shading) | 0.57 [0.46, 0.69] | 0.40 [0.13, 0.67] | n/a | 0.13 | 0.20 |
-| KDE calibration off (h=10, T=1) | 0.59 [0.45, 0.72] | 0.20 [0.07, 0.53] | n/a | 0.13 | 0.20 |
-| w_min = 0.25 | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
-| w_min = 0.50 | 0.62 [0.50, 0.72] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.21 |
-| no leave-one-out (global consensus) | 0.58 [0.46, 0.70] | 0.27 [0.07, 0.53] | 180 | 0.13 | 0.21 |
-| arbiter (C1+C2+C3) | 0.60 [0.48, 0.73] | 0.13 [0.00, 0.67] | n/a | 0.13 | 0.21 |
-| region backend gt | 0.67 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.00 | 0.00 |
-| region backend slic | 0.78 | TPR@tau 0.33, FPR@tau 0.00 | - | 0.67 | 0.33 |
+| KDE calibration off (h=10, T=1) | 0.66 [0.55, 0.76] | 0.40 [0.20, 0.67] | 135 | 0.13 | 0.20 |
+| w_min = 0.25 | 0.65 [0.54, 0.74] | 0.60 [0.33, 0.87] | 60 | 0.13 | 0.21 |
+| w_min = 0.50 | 0.65 [0.54, 0.74] | 0.60 [0.33, 0.87] | 60 | 0.13 | 0.21 |
+| no leave-one-out (global consensus) | 0.60 [0.48, 0.71] | 0.33 [0.13, 0.67] | 180 | 0.13 | 0.21 |
+| arbiter (default cues) | 0.65 [0.54, 0.75] | 0.53 [0.27, 0.80] | 90 | 0.13 | 0.21 |
+| region backend gt | 0.78 | TPR@tau 0.67, FPR@tau 0.00 | - | 0.00 | 0.00 |
+| region backend slic | 0.78 | TPR@tau 0.00, FPR@tau 0.00 | - | 0.67 | 0.33 |
 
 Suite quick; region-backend rows on 3+3 scenes. Caveat: synthetic scenes with simulated normal predictors unless stated.

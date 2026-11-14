@@ -55,7 +55,7 @@ class Config:
     contour_min_px: int = 80
     contour_kappa: float = 0.1  # S -> [0,1] map: exp(-(Smax - S)/kappa)
     contour_min_rho: float = 0.3
-    w_contour: float = 0.5
+    w_contour: float = 0.0  # silhouette cue is off by default: on 60 calibration scenes it did not help (0.5 = on)
     # shadow pairs
     shadow_sigma_px: float = 3.0
     w_shadow: float = 0.7

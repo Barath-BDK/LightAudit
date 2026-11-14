@@ -49,7 +49,7 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
         if r.get("kind") == "pseudo":
             continue
         g = r["glint"] if "glint" in cues else None
-        c = r["contour"] if "contour" in cues else None
+        c = r["contour"] if "contour" in cues and cfg.w_contour > 0 else None
         r["A"] = combine_cues(r["P"], g, c, cfg)
         r["cues"] = (["shading"] + (["glint"] if g is not None else []) + (["contour"] if c is not None else [])
                      + (["panel"] if r.get("panel_z") is not None else []))

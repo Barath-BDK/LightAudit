@@ -7,8 +7,8 @@
   "T": 1.5,
   "cov68": 0.6976744186046512,
   "cov95": 0.8985200845665962,
-  "tau_img_05": 6.348225106140116,
-  "tau_img_10": 5.548991759968739,
+  "tau_img_05": 6.2943088485391545,
+  "tau_img_10": 5.530738695362592,
   "w_min": 0.35,
   "n_cal": 200,
   "seeds": [
@@ -18,7 +18,7 @@
   "date": "2026-11-14",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T14:16:27+00:00",
+ "timestamp": "2026-11-14T16:35:50+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "n_pristine": 5,
@@ -42,9 +42,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -70,9 +70,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -98,9 +98,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -114,9 +114,9 @@
   "jpeg:50": {
    "kind": "jpeg",
    "param": 50,
-   "tpr_C1": 0.6,
+   "tpr_C1": 0.8,
    "tpr_C1_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_C1": 0.2,
@@ -126,9 +126,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.2,
@@ -154,9 +154,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -266,9 +266,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -294,9 +294,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -322,9 +322,9 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.6,
+   "tpr_fused": 0.8,
    "tpr_fused_ci": [
-    0.2,
+    0.4,
     1.0
    ],
    "abstain_spliced_fused": 0.0,
@@ -356,10 +356,10 @@
     0.8
    ],
    "abstain_spliced_fused": 0.4,
-   "fpr_fused": 0.2,
+   "fpr_fused": 0.0,
    "fpr_fused_ci": [
     0.0,
-    0.6
+    0.0
    ],
    "abstain_pristine_fused": 0.0
   },
@@ -406,16 +406,16 @@
     0.0
    ],
    "abstain_pristine_C1": 0.6,
-   "tpr_fused": 0.4,
+   "tpr_fused": 0.6,
    "tpr_fused_ci": [
-    0.0,
-    0.8
+    0.2,
+    1.0
    ],
    "abstain_spliced_fused": 0.0,
-   "fpr_fused": 0.2,
+   "fpr_fused": 0.0,
    "fpr_fused_ci": [
     0.0,
-    0.6
+    0.0
    ],
    "abstain_pristine_fused": 0.6
   }

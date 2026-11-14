@@ -11,10 +11,11 @@ from . import common as C
 from . import metrics as M
 from .exp_e4 import DELTAS, collect, negatives
 
-ROWS = [("rule, C1 (shading)", "C1", "score"), ("rule, C1+C2", "C1+C2", "score"), ("rule, C1+C2+C3 (default)", "C1+C2+C3", "score"),
+ROWS = [("rule, C1 (shading)", "C1", "score"), ("rule, C1+C2", "C1+C2", "score"), ("rule, default (silhouette weight 0, same as C1+C2)", "C1+C2+C3", "score"),
+        ("with silhouette cue (w_contour = 0.5)", "contour0.5", "score"),
         (C.BASE + " baseline (shading)", C.BASE, "score"), ("KDE calibration off (h=10, T=1)", "noKDEcal", "score"),
         ("w_min = 0.25", "wmin0.25", "score"), ("w_min = 0.50", "wmin0.50", "score"),
-        ("no leave-one-out (global consensus)", "noLOO", "score"), ("arbiter (C1+C2+C3)", "C1+C2+C3", "arb_score")]
+        ("no leave-one-out (global consensus)", "noLOO", "score"), ("arbiter (default cues)", "C1+C2+C3", "arb_score")]
 
 
 def _ablate(rows, variant, key):

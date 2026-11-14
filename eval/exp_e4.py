@@ -36,6 +36,7 @@ def _variants(cfg, ablations: bool):
             "wmin0.25": dict(cues=C.CUE_SETS["C1+C2+C3"], cfg=replace(cfg, w_min=0.25)),
             "wmin0.50": dict(cues=C.CUE_SETS["C1+C2+C3"], cfg=replace(cfg, w_min=0.50)),
             "noLOO": dict(cues=C.CUE_SETS["C1+C2+C3"], loo=False),
+            "contour0.5": dict(cues=C.CUE_SETS["C1+C2+C3"], cfg=replace(cfg, w_contour=0.5)),
         })
     return v
 

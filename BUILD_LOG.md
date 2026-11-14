@@ -3,6 +3,14 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 3 (15 Nov 2026): silhouette cue off by default
+
+60-scene check on the calibration split (car pasted at 45 and 90 deg): shading + glints catches 60% of the 90 deg
+splices at 5% false alarms, adding the silhouette cue 52% (false alarms at the calibrated level 3% vs 5%); AUC is
+the same (0.82). `Config.w_contour = 0` now; the cue stays in the code, in the viewer's weight slider and as an
+ablation row in E8. Also tested there: weighting the score by region reliability (no change) and using the
+second-highest shortfall (worse). Recalibrated and re-evaluated; 62 tests and the parity check pass.
+
 ## Update 2 (14 Nov 2026): soft-light abstention and panel check
 
 - Tested three candidate checks on 30 calibration scenes each before building any: soft-light contrast
