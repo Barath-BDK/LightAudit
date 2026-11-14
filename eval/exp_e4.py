@@ -54,17 +54,17 @@ def _job(args) -> list[dict]:
                         delta_actual=rec.get("delta", 0.0), cue=cue, kind=rec["kind"], missing=False,
                         res=C.evaluate(rec, cfg, variants)))
 
-    full_v, std_v, ls_v = _variants(cfg, True), _variants(cfg, False), {"LS": dict(cues=("shading",))}
+    full_v, std_v, ls_v = _variants(cfg, True), _variants(cfg, False), {C.BASE: dict(cues=("shading",))}
     if part == "prist":
-        add(C.pristine(seed, "normal"), "pristine_normal", "rank", full_v)
-        add(C.pristine(seed, "normal", cue="ls"), "pristine_normal", "ls", ls_v)
-        add(C.pristine(seed, "damage"), "pristine_damage", "rank", std_v)
+        add(C.pristine(seed, "normal"), "pristine_normal", C.MAIN, full_v)
+        add(C.pristine(seed, "normal", cue=C.ALT), "pristine_normal", C.ALT, ls_v)
+        add(C.pristine(seed, "damage"), "pristine_damage", C.MAIN, std_v)
         return out
     for d in deltas:
-        add(C.composite(seed, "normal", "car", d), "car", "rank", full_v)
-        add(C.composite(seed, "normal", "car", d, cue="ls"), "car", "ls", ls_v)
-        add(C.composite(seed, "normal", "distractor", d), "distractor", "rank", std_v)  # None: no distractor
-        add(C.composite(seed, "damage", "dent", d), "dent", "rank", std_v)
+        add(C.composite(seed, "normal", "car", d), "car", C.MAIN, full_v)
+        add(C.composite(seed, "normal", "car", d, cue=C.ALT), "car", C.ALT, ls_v)
+        add(C.composite(seed, "normal", "distractor", d), "distractor", C.MAIN, std_v)  # None: no distractor
+        add(C.composite(seed, "damage", "dent", d), "dent", C.MAIN, std_v)
     return out
 
 
@@ -86,12 +86,12 @@ def collect(suite: str) -> list[dict]:
     return rows
 
 
-def negatives(rows, target: str, cue: str = "rank"):
+def negatives(rows, target: str, cue: str = C.MAIN):
     t = "pristine_damage" if target == "dent" else "pristine_normal"
     return [r for r in rows if r["target"] == t and r["cue"] == cue and not r["missing"]]
 
 
-def positives(rows, target: str, delta, cue: str = "rank"):
+def positives(rows, target: str, delta, cue: str = C.MAIN):
     return [r for r in rows if r["target"] == target and r["cue"] == cue and not r["missing"] and r["delta"] == delta]
 
 
@@ -99,7 +99,7 @@ def scores(rs, variant, key="score"):
     return [r["res"][variant][key] for r in rs]
 
 
-def curve(rows, target, variant, cue="rank", n_boot=1000):
+def curve(rows, target, variant, cue=C.MAIN, n_boot=1000):
     """TPR@5%FPR (test-pristine threshold) and TPR@tau per delta, with scene-bootstrap CIs."""
     neg = negatives(rows, target, cue)
     ns = scores(neg, variant)
@@ -140,7 +140,7 @@ def run(suite: str) -> dict:
     for target in TARGETS:
         cur = {v: curve(rows, target, v) for v in C.CUE_SETS}
         if target == "car":
-            cur["LS"] = curve(rows, target, "LS", cue="ls")
+            cur[C.BASE] = curve(rows, target, C.BASE, cue=C.ALT)
         cur["fused"] = dict(cur["C1+C2+C3"], variant="fused")
         n_scenes = len({r["seed"] for r in rows if r["target"] == target and not r["missing"]})
         n_missing = len({r["seed"] for r in rows if r["target"] == target and r["missing"]})

@@ -93,7 +93,7 @@ def build_manifest(result: dict, name: str, title: str, description: str, source
     cfg = result["cfg"]
     H, W = result["labels"].shape
     return dict(
-        version=1, name=name, title=title, description=description,
+        version=1, name=name, title=title, description=description, cue=result.get("cue", "rank"),
         image=dict(w=W, h=H, fov_deg=result["fov_deg"], source=source),
         ground_truth=result.get("ground_truth"),
         normals_backend=result.get("normals_backend", "unknown"), regions_backend=result.get("regions_backend", "unknown"),
@@ -116,7 +116,7 @@ def write_bundle(result: dict, name: str, title: str, description: str, source: 
     _write_maps(d, result, m, full=True)
     if baseline_ls is not None:
         np.stack([r["A"] for r in baseline_ls["regions"]]).astype("<f4").tofile(d / "landscapes_ls.bin")
-        m["baseline_ls"] = dict(present=True, fusion=fusion_manifest(baseline_ls),
+        m["baseline_ls"] = dict(present=True, cue=baseline_ls.get("cue", "ls"), fusion=fusion_manifest(baseline_ls),
                                 regions=[dict(id=r["id"], center=r["center"], r68_deg=r["r68_deg"], r95_deg=r["r95_deg"],
                                               weight=r["weight"], reliable=r["reliable"]) for r in baseline_ls["regions"]])
     for a in attacks or []:

@@ -12,13 +12,13 @@ from . import metrics as M
 from .exp_e4 import DELTAS, collect, negatives
 
 ROWS = [("rule, C1 (shading)", "C1", "score"), ("rule, C1+C2", "C1+C2", "score"), ("rule, C1+C2+C3 (default)", "C1+C2+C3", "score"),
-        ("LS baseline (shading)", "LS", "score"), ("KDE calibration off (h=10, T=1)", "noKDEcal", "score"),
+        (C.BASE + " baseline (shading)", C.BASE, "score"), ("KDE calibration off (h=10, T=1)", "noKDEcal", "score"),
         ("w_min = 0.25", "wmin0.25", "score"), ("w_min = 0.50", "wmin0.50", "score"),
         ("no leave-one-out (global consensus)", "noLOO", "score"), ("arbiter (C1+C2+C3)", "C1+C2+C3", "arb_score")]
 
 
 def _ablate(rows, variant, key):
-    cue = "ls" if variant == "LS" else "rank"
+    cue = C.ALT if variant == C.BASE else C.MAIN
     neg = negatives(rows, "car", cue)
     if not neg or variant not in neg[0]["res"] or key not in neg[0]["res"][variant]:
         return None

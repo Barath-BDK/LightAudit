@@ -18,7 +18,7 @@ if __package__ in (None, ""):
 
 from eval.common import CAVEAT, FIGS, RESULTS, load_json  # noqa: E402
 
-PAL = {"C1": "#4c78a8", "C1+C2": "#f58518", "C1+C2+C3": "#54a24b", "fused": "#54a24b", "LS": "#e45756",
+PAL = {"C1": "#4c78a8", "C1+C2": "#f58518", "C1+C2+C3": "#54a24b", "fused": "#54a24b", "LS": "#e45756", "RANK": "#e45756",
        "rank": "#4c78a8", "ls": "#e45756", "ls_lstsq": "#9d755d", "arbiter": "#b279a2", "grey": "#888888"}
 plt.rcParams.update({"font.size": 10, "axes.titlesize": 11, "axes.labelsize": 10, "legend.fontsize": 9,
                      "xtick.labelsize": 9, "ytick.labelsize": 9, "axes.spines.top": False, "axes.spines.right": False})

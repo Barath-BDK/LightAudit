@@ -172,8 +172,25 @@ def _run_dsine(rgb: np.ndarray, fov_deg: float) -> np.ndarray:
     import torch
 
     def load():
-        m = torch.hub.load("hugoycj/DSINE-hub", "DSINE", trust_repo=True)
-        return m.eval() if hasattr(m, "eval") else m
+        if torch.cuda.is_available():
+            return torch.hub.load("hugoycj/DSINE-hub", "DSINE", trust_repo=True)
+        # The hub wrapper hard-codes .to("cuda"); on a CPU-only machine remap those moves to the CPU while loading.
+        cpu = torch.device("cpu")
+        saved = torch.nn.Module.to, torch.Tensor.to
+
+        def remap(orig):
+            def to(self, *a, **k):
+                a = tuple(cpu if isinstance(x, torch.device) and x.type == "cuda" else x for x in a)
+                return orig(self, *a, **k)
+            return to
+
+        torch.nn.Module.to, torch.Tensor.to = remap(saved[0]), remap(saved[1])
+        try:
+            m = torch.hub.load("hugoycj/DSINE-hub", "DSINE", trust_repo=True)
+        finally:
+            torch.nn.Module.to, torch.Tensor.to = saved
+        m.device = cpu
+        return m
 
     model = _model("dsine", load)
     img = _small(rgb, 640)

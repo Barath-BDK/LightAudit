@@ -30,6 +30,9 @@ import numpy as np
 
 from lightaudit.config import CALIB_DEFAULT, ROOT, SPLIT_SEEDS, Config, calibrated, load_calib
 
+MAIN = Config().cue  # the audit's shading cue
+ALT = "rank" if MAIN == "ls" else "ls"  # the other cue, evaluated as the shading-only baseline
+BASE = ALT.upper()  # variant key / label of that baseline
 RESULTS = ROOT / "data" / "results"
 CACHE = RESULTS / "cache"
 TABLES = RESULTS / "tables"
@@ -220,7 +223,7 @@ def sample(seed: int, kind: str):
     return _SAMPLES[k]
 
 
-def pristine(seed: int, kind: str, sigma: float = 8.0, cue: str = "rank", panel: bool | None = None) -> dict:
+def pristine(seed: int, kind: str, sigma: float = 8.0, cue: str = MAIN, panel: bool | None = None) -> dict:
     """Slim pristine audit {seed, kind, sigma, cue, panel, light_cam, regions}; cached."""
     panel = (kind == "damage") if panel is None else panel
     p = _key("pr", kind, seed, f"s{sigma:g}", cue, "panel" if panel else "full")
@@ -261,7 +264,7 @@ def make_composite(s, target: str, delta: float, seed: int):
         return None
 
 
-def composite(seed: int, kind: str, target: str, delta: float, sigma: float = 8.0, cue: str = "rank") -> dict | None:
+def composite(seed: int, kind: str, target: str, delta: float, sigma: float = 8.0, cue: str = MAIN) -> dict | None:
     """Slim composite audit (only the edited regions stored; the rest refer to the pristine record)."""
     panel = target == "dent"
     p = _key("co", kind, seed, target, f"d{delta:g}", f"s{sigma:g}", cue)

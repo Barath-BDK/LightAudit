@@ -23,10 +23,10 @@ def run(suite: str) -> dict:
     rows = collect(suite)
     out_t = {}
     for target in TARGETS:
-        variants = list(C.CUE_SETS) + (["LS"] if target == "car" else [])
+        variants = list(C.CUE_SETS) + ([C.BASE] if target == "car" else [])
         res = {}
         for v in variants:
-            cue = "ls" if v == "LS" else "rank"
+            cue = C.ALT if v == C.BASE else C.MAIN
             neg = negatives(rows, target, cue)
             pos = _pos_by_scene(rows, target, cue)
             ns = [r["res"][v]["score"] for r in neg]

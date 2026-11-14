@@ -77,7 +77,7 @@ def build_demo_bundles(only: list[str] | None = None) -> list[dict]:
             rid = max(ed, key=lambda r: (r["flagged"], r["n_valid"]))["id"]
             reaudit = lambda rgb: audit_sample(s, cfg=cfg, composite=dict(comp, rgb=rgb), panel=panel, reuse=res, changed=[rid])  # noqa: E731
             attacks = attack_suite(res, rid, reaudit, seed=seed)
-        ls = audit_sample(s, cfg=cfg, composite=comp, panel=panel, cue="ls", residual=False)
+        ls = audit_sample(s, cfg=cfg, composite=comp, panel=panel, cue="rank" if cfg.cue == "ls" else "ls", residual=False)
         what = d["what"].format(delta=comp["delta_deg"] if comp else 0)
         desc = (f"{what} Synthetic scene (seed {seed}), simulated normals. Audit verdict: {f['verdict']}"
                 + ("" if ok else f" (intended: {'/'.join(d['expect'])}; shown as it is)") + ".")
@@ -91,7 +91,7 @@ def build_demo_bundles(only: list[str] | None = None) -> list[dict]:
 
 
 def audit_image(image: Path, name: str | None = None, roi: Path | None = None, regions: str = "sam",
-                normals: str = "dsine,stablenormal", fov: float = 60.0, calib: Path | None = None,
+                normals: str = "dsine,stablenormal,depth_anything", fov: float = 60.0, calib: Path | None = None,
                 attacks: bool = False, html: bool = False, flips=(False, False, False), title: str | None = None,
                 description: str | None = None, progress=None, root: Path | None = None) -> Path:
     """Real-photo path: normals ensemble -> regions -> audit -> bundle."""
@@ -152,7 +152,7 @@ def main(argv=None) -> int:
     p.add_argument("--image", required=True)
     p.add_argument("--roi")
     p.add_argument("--regions", default="sam")
-    p.add_argument("--normals", default="dsine,stablenormal")
+    p.add_argument("--normals", default="dsine,stablenormal,depth_anything")
     p.add_argument("--fov", type=float, default=60.0)
     p.add_argument("--calib")
     p.add_argument("--name")

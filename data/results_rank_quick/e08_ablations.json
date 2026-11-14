@@ -1,0 +1,341 @@
+{
+ "experiment": "E8",
+ "suite": "quick",
+ "caveat": "synthetic scenes with simulated normal predictors unless stated",
+ "calibration": {
+  "h": 18,
+  "T": 1.5,
+  "cov68": 0.6636971046770601,
+  "cov95": 0.9265033407572383,
+  "tau_img_05": 4.945745134208296,
+  "tau_img_10": 4.259643944992111,
+  "w_min": 0.35,
+  "n_cal": 200,
+  "seeds": [
+   1000,
+   1199
+  ],
+  "date": "2026-11-12",
+  "source": "calib_default.json"
+ },
+ "timestamp": "2026-11-14T10:40:29+00:00",
+ "python": "3.11.4",
+ "platform": "Windows-10-10.0.26200-SP0",
+ "target": "car",
+ "table": [
+  {
+   "ablation": "rule, C1 (shading)",
+   "variant": "C1",
+   "score": "score",
+   "available": true,
+   "auc": 0.6214814814814815,
+   "auc_ci": [
+    0.5081018518518519,
+    0.7289074074074074
+   ],
+   "tpr5_d90": 0.4,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.6666666666666666
+   ],
+   "mdi_fpr5": 180.0,
+   "mdi_fpr5_interp": 172.5,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.14074074074074075,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "rule, C1+C2",
+   "variant": "C1+C2",
+   "score": "score",
+   "available": true,
+   "auc": 0.6362962962962962,
+   "auc_ci": [
+    0.512962962962963,
+    0.7437222222222223
+   ],
+   "tpr5_d90": 0.4,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.7333333333333333
+   ],
+   "mdi_fpr5": null,
+   "mdi_fpr5_interp": null,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.14074074074074075,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "rule, C1+C2+C3 (default)",
+   "variant": "C1+C2+C3",
+   "score": "score",
+   "available": true,
+   "auc": 0.6518518518518519,
+   "auc_ci": [
+    0.5214814814814814,
+    0.7689074074074074
+   ],
+   "tpr5_d90": 0.4,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.6666666666666666
+   ],
+   "mdi_fpr5": 180.0,
+   "mdi_fpr5_interp": 168.75,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "LS baseline (shading)",
+   "variant": "LS",
+   "score": "score",
+   "available": true,
+   "auc": 0.7133333333333334,
+   "auc_ci": [
+    0.6077685185185185,
+    0.8092685185185184
+   ],
+   "tpr5_d90": 0.6666666666666666,
+   "tpr5_d90_ci": [
+    0.4,
+    0.8666666666666667
+   ],
+   "mdi_fpr5": 90.0,
+   "mdi_fpr5_interp": 71.25,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "KDE calibration off (h=10, T=1)",
+   "variant": "noKDEcal",
+   "score": "score",
+   "available": true,
+   "auc": 0.5333333333333333,
+   "auc_ci": [
+    0.37142592592592594,
+    0.6940833333333333
+   ],
+   "tpr5_d90": 0.06666666666666667,
+   "tpr5_d90_ci": [
+    0.0,
+    0.4
+   ],
+   "mdi_fpr5": null,
+   "mdi_fpr5_interp": null,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.1259259259259259,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "w_min = 0.25",
+   "variant": "wmin0.25",
+   "score": "score",
+   "available": true,
+   "auc": 0.6518518518518519,
+   "auc_ci": [
+    0.5214814814814814,
+    0.7689074074074074
+   ],
+   "tpr5_d90": 0.4,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.6666666666666666
+   ],
+   "mdi_fpr5": 180.0,
+   "mdi_fpr5_interp": 168.75,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "w_min = 0.50",
+   "variant": "wmin0.50",
+   "score": "score",
+   "available": true,
+   "auc": 0.6451851851851852,
+   "auc_ci": [
+    0.5111018518518519,
+    0.7622777777777777
+   ],
+   "tpr5_d90": 0.4,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.6666666666666666
+   ],
+   "mdi_fpr5": 180.0,
+   "mdi_fpr5_interp": 168.75,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "no leave-one-out (global consensus)",
+   "variant": "noLOO",
+   "score": "score",
+   "available": true,
+   "auc": 0.5792592592592593,
+   "auc_ci": [
+    0.4347962962962963,
+    0.7177777777777777
+   ],
+   "tpr5_d90": 0.3333333333333333,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.6
+   ],
+   "mdi_fpr5": null,
+   "mdi_fpr5_interp": null,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  },
+  {
+   "ablation": "arbiter (C1+C2+C3)",
+   "variant": "C1+C2+C3",
+   "score": "arb_score",
+   "available": true,
+   "auc": 0.6688888888888889,
+   "auc_ci": [
+    0.5511111111111111,
+    0.7874074074074074
+   ],
+   "tpr5_d90": 0.3333333333333333,
+   "tpr5_d90_ci": [
+    0.13333333333333333,
+    0.7333333333333333
+   ],
+   "mdi_fpr5": 180.0,
+   "mdi_fpr5_interp": 157.5,
+   "abstain_pristine": 0.13333333333333333,
+   "abstain_comp": 0.11851851851851852,
+   "n_neg": 15,
+   "n_pos_d90": 15,
+   "n_pos_d30plus": 90
+  }
+ ],
+ "region_backend": {
+  "gt": {
+   "auc": 0.7777777777777778,
+   "tpr_tau": 0.6666666666666666,
+   "fpr_tau": 0.0,
+   "loc_tau": 0.6666666666666666,
+   "abstain_pristine": 0.0,
+   "abstain_comp": 0.0,
+   "n_pristine": 3,
+   "n_spliced": 3
+  },
+  "slic": {
+   "auc": 0.8888888888888888,
+   "tpr_tau": 0.6666666666666666,
+   "fpr_tau": 0.0,
+   "loc_tau": 0.3333333333333333,
+   "abstain_pristine": 0.0,
+   "abstain_comp": 0.0,
+   "n_pristine": 3,
+   "n_spliced": 3
+  }
+ },
+ "n_seg_scenes": 3,
+ "arbiter": {
+  "threshold": 0.7578840639560803,
+  "permutation_importance": [
+   {
+    "feature": "angle_k",
+    "mean": 0.1704040404040404,
+    "std": 0.06777401425670848
+   },
+   {
+    "feature": "n_valid",
+    "mean": 0.10499999999999998,
+    "std": 0.03969899370273886
+   },
+   {
+    "feature": "s_k",
+    "mean": 0.07868686868686865,
+    "std": 0.017781507873142498
+   },
+   {
+    "feature": "spread_deg",
+    "mean": 0.07146464646464645,
+    "std": 0.01790722785093141
+   },
+   {
+    "feature": "has_glint",
+    "mean": 0.010404040404040383,
+    "std": 0.005533473100930237
+   },
+   {
+    "feature": "f_norm",
+    "mean": 0.005656565656565632,
+    "std": 0.011668306325813048
+   },
+   {
+    "feature": "f_dir",
+    "mean": 0.0014141414141414066,
+    "std": 0.0032323232323232306
+   },
+   {
+    "feature": "f_spread",
+    "mean": 0.0,
+    "std": 0.0
+   },
+   {
+    "feature": "is_largest_region",
+    "mean": 0.0,
+    "std": 0.0
+   },
+   {
+    "feature": "mean_unc",
+    "mean": -0.0010101010101010387,
+    "std": 0.0018625342337965397
+   },
+   {
+    "feature": "sharp_area",
+    "mean": -0.0011616161616161858,
+    "std": 0.0031178432998081977
+   },
+   {
+    "feature": "f_size",
+    "mean": -0.002121212121212174,
+    "std": 0.0024927197331823933
+   },
+   {
+    "feature": "rho_max",
+    "mean": -0.004393939393939406,
+    "std": 0.014406869967306304
+   },
+   {
+    "feature": "f_sharp",
+    "mean": -0.006363636363636405,
+    "std": 0.014195782931399208
+   },
+   {
+    "feature": "w",
+    "mean": -0.013636363636363651,
+    "std": 0.008997840097249568
+   }
+  ],
+  "heldout_region_auc": 0.8565656565656565,
+  "n_rows": 502,
+  "n_scenes": 60
+ },
+ "notes": "w_min variants keep the calibrated tau (calibrated at w_min = 0.35). Arbiter abstains where the rule abstains (INSUFFICIENT -> score -inf). Region-backend comparison uses all cues and the calibrated tau; slic regions are re-audited from scratch."
+}

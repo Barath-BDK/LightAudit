@@ -26,7 +26,7 @@
  {
   "name": "demo_failure_missed_splice",
   "title": "Failure example: a splice that passes",
-  "description": "FAILURE EXAMPLE. The car was pasted from a light 120\u00b0 away, yet the audit does not flag it. Synthetic scene (seed 4061), simulated normals. Audit verdict: CONSISTENT.",
+  "description": "FAILURE EXAMPLE. The car was pasted from a light 120\u00b0 away, yet the audit does not flag it. Synthetic scene (seed 4063), simulated normals. Audit verdict: CONSISTENT.",
   "verdict": "CONSISTENT",
   "thumb": "demo_failure_missed_splice/thumb.jpg",
   "source": "synthetic"
@@ -50,7 +50,7 @@
  {
   "name": "demo_splice_car",
   "title": "Car pasted from another light",
-  "description": "The car was rendered under a light 120\u00b0 away from the scene's sun and pasted in. Synthetic scene (seed 4012), simulated normals. Audit verdict: SUSPICIOUS.",
+  "description": "The car was rendered under a light 120\u00b0 away from the scene's sun and pasted in. Synthetic scene (seed 4011), simulated normals. Audit verdict: SUSPICIOUS.",
   "verdict": "SUSPICIOUS",
   "thumb": "demo_splice_car/thumb.jpg",
   "source": "synthetic"

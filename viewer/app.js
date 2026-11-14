@@ -228,7 +228,7 @@ function updateDome() {
   } else dome.setShell('none');
   if (state.shell === 'consensus') hint = 'consensus of the reliable regions';
   if (state.shell === 'all') hint = 'all reliable regions, in their colours';
-  if (ls) hint += ' · LS baseline';
+  if (ls) hint += ' · baseline cue';
   let h = $('#dome-stage .dome-hint');
   if (!h) { h = document.createElement('div'); h.className = 'dome-hint'; $('#dome-stage').appendChild(h); }
   h.textContent = hint;
@@ -485,7 +485,7 @@ function bindWorkspace() {
     state.baseline = b.dataset.b;
     $$('#baseline-seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     updateDome();
-    if (state.baseline === 'ls') toast(`LS baseline (comparison only): its own verdict would be ${lsFusion.verdict}. The audit uses the rank cue.`);
+    if (state.baseline === 'ls') toast(`Baseline cue "${B.manifest.baseline_ls.cue || 'ls'}" (comparison only): its own verdict would be ${lsFusion.verdict}. The audit uses the "${B.manifest.cue || 'rank'}" cue.`);
   }));
   $('#snap-cons').addEventListener('click', () => { if (state.fusion.consensus) setLight(state.fusion.consensus.dir); else toast('No consensus: fewer than one reliable region.', 'warn'); });
   $('#snap-sel').addEventListener('click', () => {

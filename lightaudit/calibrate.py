@@ -88,7 +88,7 @@ def run_calibration(n_cal: int | None = None, n_shape: int | None = None, out: P
         tau_img_05=conformal_quantile(scores, 0.05), tau_img_10=conformal_quantile(scores, 0.10),
         tau_ref_factor=1.0, w_min=cfg.w_min, n_cal=n_cal, n_shape_scenes=n_shape, n_shape_regions=len(rel),
         n_scored=len(scores), insufficient_rate=1 - len(scores) / max(len(scored), 1),
-        seeds=[seed0, seed0 + n_cal - 1], date=date.today().isoformat(), normals="noisy_gt(8)")
+        seeds=[seed0, seed0 + n_cal - 1], date=date.today().isoformat(), normals="noisy_gt(8)", cue=cfg.cue)
     for k in ("tau_img_05", "tau_img_10"):  # too few scores for the conformal rank: fall back to the max (logged)
         if not math.isfinite(calib[k]):
             calib[k] = float(max(scores)) if scores else cfg.tau_img

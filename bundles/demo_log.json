@@ -9,24 +9,24 @@
   ],
   "verdict": "CONSISTENT",
   "matched": true,
-  "S_img": 0.7726796108800936,
+  "S_img": 0.8057032969435464,
   "attacks": []
  },
  {
   "name": "demo_splice_car",
   "built": true,
-  "seed": 4012,
-  "seeds_tried": 3,
+  "seed": 4011,
+  "seeds_tried": 2,
   "intended": [
    "SUSPICIOUS"
   ],
   "verdict": "SUSPICIOUS",
   "matched": true,
-  "S_img": 5.905368159966091,
+  "S_img": 6.858349375021832,
   "attacks": [
    {
     "variant": "T1",
-    "verdict": "SUSPICIOUS"
+    "verdict": "CONSISTENT"
    },
    {
     "variant": "T3a_0",
@@ -56,7 +56,7 @@
   ],
   "verdict": "CONSISTENT",
   "matched": true,
-  "S_img": 2.175982927544117,
+  "S_img": 2.6057429269927805,
   "attacks": []
  },
  {
@@ -69,7 +69,7 @@
   ],
   "verdict": "SUSPICIOUS",
   "matched": true,
-  "S_img": 5.439760164971866,
+  "S_img": 6.839025080521418,
   "attacks": [
    {
     "variant": "T1",
@@ -77,19 +77,19 @@
    },
    {
     "variant": "T3a_0",
-    "verdict": "CONSISTENT"
+    "verdict": "SUSPICIOUS"
    },
    {
     "variant": "T3a_10",
-    "verdict": "CONSISTENT"
+    "verdict": "SUSPICIOUS"
    },
    {
     "variant": "T3a_20",
-    "verdict": "CONSISTENT"
+    "verdict": "SUSPICIOUS"
    },
    {
     "variant": "T4",
-    "verdict": "CONSISTENT"
+    "verdict": "SUSPICIOUS"
    }
   ]
  },
@@ -104,7 +104,7 @@
   ],
   "verdict": "CONSISTENT",
   "matched": false,
-  "S_img": 4.060308531215175,
+  "S_img": 4.0624662664107305,
   "attacks": []
  },
  {
@@ -117,20 +117,20 @@
   ],
   "verdict": "INSUFFICIENT",
   "matched": true,
-  "S_img": 0.29341302129649544,
+  "S_img": 0.4970337240464414,
   "attacks": []
  },
  {
   "name": "demo_failure_missed_splice",
   "built": true,
-  "seed": 4061,
-  "seeds_tried": 2,
+  "seed": 4063,
+  "seeds_tried": 4,
   "intended": [
    "CONSISTENT"
   ],
   "verdict": "CONSISTENT",
   "matched": true,
-  "S_img": 4.64675573798108,
+  "S_img": 3.7976965165281773,
   "attacks": []
  }
 ]

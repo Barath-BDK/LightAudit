@@ -1,0 +1,423 @@
+{
+ "experiment": "E7",
+ "suite": "quick",
+ "caveat": "synthetic scenes with simulated normal predictors unless stated",
+ "calibration": {
+  "h": 18,
+  "T": 1.5,
+  "cov68": 0.6636971046770601,
+  "cov95": 0.9265033407572383,
+  "tau_img_05": 4.945745134208296,
+  "tau_img_10": 4.259643944992111,
+  "w_min": 0.35,
+  "n_cal": 200,
+  "seeds": [
+   1000,
+   1199
+  ],
+  "date": "2026-11-12",
+  "source": "calib_default.json"
+ },
+ "timestamp": "2026-11-14T10:39:49+00:00",
+ "python": "3.11.4",
+ "platform": "Windows-10-10.0.26200-SP0",
+ "n_pristine": 5,
+ "n_spliced": 5,
+ "splice": "car at delta = 90 deg",
+ "deviation": "n = 50 + 50 in the full suite instead of 150 (CPU budget)",
+ "tau_note": "calibrated tau_img, not re-fit per perturbation",
+ "perturbations": {
+  "none:None": {
+   "kind": "none",
+   "param": null,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.8,
+   "tpr_fused_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.2,
+   "fpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "jpeg:95": {
+   "kind": "jpeg",
+   "param": 95,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.8,
+   "tpr_fused_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.2,
+   "fpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "jpeg:75": {
+   "kind": "jpeg",
+   "param": 75,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.8,
+   "tpr_fused_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "jpeg:50": {
+   "kind": "jpeg",
+   "param": 50,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.2,
+   "fpr_C1_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.6,
+   "tpr_fused_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "jpeg:30": {
+   "kind": "jpeg",
+   "param": 30,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.6,
+   "tpr_fused_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "resize:0.75": {
+   "kind": "resize",
+   "param": 0.75,
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.2,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.2,
+   "tpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_spliced_fused": 0.4,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "resize:0.5": {
+   "kind": "resize",
+   "param": 0.5,
+   "tpr_C1": 0.2,
+   "tpr_C1_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_spliced_C1": 0.6,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.2,
+   "tpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_spliced_fused": 0.6,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "resize:0.35": {
+   "kind": "resize",
+   "param": 0.35,
+   "tpr_C1": 0.0,
+   "tpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_spliced_C1": 0.8,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.8,
+   "tpr_fused": 0.2,
+   "tpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_spliced_fused": 0.8,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.8
+  },
+  "noise:0.01": {
+   "kind": "noise",
+   "param": 0.01,
+   "tpr_C1": 0.8,
+   "tpr_C1_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.6,
+   "tpr_fused_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.2,
+   "fpr_fused_ci": [
+    0.0,
+    0.6
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "noise:0.03": {
+   "kind": "noise",
+   "param": 0.03,
+   "tpr_C1": 0.8,
+   "tpr_C1_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.4,
+   "tpr_fused_ci": [
+    0.0,
+    0.8
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "noise:0.06": {
+   "kind": "noise",
+   "param": 0.06,
+   "tpr_C1": 0.8,
+   "tpr_C1_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.4,
+   "tpr_fused_ci": [
+    0.0,
+    0.8
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "tone:gamma1.5": {
+   "kind": "tone",
+   "param": "gamma1.5",
+   "tpr_C1": 0.4,
+   "tpr_C1_ci": [
+    0.0,
+    0.8
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.6,
+   "tpr_fused_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "tone:gamma2.8": {
+   "kind": "tone",
+   "param": "gamma2.8",
+   "tpr_C1": 0.8,
+   "tpr_C1_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.0,
+   "tpr_fused": 0.8,
+   "tpr_fused_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.0
+  },
+  "tone:contrast1.5": {
+   "kind": "tone",
+   "param": "contrast1.5",
+   "tpr_C1": 0.6,
+   "tpr_C1_ci": [
+    0.2,
+    1.0
+   ],
+   "abstain_spliced_C1": 0.0,
+   "fpr_C1": 0.0,
+   "fpr_C1_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_C1": 0.6,
+   "tpr_fused": 0.8,
+   "tpr_fused_ci": [
+    0.4,
+    1.0
+   ],
+   "abstain_spliced_fused": 0.0,
+   "fpr_fused": 0.0,
+   "fpr_fused_ci": [
+    0.0,
+    0.0
+   ],
+   "abstain_pristine_fused": 0.6
+  }
+ }
+}

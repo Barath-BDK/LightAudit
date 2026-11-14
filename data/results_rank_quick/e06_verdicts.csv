@@ -1,0 +1,9 @@
+condition,set,n,CONSISTENT,SUSPICIOUS,INSUFFICIENT,CONFLICT,accuracy_decided,acc_lo,acc_hi
+normal,pristine,5,0.8,0.2,0.0,0.0,0.8,0.4,1.0
+normal,spliced,5,0.2,0.8,0.0,0.0,0.8,0.4,1.0
+overcast,pristine,5,0.8,0.2,0.0,0.0,0.8,0.4,1.0
+overcast,spliced,5,0.8,0.0,0.2,0.0,0.0,0.0,0.0
+multi,pristine,5,0.6,0.2,0.2,0.0,0.75,0.25,1.0
+multi,spliced,5,0.8,0.2,0.0,0.0,0.2,0.0,0.6
+lowres,pristine,5,0.6,0.0,0.2,0.2,1.0,1.0,1.0
+lowres,spliced,5,0.4,0.0,0.6,0.0,0.0,0.0,0.0

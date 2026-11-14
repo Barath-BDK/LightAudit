@@ -259,8 +259,8 @@ export function workspaceHTML(b) {
         <label class="check" title="68% (solid) and 95% (dashed) credible cones (C)"><input type="checkbox" id="cones-cb"> Cones</label>
         <span class="spacer"></span>
         <div class="seg" id="baseline-seg" role="group" aria-label="Light estimator" ${b.ls ? '' : 'hidden'}>
-          <button data-b="rank" aria-pressed="true" title="Tone-curve-invariant rank cue (used by the audit)">Rank</button>
-          <button data-b="ls" aria-pressed="false" title="Least-squares Lambertian baseline (comparison only)">LS baseline</button></div>
+          <button data-b="rank" aria-pressed="true" title="The shading cue the audit used">Audit cue</button>
+          <button data-b="ls" aria-pressed="false" title="The other shading cue (rank or least squares), for comparison only">Baseline cue</button></div>
       </div>
       <div class="stage" id="dome-stage"></div>
       <div class="panel-foot">

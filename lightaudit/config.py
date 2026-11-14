@@ -66,6 +66,8 @@ class Config:
     tau_ref_factor: float = 1.0
     min_reliable: int = 3
     broad_consensus_frac: float = 0.35
+    # shading cue used by the audit: "ls" (least squares, default since it measured ~3x more accurate) or "rank"
+    cue: str = "ls"
     # residual
     Klut: int = 33
     sigma_min: float = 0.015

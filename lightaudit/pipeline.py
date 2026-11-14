@@ -63,7 +63,7 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
 
 
 def audit(rgb, normals, unc, labels, meta, cfg: Config | None = None, fov_deg: float = 60.0, seed: int = 0,
-          cue: str = "rank", cues=ALL_CUES, scale: float = 1.0, reuse: dict | None = None, changed=None,
+          cue: str | None = None, cues=ALL_CUES, scale: float = 1.0, reuse: dict | None = None, changed=None,
           residual: bool = True, pseudo: list | None = None, loo: bool = True) -> dict:
     """Full audit of one image.
 
@@ -72,6 +72,7 @@ def audit(rgb, normals, unc, labels, meta, cfg: Config | None = None, fov_deg: f
     pseudo: scene-level cues [{name, A, weight, cue}] entered as pseudo-regions (e.g. shadow pairs).
     """
     cfg = cfg or calibrated()
+    cue = cue or cfg.cue
     Y = luminance(rgb)
     H, W = Y.shape
     view = view_vectors(H, W, fov_deg)
