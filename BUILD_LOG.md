@@ -33,6 +33,10 @@ lighting of the same scene.
 - **Region-count effect confirmed:** the max correlation-drop score correlates 0.43 with the number of regions per
   image; a per-region likelihood-ratio test (shared light vs own light, chi-square with 2 dof) with Holm
   correction removes it (0.09). Implemented in the benchmark (`lr_scores`), not yet in the pipeline.
+- **Outdoor photos re-audited with the corrected DSINE** (six unedited Wikimedia photos, SAM regions, DSINE +
+  Depth Anything): 4 of 6 flagged SUSPICIOUS (mini_parking, peugeot_104, street_car, supermarket_carpark), 2
+  CONSISTENT. The earlier "1 of 6" was an artefact of the mirrored normals (fewer regions passed the reliability
+  gate). The real splice bundle was not re-audited.
 - Not yet done: outdoor real photos with ground truth, detection rate vs angle on real splices, rank vs least
   squares on real images, moving the likelihood-ratio test and the normal-diversity gate into the pipeline.
 

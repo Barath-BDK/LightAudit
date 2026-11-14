@@ -82,8 +82,8 @@
  {
   "name": "real_peugeot_104",
   "title": "peugeot_104.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
-  "verdict": "CONSISTENT",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
   "thumb": "real_peugeot_104/thumb.jpg",
   "source": "real"
  },
@@ -98,16 +98,16 @@
  {
   "name": "real_street_car",
   "title": "street_car.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
-  "verdict": "CONSISTENT",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
   "thumb": "real_street_car/thumb.jpg",
   "source": "real"
  },
  {
   "name": "real_supermarket_carpark",
   "title": "supermarket_carpark.jpg",
-  "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
-  "verdict": "CONSISTENT",
+  "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
   "thumb": "real_supermarket_carpark/thumb.jpg",
   "source": "real"
  }
