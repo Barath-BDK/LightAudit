@@ -70,8 +70,8 @@ class Config:
     soft_contrast: float = 0.34
     # panel mode: |mean residual| of the ROI against the panel's own shading curve, in robust sigmas (calibrated)
     tau_panel: float = 1.0  # panel_z is already a ratio to the calibrated levels below
-    tau_panel_T: float = 1.0  # shared-material statistic without albedo handling (calibrated)
-    tau_panel_Tr: float = 1.0  # ... with boundary-guarded Retinex (calibrated)
+    tau_panel_T: float = 1.0  # shared-light statistic, band-guarded Retinex (calibrated)
+    tau_panel_Tr: float = 1.0  # shared-material statistic, band-guarded Retinex (calibrated)
     panel_band: int = 3  # guard band (px) around the ROI boundary for Retinex: pasted regions are feathered
     retinex_thr: float = 0.10  # log-gradient above which Retinex calls an edge reflectance
     panel_min_px: int = 50
@@ -136,3 +136,15 @@ def calibrated(cfg: Config | None = None, calib: dict | None = None, alpha: floa
                    shadow_levels_max=float(calib.get("shadow_levels_max", cfg.shadow_levels_max)),
                    tau_panel_T=float(calib.get("tau_panel_T_05" if alpha <= 0.05 else "tau_panel_T_10", cfg.tau_panel_T)),
                    tau_panel_Tr=float(calib.get("tau_panel_Tr_05" if alpha <= 0.05 else "tau_panel_Tr_10", cfg.tau_panel_Tr)))
+
+
+CALIB_REAL_PANEL = Path(__file__).resolve().parent / "calib_real_panel.json"
+
+
+def real_panel(cfg: Config) -> Config:
+    """Panel thresholds calibrated on real photographs (eval/mit_panel.py), at the 10% level: synthetic thresholds
+    are several times too high for real images. Returns cfg unchanged if that file does not exist."""
+    if not CALIB_REAL_PANEL.exists():
+        return cfg
+    c = json.loads(CALIB_REAL_PANEL.read_text())
+    return replace(cfg, tau_panel_T=float(c["tau_panel_T_10"]), tau_panel_Tr=float(c["tau_panel_Tr_10"]))

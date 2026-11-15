@@ -24,15 +24,9 @@ from lightaudit.regions import apply_roi, auto_exclude  # noqa: E402
 
 
 def real_cfg():
-    """Calibration with the panel thresholds learned on real clean objects (eval/mit_panel.py), alpha = 0.10."""
-    import json
-    from dataclasses import replace
-    cfg = calibrated()
-    f = ROOT / "lightaudit" / "calib_real_panel.json"
-    if f.exists():
-        c = json.loads(f.read_text())
-        cfg = replace(cfg, tau_panel_T=c["tau_panel_T_10"], tau_panel_Tr=c["tau_panel_Tr_10"])
-    return cfg
+    """Default calibration with the panel thresholds learned on real clean objects (eval/mit_panel.py)."""
+    from lightaudit.config import real_panel
+    return real_panel(calibrated())
 
 
 def demo(obj: str, i: int, j: int, part: int = 1, k: int = 4, up: int = 2, feather: float = 1.5) -> list[dict]:

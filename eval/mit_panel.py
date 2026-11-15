@@ -41,7 +41,7 @@ def _one(obj):
     unc = np.full(mask_b.shape, cfg.single_backend_unc, np.float32)
     P = mb.pixel_data(obj, "normals_depth_anything", 4)
     ld = P["dirs"][mb.lamp_dirs(P["parts"])] if len(P["parts"]) >= 3 else None
-    rng = np.random.default_rng(abs(hash(obj)) % 2 ** 31)
+    rng = np.random.default_rng(__import__("zlib").crc32(obj.encode()))  # deterministic per object
     rows = []
     for part in range(1, 5):
         roi = lab == part
@@ -55,7 +55,7 @@ def _one(obj):
             for tag, lin in (("clean", d["lin"][i]), ("splice", d["lin"][i] * (1 - a) + d["lin"][j] * a)):
                 Y = big((np.clip(lin, 0, 1) ** (1 / 2.2)).astype(np.float32), cv2.INTER_CUBIC)
                 Y = np.round(np.clip(Y, 0, 1) * 255) / 255  # 8-bit, as a real photo
-                T = panel_shared(Y, n_b, unc, labels, regs, cfg, retinex=False)
+                T = panel_shared(Y, n_b, unc, labels, regs, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band, shape_only=True)
                 Tr = panel_shared(Y, n_b, unc, labels, regs, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band)
                 if T is None or Tr is None:
                     continue

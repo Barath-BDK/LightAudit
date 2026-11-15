@@ -18,7 +18,7 @@
   "date": "2026-11-15",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-15T03:03:58+00:00",
+ "timestamp": "2026-11-15T03:57:57+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "min_delta": 30,
@@ -1884,9 +1884,9 @@
      1.0
     ],
     "tpr_fpr5_test_threshold": 0.07777777777777778,
-    "top1_all": 0.5666666666666667,
-    "n_suspicious": 45,
-    "flag_correct_among_suspicious": 0.9111111111111111,
+    "top1_all": 0.7888888888888889,
+    "n_suspicious": 69,
+    "flag_correct_among_suspicious": 0.9565217391304348,
     "abstain_pos": 0.14444444444444443,
     "abstain_neg": 0.13333333333333333
    },
@@ -2052,8 +2052,8 @@
      1.0
     ],
     "tpr_fpr5_test_threshold": 0.07777777777777778,
-    "top1_all": 0.6,
-    "n_suspicious": 41,
+    "top1_all": 0.8444444444444444,
+    "n_suspicious": 66,
     "flag_correct_among_suspicious": 1.0,
     "abstain_pos": 0.14444444444444443,
     "abstain_neg": 0.13333333333333333
@@ -2220,8 +2220,8 @@
      1.0
     ],
     "tpr_fpr5_test_threshold": 0.07777777777777778,
-    "top1_all": 0.6,
-    "n_suspicious": 41,
+    "top1_all": 0.8444444444444444,
+    "n_suspicious": 66,
     "flag_correct_among_suspicious": 1.0,
     "abstain_pos": 0.14444444444444443,
     "abstain_neg": 0.13333333333333333
@@ -2388,8 +2388,8 @@
      1.0
     ],
     "tpr_fpr5_test_threshold": 0.07777777777777778,
-    "top1_all": 0.6,
-    "n_suspicious": 41,
+    "top1_all": 0.8444444444444444,
+    "n_suspicious": 66,
     "flag_correct_among_suspicious": 1.0,
     "abstain_pos": 0.14444444444444443,
     "abstain_neg": 0.13333333333333333

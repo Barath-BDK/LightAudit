@@ -50,16 +50,17 @@ def residual_maps(rgb, Y, normals, unc, regions: list[dict], cfg: Config = Confi
 
 
 def panel_score(Y, normals, unc, labels, regions: list[dict], cfg: Config = Config()) -> None:
-    """Panel mode: does the ROI share the light and material of the panel it sits on? Two shared-material
-    statistics (see panel_shared) are computed, without albedo handling and with boundary-guarded Retinex; the
-    first is the stronger one on uniformly painted surfaces, the second on painted / patterned ones (measured on
-    synthetic damage scenes and on the MIT Intrinsic Images objects). Sets roi["panel_T"], roi["panel_Tr"] and
-    roi["panel_z"] = the larger of the two divided by its calibrated alert level (so the alert level of panel_z
-    is 1). None where it cannot be computed."""
+    """Panel mode: does the ROI share the light and material of the panel it sits on? Two statistics (see
+    panel_shared), both after band-guarded Retinex: panel_Tr = shared material (the panel's light, gain and offset
+    must predict the ROI) and panel_T = shared light only (the ROI keeps its own gain and offset, so brightness or
+    colour matching of a pasted area cannot hide it). This pair was the best of the combinations compared on real
+    objects at matched false-alarm rates (eval/mit_attack.py). roi["panel_z"] = the larger of the two divided by
+    its calibrated alert level (so the alert level of panel_z is 1). None where it cannot be computed."""
     roi = next((r for r in regions if r["name"] == "ROI"), None)
     if roi is None:
         return
-    roi["panel_T"] = panel_shared(Y, normals, unc, labels, regions, cfg, retinex=False)
+    roi["panel_T"] = panel_shared(Y, normals, unc, labels, regions, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band,
+                                  shape_only=True)
     roi["panel_Tr"] = panel_shared(Y, normals, unc, labels, regions, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band)
     roi["panel_z"] = panel_ratio(roi, cfg)
 
@@ -127,6 +128,15 @@ def fit_light(S: np.ndarray, y: np.ndarray):
     return j, float(gain[j]), float((Ys - gain[j] * A[j]) / n), rss
 
 
+def shared_light_T(S_ref, y_ref, S_roi, y_roi) -> float:
+    """Shape-only variant of shared_material_T: the test pixels must follow the reference's LIGHT, but with their
+    own gain and offset. Unchanged by any affine brightness change of the test area (colour / brightness
+    matching), at the price of ignoring gain mismatches."""
+    j = fit_light(S_ref, y_ref)[0]
+    rss = fit_light(S_roi, y_roi)[3]
+    return float(np.log(max(float(rss[j]), 1e-12) / max(float(rss.min()), 1e-12)))
+
+
 def shared_material_T(S_ref, y_ref, S_roi, y_roi) -> float:
     """Shared-material statistic: one shading model (light, gain, offset) is fitted on the reference pixels and
     used to predict the test pixels; T = log(RSS of that prediction / RSS of the test pixels' own best fit).
@@ -138,7 +148,7 @@ def shared_material_T(S_ref, y_ref, S_roi, y_roi) -> float:
 
 
 def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Config(), retinex: bool = True,
-                 thr: float = 0.10, max_px: int = 4000, blur: float = 0.0, band: int = 4):
+                 thr: float = 0.10, max_px: int = 4000, blur: float = 0.0, band: int = 4, shape_only: bool = False):
     """Panel mode, shared-material test (validated on real curved objects, eval/mit_bench.py): the ROI must be
     predicted by the ONE shading model (light, gain, offset) fitted on the ring and the panel remainder.
     Albedo is removed first by Retinex, guarded so that a step across the ROI boundary is never called paint.
@@ -168,7 +178,8 @@ def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Con
     dirs = eq_dirs()[coarse_index(cfg.coarse_step)].astype(np.float64)
     S_ref = np.maximum(dirs @ normals[ys, xs].T.astype(np.float64), 0)
     S_roi = np.maximum(dirs @ normals[rys, rxs].T.astype(np.float64), 0)
-    return shared_material_T(S_ref, lin[ys, xs] / alb[ys, xs], S_roi, lin[rys, rxs] / alb[rys, rxs])
+    fn = shared_light_T if shape_only else shared_material_T
+    return fn(S_ref, lin[ys, xs] / alb[ys, xs], S_roi, lin[rys, rxs] / alb[rys, rxs])
 
 
 def shadow_levels(Y, normals, mask, cfg: Config = Config()):

@@ -18,7 +18,7 @@
   "date": "2026-11-15",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-15T03:09:01+00:00",
+ "timestamp": "2026-11-15T03:58:39+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "n_scenes_per_target": 8,
@@ -1049,8 +1049,8 @@
    "C1+C2+C3": null
   },
   "dent": {
-   "C1": 90.0,
-   "C1+C2+C3": 90.0
+   "C1": 30.0,
+   "C1+C2+C3": 30.0
   }
  },
  "caveat_attack": "the defender's simulated normals are independent of the edit (best case for the attacker); an attacked region that becomes not assessable counts as passing."

@@ -25,13 +25,13 @@
 </style></head><body>
 
 <h1>LightAudit: what works and what does not</h1>
-<div class="sub">Results report &middot; 15 November 2026 (updated with the two-sun check) &middot; https://github.com/Barath-BDK/LightAudit<br>
+<div class="sub">Results report &middot; 15 November 2026 (updated: two-sun check, colour-matching-resistant dent check) &middot; https://github.com/Barath-BDK/LightAudit<br>
 Every number below was produced by code in the repository. Sample sizes are given because several of them are small.</div>
 
 <div class="good"><b>Headline.</b> The tool now has one capability that is measured to work on <i>real photographs</i>:
 checking a marked area of an object (the damage-photo case). On held-out real objects it raises a false alarm on
-6% of clean images and catches 50% of areas pasted from a differently lit photo, 65% when the lighting differs by
-80&deg; or more.</div>
+5% of clean images and catches 45% of areas pasted from a differently lit photo, 57% when the lighting differs by
+80&deg; or more, and still 32% after the forger matches the area's colour and brightness.</div>
 <div class="note"><b>And one that does not.</b> Deciding whether a whole object was pasted into a scene from another
 photo does not work on real photos (detection at chance level on real indoor scenes, false alarms on 4 of 6 outdoor
 photos). On synthetic scenes it works moderately, and a re-shaded fake defeats it.</div>
@@ -39,11 +39,13 @@ photos). On synthetic scenes it works moderately, and a re-shaded fake defeats i
 <h2>1. Scorecard</h2>
 <table>
 <tr><th>Capability</th><th>Data</th><th>Result</th><th>Verdict</th></tr>
-<tr><td>Dent / marked-area check</td><td>Real objects, held out (400 clean, 400 spliced)</td><td>6% false alarms, 50% caught; 65% at &ge;80&deg;</td><td class="ok">works</td></tr>
-<tr><td>Dent / marked-area check, strict setting</td><td>same</td><td>0.7% false alarms, 32% caught; 52% at &ge;80&deg;</td><td class="ok">works</td></tr>
-<tr><td>Dent check on synthetic scenes</td><td>8 pasted dents, 15 clean</td><td>5 of 8 caught (62%); 0&ndash;7% false alarms</td><td class="ok">works</td></tr>
+<tr><td>Dent / marked-area check</td><td>Real objects, held out (400 clean, 400 spliced)</td><td>5.2% false alarms, 45% caught; 57% at &ge;80&deg;</td><td class="ok">works</td></tr>
+<tr><td>Dent / marked-area check, strict setting</td><td>same</td><td>2.2% false alarms, 34% caught; 51% at &ge;80&deg;</td><td class="ok">works</td></tr>
+<tr><td>Dent check after colour matching, real</td><td>400 real splices</td><td>32% caught at 5.2% false alarms (previous version: 20%)</td><td class="mid">partly</td></tr>
+<tr><td>Dent check, other half of the objects as test</td><td>400 clean, 400 spliced</td><td>10% false alarms, 52% caught, 33% after colour matching</td><td class="mid">threshold transfers unevenly</td></tr>
+<tr><td>Dent check on synthetic scenes</td><td>8 pasted dents, 15 clean</td><td>5 of 8 caught (62%); 4 of 15 false alarms (27%)</td><td class="mid">partly</td></tr>
 <tr><td>Dent check after a re-shade attack</td><td>8 synthetic</td><td>6 of 8 still caught (75%)</td><td class="ok">holds</td></tr>
-<tr><td>Dent check after colour matching</td><td>8 synthetic</td><td>0 of 8 caught</td><td class="bad">defeated</td></tr>
+<tr><td>Dent check after colour matching, synthetic</td><td>8 synthetic</td><td>0 of 8 caught</td><td class="bad">defeated</td></tr>
 <tr><td>Abstaining under overcast light</td><td>5 synthetic scenes</td><td>4 of 5 return INSUFFICIENT (was 0 of 5)</td><td class="ok">works</td></tr>
 <tr><td>Clean sunny scenes left alone</td><td>5 synthetic</td><td>0 of 5 flagged</td><td class="ok">works</td></tr>
 <tr><td>Whole object pasted, synthetic, 90&deg;</td><td>5 scenes / 8 scenes</td><td>4 of 5 and 6 of 8 caught; AUC 0.65 over all angles &ge;30&deg; (n=15)</td><td class="mid">partly</td></tr>
@@ -60,24 +62,36 @@ photos). On synthetic scenes it works moderately, and a re-shaded fake defeats i
 <h3>What it does</h3>
 <p>You mark an area of an object (for example a dent on a car door). The tool asks: is this area lit like the
 surface around it? It fits one shading model (light direction, brightness, ambient) to the surrounding surface and
-checks whether that model predicts the marked area. Painted patterns are removed first with Retinex, with one
-rule added: a brightness step across the boundary of the marked area is never treated as paint. Without that rule,
-Retinex explains a pasted area's brightness as paint and hides it.</p>
+runs two tests on the marked area. <b>Material test:</b> that same model must predict the area's brightness.
+<b>Light test:</b> the area must follow the same light direction, with its own brightness level, so matching the
+colour or brightness of a pasted area cannot hide it. Painted patterns are removed first with Retinex, with one
+rule added: a brightness step in a 3-pixel band around the boundary of the marked area is never treated as paint.
+Without that rule Retinex explains a pasted area's brightness as paint and hides it.</p>
 
 <h3>Real-photo test (MIT Intrinsic Images: 20 real objects, 10 lamp positions each)</h3>
 <p>Ten objects calibrate the alert level, the other ten are the test. A splice is one part of an object taken from
 a photo of the same object under another lamp, blended at the edge, saved as 8-bit.</p>
 <table>
-<tr><th>Lighting difference</th><th>Caught at 6% false alarms</th><th>Caught at 0.7% false alarms</th><th>Splices</th></tr>
-<tr><td>0&ndash;25&deg;</td><td class="n">38%</td><td class="n">19%</td><td class="n">69</td></tr>
-<tr><td>25&ndash;50&deg;</td><td class="n">42%</td><td class="n">22%</td><td class="n">135</td></tr>
-<tr><td>50&ndash;80&deg;</td><td class="n">58%</td><td class="n">40%</td><td class="n">134</td></tr>
-<tr><td>80&deg; and above</td><td class="n">65%</td><td class="n">52%</td><td class="n">62</td></tr>
-<tr><th>All</th><th class="n">50%</th><th class="n">32%</th><th class="n">400</th></tr>
+<tr><th>Lighting difference</th><th>Caught at 5.2% false alarms</th><th>Caught at 2.2% false alarms</th><th>Splices</th></tr>
+<tr><td>0&ndash;25&deg;</td><td class="n">36%</td><td class="n">27%</td><td class="n">67</td></tr>
+<tr><td>25&ndash;50&deg;</td><td class="n">41%</td><td class="n">27%</td><td class="n">143</td></tr>
+<tr><td>50&ndash;80&deg;</td><td class="n">47%</td><td class="n">36%</td><td class="n">120</td></tr>
+<tr><td>80&deg; and above</td><td class="n">57%</td><td class="n">51%</td><td class="n">70</td></tr>
+<tr><th>All</th><th class="n">45%</th><th class="n">34%</th><th class="n">400</th></tr>
 </table>
-<p>By test object (false alarms / caught, at the 6% setting): cup 0% / 57%, potato 0% / 75%, turtle 0% / 68%,
-teabag 0% / 55%, paper 0% / 40%, frog 0% / 33%, box 7% / 35%, dinosaur 3% / 12%, squirrel 17% / 40%, pear 35% / 88%.
-Smooth, evenly coloured objects work best; the pear produces most of the false alarms.</p>
+<p>By test object (false alarms / caught, at the 5.2% setting): pear 15% / 85%, cup 17% / 78%, potato 3% / 57%,
+turtle 0% / 50%, paper 3% / 45%, teabag 7% / 40%, dinosaur 5% / 25%, squirrel 0% / 25%, box 3% / 23%, frog 0% / 23%.</p>
+<p>Which pair of tests to use was decided on the same 400 clean and 400 spliced images, with and without colour
+matching of the pasted area, at matched false-alarm rates:</p>
+<table>
+<tr><th>Tests used</th><th>False alarms</th><th>Plain splices caught</th><th>Colour-matched splices caught</th></tr>
+<tr><td>Material test with and without Retinex (previous version)</td><td class="n">6.5%</td><td class="n">41%</td><td class="n">20%</td></tr>
+<tr><td><b>Material test + light test, both with Retinex (current)</b></td><td class="n">5.2%</td><td class="n">45%</td><td class="n">32%</td></tr>
+<tr><td>Current pair, calibrated on the other half of the objects</td><td class="n">10.2%</td><td class="n">52%</td><td class="n">33%</td></tr>
+<tr><td>Previous version, calibrated on the other half</td><td class="n">10.5%</td><td class="n">46%</td><td class="n">27%</td></tr>
+</table>
+<p>The last two rows show a weakness: thresholds learned on one half of the objects give 5% false alarms on the other
+half in one direction and 10&ndash;19% in the other. Ten objects are too few to calibrate reliably.</p>
 <p>How the method got there, on the same data with hard-edged splices (AUC):</p>
 <table>
 <tr><th>Variant</th><th>AUC</th></tr>
@@ -90,14 +104,14 @@ Smooth, evenly coloured objects work best; the pear produces most of the false a
 
 <h3>Examples (real photographs in the viewer)</h3>
 <div class="two">
-<figure><img src="figures/viewer_real_turtle_spliced.png"><figcaption>Works. Real turtle; the marked area was taken from a photo under another lamp. Verdict SUSPICIOUS, score 1.7 times the alert level.</figcaption></figure>
-<figure><img src="figures/viewer_real_turtle_clean.png"><figcaption>Works. The same turtle, unedited. Verdict CONSISTENT.</figcaption></figure>
-<figure><img src="figures/viewer_real_cup_spliced.png"><figcaption>Works. Real cup with a pasted area: SUSPICIOUS.</figcaption></figure>
-<figure><img src="figures/viewer_real_pear_missed.png"><figcaption>Miss. Real pear with a pasted area: score 0.96 of the alert level, not flagged.</figcaption></figure>
+<figure><img src="figures/viewer_real_pear_spliced.png"><figcaption>Works. Real pear; the marked area was taken from a photo under another lamp. Verdict SUSPICIOUS, score 2.2 times the alert level.</figcaption></figure>
+<figure><img src="figures/viewer_real_pear_clean.png"><figcaption>Works. The same pear, unedited. Verdict CONSISTENT.</figcaption></figure>
+<figure><img src="figures/viewer_real_cup_spliced.png"><figcaption>Works. Real cup with a pasted area: SUSPICIOUS, 1.4 times the alert level.</figcaption></figure>
+<figure><img src="figures/viewer_real_turtle_missed.png"><figcaption>Miss. Real turtle with a pasted area: score 0.5 of the alert level, not flagged.</figcaption></figure>
 </div>
-<figure><img src="figures/viewer_real_potato_falsealarm.png"><figcaption>False alarm. Real potato, unedited, flagged with a score 1.006 times the alert level.</figcaption></figure>
+<figure><img src="figures/viewer_real_potato_falsealarm.png"><figcaption>False alarm. Real potato, unedited, flagged at 2.1 times the alert level.</figcaption></figure>
 <p>Six real demo pairs are in the gallery (<code>real_mit_*</code>): 5 of 6 clean images are left alone; of the 6
-spliced ones 3 are flagged, 1 returns CONFLICT and 2 are missed.</p>
+spliced ones 3 are flagged (cup, pear, frog), 1 returns CONFLICT and 2 are missed (turtle, box).</p>
 
 <h2>3. Synthetic scenes</h2>
 <div class="two">
@@ -131,7 +145,7 @@ one-sun calibration scenes trip it (8 of 190).</p>
 <tr><td>Adaptive attack</td><td class="n bad">0%</td><td class="n bad">14%</td><td class="n">75%</td></tr>
 </table>
 <p>The two checks fail in opposite ways: re-shading defeats the whole-object check but not the dent check; colour
-matching defeats the dent check but not the whole-object check.</p>
+matching defeats the dent check on these shallow synthetic dents (0 of 8) but only partly on real curved objects (32% still caught).</p>
 
 <h2>4. Why whole-object checks fail on real photos</h2>
 <table>
@@ -152,6 +166,7 @@ matching defeats the dent check but not the whole-object check.</p>
 <li>Second-light fit for two-sun scenes: AUC 0.65&ndash;0.70, not enough. The cast-shadow test replaced it and is built in.</li>
 <li>Shared paint levels per segment: no gain over no correction.</li>
 <li>Plain Retinex and smoothed Retinex: worse than no correction on composites.</li>
+<li>The material test without Retinex as a second statistic: on real objects it mostly added false alarms; replaced by the light test.</li>
 </ul>
 
 <h2>6. How to run</h2>
@@ -173,7 +188,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 <table>
 <tr><th>#</th><th>Step</th><th>Why</th></tr>
 <tr><td>1</td><td>Test the marked-area check on real car photos with real dents, clean and edited</td><td>The real test so far uses tabletop objects; genuine damage with scratches or dirt may raise false alarms</td></tr>
-<tr><td>2</td><td>Add a colour-consistency check for the marked area</td><td>Colour matching defeats the marked-area check</td></tr>
+<tr><td>2</td><td>Calibrate the marked-area check on more real objects</td><td>With ten objects the false-alarm rate swings between 5% and 19% depending on which half calibrates</td></tr>
 <tr><td>3</td><td>Test the two-sun check on real photos</td><td>It needs a large flat surface; road markings or stains could look like a second shadow level</td></tr>
 <tr><td>4</td><td>Move the per-region likelihood test with Holm correction into the whole-object check</td><td>Removes the growth of false alarms with region count</td></tr>
 <tr><td>5</td><td>Run the full synthetic evaluation</td><td>Narrow the ranges; every synthetic number here is from the quick suite</td></tr>

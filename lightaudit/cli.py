@@ -103,6 +103,9 @@ def audit_image(image: Path, name: str | None = None, roi: Path | None = None, r
     from .regions import apply_roi, auto_exclude, propose_regions
     say = progress or (lambda msg: print(" ", msg))
     cfg = calibrated(calib=load_calib(calib))
+    if calib is None:  # real photos: panel thresholds calibrated on real images, not on synthetic scenes
+        from .config import real_panel
+        cfg = real_panel(cfg)
     rgb = load_rgb(image, cfg.max_side)
     log: list[str] = []
     say("estimating surface normals")

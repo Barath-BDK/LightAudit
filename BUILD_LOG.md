@@ -3,6 +3,28 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 8 (15 Nov 2026): colour-matching-resistant panel test; real thresholds for real photos
+
+- Measured on real objects (`eval/mit_attack.py`, 400 clean / 400 spliced / 400 colour-matched splices of 10
+  held-out objects, both calibration splits): colour and brightness matching of the pasted area
+  (`attacks.t1_color_transfer`) cuts detection of the previous pair (material test with and without Retinex) from
+  41% to 20% at 6.5% false alarms.
+- New statistic `residual.shared_light_T` (shape only: the ROI follows the reference's light with its own gain and
+  offset; invariant to affine brightness changes of the ROI). Panel mode now uses the material test and the light
+  test, both after band-guarded Retinex; the material test without Retinex is removed.
+- Head-to-head at matched false alarms: new pair 45% plain / 32% colour-matched at 5.2% false alarms (previous
+  41% / 20% at 6.5%); other split 52% / 33% at 10.2% (previous 46% / 27% at 10.5%). A first pre-test on half the
+  lamps had suggested a larger gain (53 / 35 vs 46 / 26); the full set is the number to quote.
+- Threshold transfer between halves of the objects is uneven: 5% false alarms one way, 10-19% the other.
+- Pipeline held-out test (`eval/mit_panel.py`): alpha 0.10: 5.2% false alarms, 45.0% detected (36 / 41 / 47 / 57%
+  by angle bin); alpha 0.05: 2.2%, 33.8% (27 / 27 / 36 / 51%).
+- Synthetic (quick suite): pasted dent caught 5 of 8, 6 of 8 after T3a/T4, still 0 of 8 after colour transfer
+  (shallow dents carry almost no shape signal); dent false alarms 4 of 15 (was 1 of 15).
+- Real photos audited through `cli audit` now use `calib_real_panel.json` for the panel thresholds by default
+  (`config.real_panel`). The real benchmark seeds are now deterministic (crc32 instead of Python's hash).
+- Real demos: clean 5 of 6 CONSISTENT (potato flagged at 2.1x); spliced: cup, pear, frog flagged, potato CONFLICT,
+  turtle and box missed. Tests: 63 pytest + 506 parity checks pass.
+
 ## Update 7 (15 Nov 2026): cast-shadow check for several light sources
 
 - `residual.shadow_levels`: on a large flat region (>= 5% of the image, mean-normal resultant >= 0.95) the share of

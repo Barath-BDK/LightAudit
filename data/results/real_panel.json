@@ -26,138 +26,138 @@
  "n_cal": 400,
  "levels": {
   "0.05": {
-   "tau_T": 2.8486551594925635,
+   "tau_T": 1.036814557689317,
    "tau_Tr": 2.773118967274235,
-   "false_alarms": 0.0075,
+   "false_alarms": 0.0225,
    "n_clean": 400,
-   "detected": 0.3225,
+   "detected": 0.3375,
    "n_splice": 400,
    "by_angle": {
     "0-25": {
-     "detected": 0.18840579710144928,
-     "n": 69
+     "detected": 0.26865671641791045,
+     "n": 67
     },
     "25-50": {
-     "detected": 0.2222222222222222,
-     "n": 135
+     "detected": 0.26573426573426573,
+     "n": 143
     },
     "50-80": {
-     "detected": 0.40298507462686567,
-     "n": 134
+     "detected": 0.35833333333333334,
+     "n": 120
     },
     "80-181": {
-     "detected": 0.5161290322580645,
-     "n": 62
+     "detected": 0.5142857142857142,
+     "n": 70
     }
    },
    "by_object": {
     "box": {
-     "false_alarms": 0.0,
-     "detected": 0.15
+     "false_alarms": 0.025,
+     "detected": 0.175
     },
     "cup2": {
-     "false_alarms": 0.0,
-     "detected": 0.5
+     "false_alarms": 0.05,
+     "detected": 0.65
     },
     "dinosaur": {
      "false_alarms": 0.0,
-     "detected": 0.075
+     "detected": 0.125
     },
     "frog2": {
      "false_alarms": 0.0,
-     "detected": 0.125
+     "detected": 0.2
     },
     "paper1": {
      "false_alarms": 0.0,
-     "detected": 0.2
+     "detected": 0.35
     },
     "pear": {
      "false_alarms": 0.075,
-     "detected": 0.725
+     "detected": 0.8
     },
     "potato": {
+     "false_alarms": 0.025,
+     "detected": 0.35
+    },
+    "squirrel": {
      "false_alarms": 0.0,
-     "detected": 0.4
+     "detected": 0.2
+    },
+    "teabag1": {
+     "false_alarms": 0.05,
+     "detected": 0.15
+    },
+    "turtle": {
+     "false_alarms": 0.0,
+     "detected": 0.375
+    }
+   }
+  },
+  "0.1": {
+   "tau_T": 0.8514900203623473,
+   "tau_Tr": 2.4082908060331945,
+   "false_alarms": 0.0525,
+   "n_clean": 400,
+   "detected": 0.45,
+   "n_splice": 400,
+   "by_angle": {
+    "0-25": {
+     "detected": 0.3582089552238806,
+     "n": 67
+    },
+    "25-50": {
+     "detected": 0.4125874125874126,
+     "n": 143
+    },
+    "50-80": {
+     "detected": 0.475,
+     "n": 120
+    },
+    "80-181": {
+     "detected": 0.5714285714285714,
+     "n": 70
+    }
+   },
+   "by_object": {
+    "box": {
+     "false_alarms": 0.025,
+     "detected": 0.225
+    },
+    "cup2": {
+     "false_alarms": 0.175,
+     "detected": 0.775
+    },
+    "dinosaur": {
+     "false_alarms": 0.05,
+     "detected": 0.25
+    },
+    "frog2": {
+     "false_alarms": 0.0,
+     "detected": 0.225
+    },
+    "paper1": {
+     "false_alarms": 0.025,
+     "detected": 0.45
+    },
+    "pear": {
+     "false_alarms": 0.15,
+     "detected": 0.85
+    },
+    "potato": {
+     "false_alarms": 0.025,
+     "detected": 0.575
     },
     "squirrel": {
      "false_alarms": 0.0,
      "detected": 0.25
     },
     "teabag1": {
-     "false_alarms": 0.0,
-     "detected": 0.325
-    },
-    "turtle": {
-     "false_alarms": 0.0,
-     "detected": 0.475
-    }
-   }
-  },
-  "0.1": {
-   "tau_T": 1.90281914928275,
-   "tau_Tr": 2.4082908060331945,
-   "false_alarms": 0.0625,
-   "n_clean": 400,
-   "detected": 0.5025,
-   "n_splice": 400,
-   "by_angle": {
-    "0-25": {
-     "detected": 0.37681159420289856,
-     "n": 69
-    },
-    "25-50": {
-     "detected": 0.4222222222222222,
-     "n": 135
-    },
-    "50-80": {
-     "detected": 0.582089552238806,
-     "n": 134
-    },
-    "80-181": {
-     "detected": 0.6451612903225806,
-     "n": 62
-    }
-   },
-   "by_object": {
-    "box": {
      "false_alarms": 0.075,
-     "detected": 0.35
-    },
-    "cup2": {
-     "false_alarms": 0.0,
-     "detected": 0.575
-    },
-    "dinosaur": {
-     "false_alarms": 0.025,
-     "detected": 0.125
-    },
-    "frog2": {
-     "false_alarms": 0.0,
-     "detected": 0.325
-    },
-    "paper1": {
-     "false_alarms": 0.0,
      "detected": 0.4
-    },
-    "pear": {
-     "false_alarms": 0.35,
-     "detected": 0.875
-    },
-    "potato": {
-     "false_alarms": 0.0,
-     "detected": 0.75
-    },
-    "squirrel": {
-     "false_alarms": 0.175,
-     "detected": 0.4
-    },
-    "teabag1": {
-     "false_alarms": 0.0,
-     "detected": 0.55
     },
     "turtle": {
      "false_alarms": 0.0,
-     "detected": 0.675
+     "detected": 0.5
     }
    }
   }

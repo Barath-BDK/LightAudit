@@ -123,5 +123,5 @@
  },
  "model": "HistGradientBoostingClassifier(max_iter=200, learning_rate=0.05, max_leaf_nodes=15, l2=1.0)",
  "composites": "normal scenes: car (even i) / distractor (odd i); damage scenes (i % 10 >= 7): dent in panel mode; delta ~ U[20, 180] deg; plus the pristine audit of every scene",
- "timestamp": "2026-11-15T02:56:37+00:00"
+ "timestamp": "2026-11-15T03:56:44+00:00"
 }

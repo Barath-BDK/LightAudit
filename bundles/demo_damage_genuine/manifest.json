@@ -36,7 +36,7 @@
   "soft_contrast": 0.42476,
   "tau_panel": 1.0,
   "shadow_levels_max": 0.28631,
-  "tau_panel_T": 3.93051,
+  "tau_panel_T": 1.68206,
   "tau_panel_Tr": 5.65107,
   "source": "calib_default.json"
  },
@@ -730,9 +730,9 @@
     "f_norm": 0.83992
    },
    "contrast": 0.07767,
-   "panel_z": 0.32364,
+   "panel_z": 0.1255,
    "shadow_mid": null,
-   "panel_T": 1.27206,
+   "panel_T": 0.01109,
    "panel_Tr": 0.70921,
    "cues": [
     "shading",
@@ -1189,5 +1189,5 @@
  },
  "attacks": [],
  "backends_log": [],
- "created": "2026-11-15T02:50:52+00:00"
+ "created": "2026-11-15T03:55:37+00:00"
 }

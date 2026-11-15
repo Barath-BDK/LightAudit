@@ -36,7 +36,7 @@
   "soft_contrast": 0.42476,
   "tau_panel": 1.0,
   "shadow_levels_max": 0.28631,
-  "tau_panel_T": 3.93051,
+  "tau_panel_T": 1.68206,
   "tau_panel_Tr": 5.65107,
   "source": "calib_default.json"
  },
@@ -865,5 +865,5 @@
  },
  "attacks": [],
  "backends_log": [],
- "created": "2026-11-15T02:51:23+00:00"
+ "created": "2026-11-15T03:56:05+00:00"
 }

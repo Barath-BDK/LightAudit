@@ -10,7 +10,7 @@
  {
   "name": "demo_damage_fake",
   "title": "Dent pasted from another light (panel mode)",
-  "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4030), simulated normals. Audit verdict: SUSPICIOUS.",
+  "description": "The dent area was rendered under a light 120\u00b0 away and pasted onto the panel. Synthetic scene (seed 4031), simulated normals. Audit verdict: SUSPICIOUS.",
   "verdict": "SUSPICIOUS",
   "thumb": "demo_damage_fake/thumb.jpg",
   "source": "synthetic"
@@ -138,8 +138,8 @@
  {
   "name": "real_mit_pear_spliced",
   "title": "Real object (pear), spliced",
-  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 7). Audit verdict: CONSISTENT.",
-  "verdict": "CONSISTENT",
+  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 7). Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
   "thumb": "real_mit_pear_spliced/thumb.jpg",
   "source": "real"
  },
@@ -170,8 +170,8 @@
  {
   "name": "real_mit_turtle_spliced",
   "title": "Real object (turtle), spliced",
-  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 10). Audit verdict: SUSPICIOUS.",
-  "verdict": "SUSPICIOUS",
+  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 10). Audit verdict: CONSISTENT.",
+  "verdict": "CONSISTENT",
   "thumb": "real_mit_turtle_spliced/thumb.jpg",
   "source": "real"
  },
