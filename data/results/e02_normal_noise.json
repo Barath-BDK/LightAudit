@@ -15,10 +15,10 @@
    1000,
    1199
   ],
-  "date": "2026-11-14",
+  "date": "2026-11-15",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T16:34:06+00:00",
+ "timestamp": "2026-11-14T23:00:31+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "n_scenes": 15,

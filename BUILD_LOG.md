@@ -3,6 +3,32 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 6 (15 Nov 2026): shared-material panel test in the pipeline, calibrated and tested on real objects
+
+- Panel mode now computes two shared-material statistics (`residual.panel_shared`): without albedo handling and
+  with Retinex guarded in a 3 px band around the ROI boundary; the ROI is flagged if either exceeds its own
+  conformal level (alpha/2 each). The previous |mean residual| statistic is removed. A band is needed because
+  pasted areas are feathered: with a guard on the boundary line only, AUC on synthetic dents fell to 0.81 (90 deg);
+  with the band 0.89; without Retinex 0.91; previous statistic 0.92 (39 scenes).
+- Synthetic calibration: tau_panel_T 3.93, tau_panel_Tr 5.65 (59 damage scenes). Quick evaluation: pasted dent
+  caught 5 of 8, 6 of 8 after T3a and after T4, 0 of 8 after colour transfer; dent false alarms 0.07 (n = 15).
+  Whole pasted car at the calibrated level 6 of 8; 0 of 8 after re-shading.
+- **Synthetic thresholds do not transfer to real photos:** on six real-object demos every spliced image scored
+  higher than its clean twin, but none reached the synthetic alert level (real scores are several times smaller).
+- **Real calibration and held-out test** (`eval/mit_panel.py`, pipeline code path, feathered 8-bit splices,
+  Depth Anything normals; 10 objects calibrate, 10 test; 400 clean and 400 spliced test images):
+  alpha 0.10: tau_T 1.90, tau_Tr 2.41, false alarms 6.2%, detected 50.2% (38 / 42 / 58 / 65% for 0-25 / 25-50 /
+  50-80 / >= 80 deg); alpha 0.05: tau 2.85 / 2.77, false alarms 0.7%, detected 32.3% (19 / 22 / 40 / 52%).
+  Per object at alpha 0.10 (false alarms / detected): cup2 0/57, potato 0/75, turtle 0/68, teabag1 0/55, paper1
+  0/40, frog2 0/33, box 7/35, dinosaur 3/12, squirrel 17/40, pear 35/88. Thresholds in
+  `lightaudit/calib_real_panel.json` (used by `tools/make_mit_demo.py`, not by default).
+- Hard-edged splice benchmark with the pipeline configuration (both statistics, band 3): AUC 0.79, 0.88 at >= 80 deg.
+- Real demos (`tools/make_mit_demo.py`, bundles not committed): clean 5 of 6 CONSISTENT (potato flagged at 1.006
+  times the level); spliced 3 of 6 SUSPICIOUS (cup2, turtle, frog2), potato CONFLICT, pear and box not flagged.
+- Results report: `docs/LightAudit_Results.pdf`. Tests: 62 pytest + 470 parity checks pass.
+- Prepared but not applied: the cast-shadow-level check for two light sources (AUC 0.96 in a 60 + 60 scene
+  pre-test). Not done: likelihood-ratio + Holm test in the whole-object fusion; full evaluation suite.
+
 ## Update 5 (15 Nov 2026): real curved objects (MIT Intrinsic Images)
 
 Benchmark: `eval/mit_bench.py` on the 20 objects of the MIT Intrinsic Images dataset (real, curved, 10 lamp

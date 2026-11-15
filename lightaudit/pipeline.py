@@ -11,7 +11,7 @@ from .fusion import combine_cues, fuse
 from .grid import eq_dirs, view_vectors
 from .imageio import luminance
 from .posterior import region_posterior
-from .residual import panel_score, residual_maps
+from .residual import panel_ratio, panel_score, residual_maps
 from .validity import valid_pixels
 
 ALL_CUES = ("shading", "glint", "contour")
@@ -48,6 +48,8 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
     for r in regions:
         if r.get("kind") == "pseudo":
             continue
+        if r.get("panel_T") is not None or r.get("panel_Tr") is not None:
+            r["panel_z"] = panel_ratio(r, cfg)  # re-derived so a changed calibration applies to cached regions
         g = r["glint"] if "glint" in cues else None
         c = r["contour"] if "contour" in cues and cfg.w_contour > 0 else None
         r["A"] = combine_cues(r["P"], g, c, cfg)

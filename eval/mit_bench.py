@@ -490,7 +490,7 @@ def angle_curve(nkey="normals_depth_anything", k=4, albedo="oracle", C=1, bins=(
             print(f"  {lo:3d}-{hi:3d} deg: detected {np.mean(rows[m, 1] > thr):.2f}  AUC {auc(neg, rows[m, 1]):.2f}  (n = {int(m.sum())})", flush=True)
 
 
-def composite_albedo(Dd, lamps, thr, guard=False):
+def composite_albedo(Dd, lamps, thr, guard=False, band=0):
     """Retinex albedo of the composite image itself (part p taken from lamp lamps[p]), sampled at each part."""
     comp = np.zeros_like(Dd["lin"][0])
     for p, l in zip(Dd["parts"], lamps):
@@ -498,11 +498,11 @@ def composite_albedo(Dd, lamps, thr, guard=False):
         comp[m] = Dd["lin"][l][m]
     rest = Dd["mask"] & ~np.isin(Dd["lab"], [p["pid"] for p in Dd["parts"]])
     comp[rest] = Dd["lin"][lamps[0]][rest]
-    r = retinex_albedo(comp, Dd["mask"], thr, Dd["lab"] if guard else None)
+    r = retinex_albedo(comp, Dd["mask"], thr, Dd["lab"] if guard else None, 0.0, band)
     return [r[p["ys"], p["xs"]] for p in Dd["parts"]]
 
 
-def bench_composite(nkey="normals_depth_anything", k=4, thr=0.10, seed=0, cache={}, guard=False, albedo="retinex", angle_bins=((0, 25), (25, 50), (50, 80), (80, 181)),
+def bench_composite(nkey="normals_depth_anything", k=4, thr=0.10, seed=0, cache={}, guard=False, albedo="retinex", band=0, angle_bins=((0, 25), (25, 50), (50, 80), (80, 181)),
                     verbose=True, objs=None):
     """Shared-material test with Retinex albedo computed on each composite image (the honest single-image case).
     Also reports detection by lighting-angle bin (angles from whole-object light estimates, approximate)."""
@@ -520,12 +520,12 @@ def bench_composite(nkey="normals_depth_anything", k=4, thr=0.10, seed=0, cache=
         on, op = [], []
         for i in range(NL):
             lamps = [i] * len(P)
-            on.append(levels_scores(P, lamps, 1, albedo="none", alb=composite_albedo(Dd, lamps, thr, guard) if albedo == "retinex" else None)[0])
+            on.append(levels_scores(P, lamps, 1, albedo="none", alb=composite_albedo(Dd, lamps, thr, guard, band) if albedo == "retinex" else None)[0])
             for kk in range(len(P)):
                 for j in rng.choice([x for x in range(NL) if x != i], 2, replace=False):
                     lamps = [i] * len(P)
                     lamps[kk] = int(j)
-                    a, top, _ = levels_scores(P, lamps, 1, albedo="none", alb=composite_albedo(Dd, lamps, thr, guard) if albedo == "retinex" else None)
+                    a, top, _ = levels_scores(P, lamps, 1, albedo="none", alb=composite_albedo(Dd, lamps, thr, guard, band) if albedo == "retinex" else None)
                     op.append(a)
                     loc.append(top == kk)
                     angs.append(float(ang(ld[i], ld[int(j)])))

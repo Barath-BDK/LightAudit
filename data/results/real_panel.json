@@ -1,0 +1,165 @@
+{
+ "calibration_objects": [
+  "apple",
+  "cup1",
+  "deer",
+  "frog1",
+  "panther",
+  "paper2",
+  "phone",
+  "raccoon",
+  "sun",
+  "teabag2"
+ ],
+ "test_objects": [
+  "box",
+  "cup2",
+  "dinosaur",
+  "frog2",
+  "paper1",
+  "pear",
+  "potato",
+  "squirrel",
+  "teabag1",
+  "turtle"
+ ],
+ "n_cal": 400,
+ "levels": {
+  "0.05": {
+   "tau_T": 2.8486551594925635,
+   "tau_Tr": 2.773118967274235,
+   "false_alarms": 0.0075,
+   "n_clean": 400,
+   "detected": 0.3225,
+   "n_splice": 400,
+   "by_angle": {
+    "0-25": {
+     "detected": 0.18840579710144928,
+     "n": 69
+    },
+    "25-50": {
+     "detected": 0.2222222222222222,
+     "n": 135
+    },
+    "50-80": {
+     "detected": 0.40298507462686567,
+     "n": 134
+    },
+    "80-181": {
+     "detected": 0.5161290322580645,
+     "n": 62
+    }
+   },
+   "by_object": {
+    "box": {
+     "false_alarms": 0.0,
+     "detected": 0.15
+    },
+    "cup2": {
+     "false_alarms": 0.0,
+     "detected": 0.5
+    },
+    "dinosaur": {
+     "false_alarms": 0.0,
+     "detected": 0.075
+    },
+    "frog2": {
+     "false_alarms": 0.0,
+     "detected": 0.125
+    },
+    "paper1": {
+     "false_alarms": 0.0,
+     "detected": 0.2
+    },
+    "pear": {
+     "false_alarms": 0.075,
+     "detected": 0.725
+    },
+    "potato": {
+     "false_alarms": 0.0,
+     "detected": 0.4
+    },
+    "squirrel": {
+     "false_alarms": 0.0,
+     "detected": 0.25
+    },
+    "teabag1": {
+     "false_alarms": 0.0,
+     "detected": 0.325
+    },
+    "turtle": {
+     "false_alarms": 0.0,
+     "detected": 0.475
+    }
+   }
+  },
+  "0.1": {
+   "tau_T": 1.90281914928275,
+   "tau_Tr": 2.4082908060331945,
+   "false_alarms": 0.0625,
+   "n_clean": 400,
+   "detected": 0.5025,
+   "n_splice": 400,
+   "by_angle": {
+    "0-25": {
+     "detected": 0.37681159420289856,
+     "n": 69
+    },
+    "25-50": {
+     "detected": 0.4222222222222222,
+     "n": 135
+    },
+    "50-80": {
+     "detected": 0.582089552238806,
+     "n": 134
+    },
+    "80-181": {
+     "detected": 0.6451612903225806,
+     "n": 62
+    }
+   },
+   "by_object": {
+    "box": {
+     "false_alarms": 0.075,
+     "detected": 0.35
+    },
+    "cup2": {
+     "false_alarms": 0.0,
+     "detected": 0.575
+    },
+    "dinosaur": {
+     "false_alarms": 0.025,
+     "detected": 0.125
+    },
+    "frog2": {
+     "false_alarms": 0.0,
+     "detected": 0.325
+    },
+    "paper1": {
+     "false_alarms": 0.0,
+     "detected": 0.4
+    },
+    "pear": {
+     "false_alarms": 0.35,
+     "detected": 0.875
+    },
+    "potato": {
+     "false_alarms": 0.0,
+     "detected": 0.75
+    },
+    "squirrel": {
+     "false_alarms": 0.175,
+     "detected": 0.4
+    },
+    "teabag1": {
+     "false_alarms": 0.0,
+     "detected": 0.55
+    },
+    "turtle": {
+     "false_alarms": 0.0,
+     "detected": 0.675
+    }
+   }
+  }
+ }
+}

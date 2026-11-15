@@ -57,7 +57,7 @@ def region_manifest(r: dict, i: int) -> dict:
         id=r["id"], name=r["name"], kind=r["kind"], excluded=r["excluded"], area_px=r["area_px"], bbox=r["bbox"],
         color=PALETTE[i % len(PALETTE)], n_valid=r["n_valid"], spread_deg=r["spread_deg"], rho_max=r["rho_max"],
         sharp_area=r["sharp_area"], mean_unc=r["mean_unc"], weight=r["weight"], reliable=r["reliable"],
-        reason=r["reason"], factors=r.get("factors"), contrast=r.get("contrast"), panel_z=r.get("panel_z"), cues=r["cues"], center=r["center"], r68_deg=r["r68_deg"],
+        reason=r["reason"], factors=r.get("factors"), contrast=r.get("contrast"), panel_z=r.get("panel_z"), panel_T=r.get("panel_T"), panel_Tr=r.get("panel_Tr"), cues=r["cues"], center=r["center"], r68_deg=r["r68_deg"],
         r95_deg=r["r95_deg"], g_lut=r.get("g_lut"), sigma=r.get("sigma"), slope=r.get("slope"), landscape_index=i)
 
 
@@ -101,7 +101,7 @@ def build_manifest(result: dict, name: str, title: str, description: str, source
         calibration=dict(h=cfg.kde_h, T=cfg.T, tau_img=cfg.tau_img, tau_ref=cfg.tau_ref, w_min=cfg.w_min,
                          alpha=cfg.alpha, eps=cfg.eps, w_glint=cfg.w_glint, w_contour=cfg.w_contour,
                          min_reliable=cfg.min_reliable, broad_consensus_frac=cfg.broad_consensus_frac,
-                         soft_contrast=cfg.soft_contrast, tau_panel=cfg.tau_panel,
+                         soft_contrast=cfg.soft_contrast, tau_panel=cfg.tau_panel, tau_panel_T=cfg.tau_panel_T, tau_panel_Tr=cfg.tau_panel_Tr,
                          source=result.get("calib_source", "calib_default.json")),
         regions=[region_manifest(r, i) for i, r in enumerate(result["regions"])],
         fusion=fusion_manifest(result), baseline_ls=dict(present=False), attacks=[],

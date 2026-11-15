@@ -46,9 +46,10 @@ def _score_job(args):
     from .synth import get_sample
     seed, kind, cfg = args
     # the two scene-level checks are switched off here: their thresholds are what is being calibrated
-    raw = replace(cfg, soft_contrast=float("inf"), tau_panel=float("inf"))
+    raw = replace(cfg, soft_contrast=float("inf"), tau_panel=float("inf"))  # panel flags off; raw statistics kept
     res = audit_sample(get_sample(seed, kind), cfg=raw, panel=(kind == "damage"), residual=False)
-    pz = next((r.get("panel_z") for r in res["regions"] if r["name"] == "ROI"), None)
+    pz = next(((r.get("panel_T"), r.get("panel_Tr")) for r in res["regions"] if r["name"] == "ROI"), None)
+    pz = None if pz is None or pz[0] is None or pz[1] is None else pz
     return seed, kind, res["fusion"]["verdict"], res["fusion"]["S_img"], res["fusion"]["soft_light"]["contrast"], pz
 
 
@@ -95,14 +96,18 @@ def run_calibration(n_cal: int | None = None, n_shape: int | None = None, out: P
     calib = dict(
         h=best["h"], T=best["T"], cov68=best["cov68"], cov95=best["cov95"],
         tau_img_05=conformal_quantile(scores, 0.05), tau_img_10=conformal_quantile(scores, 0.10),
-        soft_contrast=soft, tau_panel_05=conformal_quantile(pz, 0.05) if pz else cfg.tau_panel,
-        tau_panel_10=conformal_quantile(pz, 0.10) if pz else cfg.tau_panel, n_panel=len(pz),
+        soft_contrast=soft, n_panel=len(pz),
+        # two panel statistics, flagged if either fires: each gets half of alpha (Bonferroni)
+        tau_panel_T_05=conformal_quantile([z[0] for z in pz], 0.025) if pz else 1.0,
+        tau_panel_Tr_05=conformal_quantile([z[1] for z in pz], 0.025) if pz else 1.0,
+        tau_panel_T_10=conformal_quantile([z[0] for z in pz], 0.05) if pz else 1.0,
+        tau_panel_Tr_10=conformal_quantile([z[1] for z in pz], 0.05) if pz else 1.0,
         tau_ref_factor=1.0, w_min=cfg.w_min, n_cal=n_cal, n_shape_scenes=n_shape, n_shape_regions=len(rel),
         n_scored=len(scores), insufficient_rate=1 - len(scores) / max(len(scored), 1),
         seeds=[seed0, seed0 + n_cal - 1], date=date.today().isoformat(), normals="noisy_gt(8)", cue=cfg.cue)
-    for k in ("tau_img_05", "tau_img_10", "tau_panel_05", "tau_panel_10"):  # too few scores: fall back to the max (logged)
-        if not math.isfinite(calib[k]):
-            pool = pz if "panel" in k else scores
+    for k in ("tau_img_05", "tau_img_10", "tau_panel_T_05", "tau_panel_T_10", "tau_panel_Tr_05", "tau_panel_Tr_10"):
+        if not math.isfinite(calib[k]):  # too few scores for the conformal rank: fall back to the max (logged)
+            pool = [z[1 if "Tr" in k else 0] for z in pz] if "panel" in k else scores
             calib[k] = float(max(pool)) if pool else (cfg.tau_panel if "panel" in k else cfg.tau_img)
             calib[k + "_note"] = "n too small for the conformal quantile; used the maximum pristine score"
     Path(out).write_text(json.dumps(calib, indent=1))

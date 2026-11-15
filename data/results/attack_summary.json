@@ -6,57 +6,57 @@
    "tier": "T0",
    "label": "T0 naive paste",
    "tpr_c1": 0.6666666666666666,
-   "tpr_fused": 0.625,
+   "tpr_fused": 0.6666666666666666,
    "n": 24,
    "mean_abs_dY": null
   },
   {
    "tier": "T1",
    "label": "T1 colour transfer",
-   "tpr_c1": 0.6956521739130435,
-   "tpr_fused": 0.6521739130434783,
+   "tpr_c1": 0.5217391304347826,
+   "tpr_fused": 0.5217391304347826,
    "n": 23,
    "mean_abs_dY": 0.23992009882045828
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (exact light)",
-   "tpr_c1": 0.2608695652173913,
-   "tpr_fused": 0.21739130434782608,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.14979081398443037
+   "mean_abs_dY": 0.1574747746243425
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b15\u00b0 error)",
-   "tpr_c1": 0.2608695652173913,
-   "tpr_fused": 0.2608695652173913,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.148489481324087
+   "mean_abs_dY": 0.1560212457957475
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b110\u00b0 error)",
-   "tpr_c1": 0.2608695652173913,
-   "tpr_fused": 0.21739130434782608,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.2608695652173913,
    "n": 23,
-   "mean_abs_dY": 0.1471807526667481
+   "mean_abs_dY": 0.15438625212434842
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b120\u00b0 error)",
    "tpr_c1": 0.30434782608695654,
-   "tpr_fused": 0.21739130434782608,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.1400854400480571
+   "mean_abs_dY": 0.1477317995513263
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b140\u00b0 error)",
-   "tpr_c1": 0.2608695652173913,
-   "tpr_fused": 0.2608695652173913,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.12683034591052844
+   "mean_abs_dY": 0.13498555909356344
   },
   {
    "tier": "T3a",
@@ -64,47 +64,47 @@
    "tpr_c1": 0.2608695652173913,
    "tpr_fused": 0.2608695652173913,
    "n": 23,
-   "mean_abs_dY": 0.15224209703181102
+   "mean_abs_dY": 0.15880855735715316
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b15\u00b0 error, independent normals)",
-   "tpr_c1": 0.2608695652173913,
-   "tpr_fused": 0.2608695652173913,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.15100961206885782
+   "mean_abs_dY": 0.1576316876174963
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b110\u00b0 error, independent normals)",
-   "tpr_c1": 0.30434782608695654,
+   "tpr_c1": 0.2608695652173913,
    "tpr_fused": 0.2608695652173913,
    "n": 23,
-   "mean_abs_dY": 0.14811931724619606
+   "mean_abs_dY": 0.15363286520637895
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b120\u00b0 error, independent normals)",
    "tpr_c1": 0.30434782608695654,
-   "tpr_fused": 0.2608695652173913,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.1442231616086286
+   "mean_abs_dY": 0.1513693827892775
   },
   {
    "tier": "T3a",
    "label": "T3a re-shade (\u00b140\u00b0 error, independent normals)",
    "tpr_c1": 0.30434782608695654,
-   "tpr_fused": 0.2608695652173913,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.12859938625732195
+   "mean_abs_dY": 0.13543365826911252
   },
   {
    "tier": "T4",
    "label": "T4 adaptive (white box)",
-   "tpr_c1": 0.21739130434782608,
-   "tpr_fused": 0.21739130434782608,
+   "tpr_c1": 0.30434782608695654,
+   "tpr_fused": 0.30434782608695654,
    "n": 23,
-   "mean_abs_dY": 0.1582437871914843
+   "mean_abs_dY": 0.16366645677582078
   }
  ]
 }

@@ -47,8 +47,8 @@ export function explain(fusion, regions, eps = 1e-3) {
     const out = fusion.flagged.map((k) => {
       const p = per[k], r = regions[k];
       if ((fusion.panel_flagged || []).includes(k)) {
-        return `The brightness of **${r.name}** does not follow the shading of the panel around it `
-          + `(panel score ${f1(p.panel_z)} > alert ${f1(fusion.tau_panel)}): it looks lit differently from its surroundings.`;
+        return `The brightness of **${r.name}** is not predicted by the shading of the panel around it `
+          + `(shared-material score ${f1(p.panel_z)} times the alert level): it looks lit differently from its surroundings.`;
       }
       const agree = Math.exp(-p.shortfall) - eps;
       const cues = r.cues.map((c) => CUE_NAMES[c] || c).join(', ');

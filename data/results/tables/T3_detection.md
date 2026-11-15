@@ -9,8 +9,8 @@
 | distractor | C1 | 90 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.61 [0.48, 0.73] | 0.52 | 15/15 |
 | distractor | C1+C2 | 90 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.62 [0.48, 0.75] | 0.51 | 15/15 |
 | distractor | C1+C2+C3 | 90 | n/a | 0.60 [0.33, 0.87] | 0.00 | 0.62 [0.48, 0.75] | 0.51 | 15/15 |
-| dent | C1 | n/a | 60 | 0.07 [0.00, 0.27] | 0.00 | 0.41 [0.22, 0.61] | 0.63 | 15/15 |
-| dent | C1+C2 | n/a | 90 | 0.07 [0.00, 0.27] | 0.00 | 0.42 [0.22, 0.61] | 0.69 | 15/15 |
-| dent | C1+C2+C3 | n/a | 90 | 0.07 [0.00, 0.27] | 0.00 | 0.42 [0.22, 0.61] | 0.69 | 15/15 |
+| dent | C1 | n/a | 90 | 0.07 [0.00, 0.27] | 0.07 | 0.41 [0.22, 0.61] | 0.57 | 15/15 |
+| dent | C1+C2 | n/a | 90 | 0.07 [0.00, 0.27] | 0.07 | 0.42 [0.22, 0.61] | 0.60 | 15/15 |
+| dent | C1+C2+C3 | n/a | 90 | 0.07 [0.00, 0.27] | 0.07 | 0.42 [0.22, 0.61] | 0.60 | 15/15 |
 
 Suite quick. 5%FPR threshold from the pristine TEST scores (labelled as such); tau = calibrated. 'fused' = C1+C2+C3: the shadow-pair cue C4 is manual-only (clicked in the viewer), so no automatic experiment can include it; 'fused' is therefore identical to C1+C2+C3. Caveat: synthetic scenes with simulated normal predictors unless stated.

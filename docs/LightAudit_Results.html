@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>LightAudit Results</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm; }
+  body { font: 10.3pt/1.48 "Segoe UI", Arial, sans-serif; color: #1b1f24; }
+  h1 { font-size: 23pt; margin: 0 0 1mm; }
+  h2 { font-size: 14.5pt; margin: 7mm 0 2mm; padding-bottom: 1mm; border-bottom: 1.5px solid #d0d5db; break-after: avoid; }
+  h3 { font-size: 11.3pt; margin: 4mm 0 1mm; break-after: avoid; }
+  p, li { margin: 0 0 1.5mm; }
+  .sub { color: #56606b; font-size: 10.5pt; margin-bottom: 4mm; }
+  code, pre { font-family: Consolas, monospace; font-size: 9pt; }
+  pre { background: #f3f5f7; border: 1px solid #dde1e6; border-radius: 4px; padding: 2.5mm 3mm; white-space: pre-wrap; break-inside: avoid; }
+  code { background: #f3f5f7; padding: 0 2px; border-radius: 2px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 3mm; font-size: 9.4pt; break-inside: avoid; }
+  th, td { border: 1px solid #d0d5db; padding: 1.2mm 1.8mm; text-align: left; vertical-align: top; }
+  th { background: #eef1f4; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  figure { margin: 3mm 0 4mm; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #c9ced4; }
+  figcaption { font-size: 8.9pt; color: #56606b; margin-top: 1mm; }
+  .note { background: #fff6e5; border-left: 4px solid #e0a030; padding: 2mm 3mm; margin: 3mm 0; break-inside: avoid; }
+  .good { background: #eaf6ee; border-left: 4px solid #2e8b4a; padding: 2mm 3mm; margin: 3mm 0; break-inside: avoid; }
+  .bad { color: #b3261e; font-weight: 600; } .ok { color: #1a7f37; font-weight: 600; } .mid { color: #9a6700; font-weight: 600; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+</style></head><body>
+
+<h1>LightAudit: what works and what does not</h1>
+<div class="sub">Results report &middot; 15 November 2026 &middot; https://github.com/Barath-BDK/LightAudit<br>
+Every number below was produced by code in the repository. Sample sizes are given because several of them are small.</div>
+
+<div class="good"><b>Headline.</b> The tool now has one capability that is measured to work on <i>real photographs</i>:
+checking a marked area of an object (the damage-photo case). On held-out real objects it raises a false alarm on
+6% of clean images and catches 50% of areas pasted from a differently lit photo, 65% when the lighting differs by
+80&deg; or more.</div>
+<div class="note"><b>And one that does not.</b> Deciding whether a whole object was pasted into a scene from another
+photo does not work on real photos (detection at chance level on real indoor scenes, false alarms on 4 of 6 outdoor
+photos). On synthetic scenes it works moderately, and a re-shaded fake defeats it.</div>
+
+<h2>1. Scorecard</h2>
+<table>
+<tr><th>Capability</th><th>Data</th><th>Result</th><th>Verdict</th></tr>
+<tr><td>Dent / marked-area check</td><td>Real objects, held out (400 clean, 400 spliced)</td><td>6% false alarms, 50% caught; 65% at &ge;80&deg;</td><td class="ok">works</td></tr>
+<tr><td>Dent / marked-area check, strict setting</td><td>same</td><td>0.7% false alarms, 32% caught; 52% at &ge;80&deg;</td><td class="ok">works</td></tr>
+<tr><td>Dent check on synthetic scenes</td><td>8 pasted dents, 15 clean</td><td>5 of 8 caught (62%); 0&ndash;7% false alarms</td><td class="ok">works</td></tr>
+<tr><td>Dent check after a re-shade attack</td><td>8 synthetic</td><td>6 of 8 still caught (75%)</td><td class="ok">holds</td></tr>
+<tr><td>Dent check after colour matching</td><td>8 synthetic</td><td>0 of 8 caught</td><td class="bad">defeated</td></tr>
+<tr><td>Abstaining under overcast light</td><td>5 synthetic scenes</td><td>4 of 5 return INSUFFICIENT (was 0 of 5)</td><td class="ok">works</td></tr>
+<tr><td>Clean sunny scenes left alone</td><td>5 synthetic</td><td>0 of 5 flagged</td><td class="ok">works</td></tr>
+<tr><td>Whole object pasted, synthetic, 90&deg;</td><td>5 scenes / 8 scenes</td><td>4 of 5 and 6 of 8 caught; AUC 0.65 over all angles &ge;30&deg; (n=15)</td><td class="mid">partly</td></tr>
+<tr><td>Whole object pasted, then re-shaded</td><td>8 synthetic cars</td><td>0 of 8 caught</td><td class="bad">defeated</td></tr>
+<tr><td>Whole object pasted, real indoor scenes</td><td>6 scenes, 150 clean, ~1,400 simulated splices</td><td>AUC 0.49&ndash;0.59 (0.64 at &ge;90&deg;)</td><td class="bad">does not work</td></tr>
+<tr><td>Unedited outdoor photos</td><td>6 photos</td><td>4 of 6 wrongly flagged</td><td class="bad">does not work</td></tr>
+<tr><td>Two-sun scenes recognised</td><td>5 synthetic</td><td>0 of 5 CONFLICT</td><td class="bad">does not work</td></tr>
+<tr><td>Low-resolution images</td><td>5 synthetic</td><td>1 of 5 splices caught, 3 of 5 abstain</td><td class="bad">weak</td></tr>
+<tr><td>Viewer, server, upload, tests</td><td>62 Python tests, 470 browser-parity checks</td><td>all pass</td><td class="ok">works</td></tr>
+</table>
+<p>AUC: 0.5 is chance, 1.0 is perfect. "Caught" means the verdict is SUSPICIOUS at the calibrated alert level.</p>
+
+<h2>2. The capability that works on real photos</h2>
+<h3>What it does</h3>
+<p>You mark an area of an object (for example a dent on a car door). The tool asks: is this area lit like the
+surface around it? It fits one shading model (light direction, brightness, ambient) to the surrounding surface and
+checks whether that model predicts the marked area. Painted patterns are removed first with Retinex, with one
+rule added: a brightness step across the boundary of the marked area is never treated as paint. Without that rule,
+Retinex explains a pasted area's brightness as paint and hides it.</p>
+
+<h3>Real-photo test (MIT Intrinsic Images: 20 real objects, 10 lamp positions each)</h3>
+<p>Ten objects calibrate the alert level, the other ten are the test. A splice is one part of an object taken from
+a photo of the same object under another lamp, blended at the edge, saved as 8-bit.</p>
+<table>
+<tr><th>Lighting difference</th><th>Caught at 6% false alarms</th><th>Caught at 0.7% false alarms</th><th>Splices</th></tr>
+<tr><td>0&ndash;25&deg;</td><td class="n">38%</td><td class="n">19%</td><td class="n">69</td></tr>
+<tr><td>25&ndash;50&deg;</td><td class="n">42%</td><td class="n">22%</td><td class="n">135</td></tr>
+<tr><td>50&ndash;80&deg;</td><td class="n">58%</td><td class="n">40%</td><td class="n">134</td></tr>
+<tr><td>80&deg; and above</td><td class="n">65%</td><td class="n">52%</td><td class="n">62</td></tr>
+<tr><th>All</th><th class="n">50%</th><th class="n">32%</th><th class="n">400</th></tr>
+</table>
+<p>By test object (false alarms / caught, at the 6% setting): cup 0% / 57%, potato 0% / 75%, turtle 0% / 68%,
+teabag 0% / 55%, paper 0% / 40%, frog 0% / 33%, box 7% / 35%, dinosaur 3% / 12%, squirrel 17% / 40%, pear 35% / 88%.
+Smooth, evenly coloured objects work best; the pear produces most of the false alarms.</p>
+<p>How the method got there, on the same data with hard-edged splices (AUC):</p>
+<table>
+<tr><th>Variant</th><th>AUC</th></tr>
+<tr><td>Compare light directions of the parts</td><td class="n">0.59&ndash;0.65</td></tr>
+<tr><td>Shared shading model, no paint removal</td><td class="n">0.74</td></tr>
+<tr><td>Shared model + Retinex on the composite</td><td class="n">0.66</td></tr>
+<tr><td>Shared model + boundary-guarded Retinex</td><td class="n">0.86 (0.91 at &ge;80&deg;)</td></tr>
+<tr><td>Shared model + the true colour map (reference)</td><td class="n">0.84</td></tr>
+</table>
+
+<h3>Examples (real photographs in the viewer)</h3>
+<div class="two">
+<figure><img src="figures/viewer_real_turtle_spliced.png"><figcaption>Works. Real turtle; the marked area was taken from a photo under another lamp. Verdict SUSPICIOUS, score 1.7 times the alert level.</figcaption></figure>
+<figure><img src="figures/viewer_real_turtle_clean.png"><figcaption>Works. The same turtle, unedited. Verdict CONSISTENT.</figcaption></figure>
+<figure><img src="figures/viewer_real_cup_spliced.png"><figcaption>Works. Real cup with a pasted area: SUSPICIOUS.</figcaption></figure>
+<figure><img src="figures/viewer_real_pear_missed.png"><figcaption>Miss. Real pear with a pasted area: score 0.96 of the alert level, not flagged.</figcaption></figure>
+</div>
+<figure><img src="figures/viewer_real_potato_falsealarm.png"><figcaption>False alarm. Real potato, unedited, flagged with a score 1.006 times the alert level.</figcaption></figure>
+<p>Six real demo pairs are in the gallery (<code>real_mit_*</code>): 5 of 6 clean images are left alone; of the 6
+spliced ones 3 are flagged, 1 returns CONFLICT and 2 are missed.</p>
+
+<h2>3. Synthetic scenes</h2>
+<div class="two">
+<figure><img src="figures/viewer_main.png"><figcaption>Works. Car pasted from a light 120&deg; away: SUSPICIOUS.</figcaption></figure>
+<figure><img src="figures/viewer_dent.png"><figcaption>Works. Pasted dent caught by the marked-area check.</figcaption></figure>
+<figure><img src="figures/viewer_overcast.png"><figcaption>Works. Overcast scene: the tool abstains ("the light looks diffuse").</figcaption></figure>
+<figure><img src="figures/viewer_multilight.png"><figcaption>Fails. Two suns: called CONSISTENT instead of CONFLICT.</figcaption></figure>
+</div>
+<figure><img src="figures/viewer_attack.png"><figcaption>Attack lab. The pasted car is re-shaded to match the scene and passes.</figcaption></figure>
+
+<h3>Numbers (quick evaluation: 5&ndash;15 scenes per cell, so the ranges are wide)</h3>
+<table>
+<tr><th>Measure</th><th>Result</th></tr>
+<tr><td>Light-direction error per region, exact surface directions</td><td>least squares 6&ndash;8&deg;, rank cue 22&ndash;26&deg; (median)</td></tr>
+<tr><td>Calibration: true light inside the 68% / 95% region</td><td>64% / 89% on test scenes</td></tr>
+<tr><td>Pasted car, AUC for differences &ge;30&deg; (n = 15)</td><td>0.65 (rank-cue baseline 0.57)</td></tr>
+<tr><td>Pasted car at 90&deg;, caught at 5% false alarms</td><td>60% (range 33&ndash;87%)</td></tr>
+<tr><td>Smallest difference with half of the cars caught</td><td>60&ndash;90&deg;</td></tr>
+<tr><td>Clean calibration scenes returning INSUFFICIENT</td><td>17% of 200</td></tr>
+</table>
+<table>
+<tr><th>Attack (8 cases each)</th><th>Pasted car caught</th><th>Pasted object caught</th><th>Pasted dent caught</th></tr>
+<tr><td>None</td><td class="n">75%</td><td class="n">62%</td><td class="n">62%</td></tr>
+<tr><td>Colour matching</td><td class="n">88%</td><td class="n">71%</td><td class="n bad">0%</td></tr>
+<tr><td>Re-shade with the exact scene light</td><td class="n bad">0%</td><td class="n bad">14%</td><td class="n">75%</td></tr>
+<tr><td>Re-shade with a 20&deg; error</td><td class="n bad">0%</td><td class="n bad">14%</td><td class="n">75%</td></tr>
+<tr><td>Adaptive attack</td><td class="n bad">0%</td><td class="n bad">14%</td><td class="n">75%</td></tr>
+</table>
+<p>The two checks fail in opposite ways: re-shading defeats the whole-object check but not the dent check; colour
+matching defeats the dent check but not the whole-object check.</p>
+
+<h2>4. Why whole-object checks fail on real photos</h2>
+<table>
+<tr><th>Finding</th><th>Evidence</th></tr>
+<tr><td>The light estimator itself is right</td><td>With a gray ball's true shape the estimate is within 1&ndash;3&deg; of the true light in 6 real scenes</td></tr>
+<tr><td>Predicted surface directions are the weak link</td><td>On the same ball: DSINE 17&ndash;22&deg; light error in 4 scenes, 57&deg; and 82&deg; in 2; Depth Anything 11&ndash;27&deg;</td></tr>
+<tr><td>A bug made it worse, now fixed</td><td>DSINE's left-right axis was mirrored: 46&deg; error on the ball as delivered, 18&ndash;25&deg; after the fix</td></tr>
+<tr><td>Most real regions are flat</td><td>Books, tables, walls have one orientation each and an unknown colour, so they say nothing about the light</td></tr>
+<tr><td>False alarms grow with the number of regions</td><td>Score correlates 0.43 with region count; a per-region likelihood test with Holm correction brings it to 0.09 (in the benchmark, not yet in the pipeline)</td></tr>
+<tr><td>Averaging two surface models does not help</td><td>Light error on synthetic scenes: DSINE 21&deg;, average 27&deg;, Depth Anything 37&deg;</td></tr>
+</table>
+
+<h2>5. What was tried and dropped</h2>
+<ul>
+<li>The rank-based shading cue (the project's original idea): 3 times less accurate than least squares; kept only as a baseline.</li>
+<li>Silhouette cue: no gain on 60 calibration scenes; off by default.</li>
+<li>Sampling several lights per region instead of one best guess: no gain.</li>
+<li>Second-light fit for two-sun scenes: AUC 0.65&ndash;0.70, not enough. (A cast-shadow version scored 0.96 on 60 + 60 scenes and is prepared but not yet built in.)</li>
+<li>Shared paint levels per segment: no gain over no correction.</li>
+<li>Plain Retinex and smoothed Retinex: worse than no correction on composites.</li>
+</ul>
+
+<h2>6. How to run</h2>
+<pre>git clone https://github.com/Barath-BDK/LightAudit
+cd LightAudit
+Set-ExecutionPolicy -Scope Process Bypass
+.\setup.ps1
+.\.venv\Scripts\python.exe -m lightaudit.cli serve        # then open http://127.0.0.1:8000</pre>
+<table>
+<tr><th>What</th><th>Command (prefix with <code>.\.venv\Scripts\python.exe</code>)</th></tr>
+<tr><td>Check a marked area in your photo</td><td><code>-m lightaudit.cli audit --image photo.jpg --roi mask.png --html</code></td></tr>
+<tr><td>Real-object benchmark (downloads nothing by itself)</td><td><code>eval/mit_panel.py</code> &nbsp; (data: MIT Intrinsic Images into <code>data/mit_intrinsic/</code>)</td></tr>
+<tr><td>Real-object demos for the viewer</td><td><code>tools/make_mit_demo.py</code></td></tr>
+<tr><td>Synthetic evaluation, figures, report</td><td><code>-m lightaudit.cli eval --suite quick</code>, then <code>figures</code>, <code>report</code></td></tr>
+<tr><td>Tests</td><td><code>-m pytest</code></td></tr>
+</table>
+
+<h2>7. What to do next</h2>
+<table>
+<tr><th>#</th><th>Step</th><th>Why</th></tr>
+<tr><td>1</td><td>Test the marked-area check on real car photos with real dents, clean and edited</td><td>The real test so far uses tabletop objects; genuine damage with scratches or dirt may raise false alarms</td></tr>
+<tr><td>2</td><td>Add a colour-consistency check for the marked area</td><td>Colour matching defeats the marked-area check</td></tr>
+<tr><td>3</td><td>Build in the cast-shadow test for two light sources</td><td>It separated two-sun scenes at 0.96 in a pre-test</td></tr>
+<tr><td>4</td><td>Move the per-region likelihood test with Holm correction into the whole-object check</td><td>Removes the growth of false alarms with region count</td></tr>
+<tr><td>5</td><td>Run the full synthetic evaluation</td><td>Narrow the ranges; every synthetic number here is from the quick suite</td></tr>
+<tr><td>6</td><td>Present the whole-object check as "necessary, not sufficient"</td><td>It is at chance on real photos and re-shading defeats it; that is a finding to report, not to hide</td></tr>
+</table>
+<p style="margin-top:4mm;color:#56606b;font-size:9pt">Limits to keep in mind: the real-photo result is for areas of one object with a known boundary; the alert level
+for real photos was calibrated on ten tabletop objects; angles in the real test are approximate. A flag means "send
+for human review", never "this is fraud".</p>
+</body></html>

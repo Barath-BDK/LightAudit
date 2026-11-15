@@ -69,7 +69,11 @@ class Config:
     # soft-light abstention: median over reliable regions of P10/P90 of linearised luminance (calibrated)
     soft_contrast: float = 0.34
     # panel mode: |mean residual| of the ROI against the panel's own shading curve, in robust sigmas (calibrated)
-    tau_panel: float = 3.0
+    tau_panel: float = 1.0  # panel_z is already a ratio to the calibrated levels below
+    tau_panel_T: float = 1.0  # shared-material statistic without albedo handling (calibrated)
+    tau_panel_Tr: float = 1.0  # ... with boundary-guarded Retinex (calibrated)
+    panel_band: int = 3  # guard band (px) around the ROI boundary for Retinex: pasted regions are feathered
+    retinex_thr: float = 0.10  # log-gradient above which Retinex calls an edge reflectance
     panel_min_px: int = 50
     # shading cue used by the audit: "ls" (least squares, default since it measured ~3x more accurate) or "rank"
     cue: str = "ls"
@@ -124,4 +128,5 @@ def calibrated(cfg: Config | None = None, calib: dict | None = None, alpha: floa
                    tau_ref_factor=float(calib.get("tau_ref_factor", 1.0)),
                    w_min=float(calib.get("w_min", cfg.w_min)), alpha=alpha,
                    soft_contrast=float(calib.get("soft_contrast", cfg.soft_contrast)),
-                   tau_panel=float(calib.get("tau_panel_05" if alpha <= 0.05 else "tau_panel_10", cfg.tau_panel)))
+                   tau_panel_T=float(calib.get("tau_panel_T_05" if alpha <= 0.05 else "tau_panel_T_10", cfg.tau_panel_T)),
+                   tau_panel_Tr=float(calib.get("tau_panel_Tr_05" if alpha <= 0.05 else "tau_panel_Tr_10", cfg.tau_panel_Tr)))

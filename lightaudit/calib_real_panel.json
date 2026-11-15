@@ -1,0 +1,20 @@
+{
+ "tau_panel_T_05": 2.8486551594925635,
+ "tau_panel_Tr_05": 2.773118967274235,
+ "tau_panel_T_10": 1.90281914928275,
+ "tau_panel_Tr_10": 2.4082908060331945,
+ "n_cal": 400,
+ "objects": [
+  "apple",
+  "cup1",
+  "deer",
+  "frog1",
+  "panther",
+  "paper2",
+  "phone",
+  "raccoon",
+  "sun",
+  "teabag2"
+ ],
+ "source": "MIT Intrinsic Images, even-index objects, Depth Anything normals"
+}
