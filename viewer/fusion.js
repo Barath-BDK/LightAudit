@@ -13,7 +13,7 @@ export const VERDICTS = ['CONSISTENT', 'SUSPICIOUS', 'INSUFFICIENT', 'CONFLICT']
 
 export const DEFAULT_CFG = Object.freeze({
   eps: 1e-3, w_glint: 0.5, w_contour: 0.5, w_shadow: 0.7, w_min: 0.35, tau_img: 2.0, tau_ref: 2.0,
-  min_reliable: 3, broad_consensus_frac: 0.35, soft_contrast: Infinity, tau_panel: Infinity,
+  min_reliable: 3, broad_consensus_frac: 0.35, soft_contrast: Infinity, tau_panel: Infinity, shadow_levels_max: Infinity,
 });
 
 function argmax(a) {
@@ -178,6 +178,7 @@ function fuseCore(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = null
  * "What-if" at the user's light (BUILD_SPEC 12.4): each region's agreement A_k(l_user) and its shortfall
  * against l_user; a reliable region is flagged when that shortfall exceeds tau. Does not change the audit.
  */
+export const MULTI_REASON = 'cast shadows on a flat surface show more than one darkness level: several light sources';
 export const SOFT_REASON = 'the light looks diffuse (overcast, or everything in shade): shading carries no direction';
 
 /**
@@ -197,9 +198,20 @@ export function fuse(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = n
   res.soft_light = { contrast: med, threshold: cfg.soft_contrast, abstain: soft };
   res.panel_flagged = [];
   res.tau_panel = cfg.tau_panel;
+  res.shadow_levels = { value: null, threshold: cfg.shadow_levels_max, conflict: false };
   if (soft) {
     per.forEach((p) => { p.flagged = false; });
     res.verdict = 'INSUFFICIENT'; res.reason = SOFT_REASON; res.flagged = [];
+    return res;
+  }
+  const shadowMid = opts.shadow_mid || null;
+  let sv = null;
+  if (shadowMid) per.forEach((p, k) => { if (shadowMid[k] != null && !p.excluded && (sv === null || shadowMid[k] > sv)) sv = shadowMid[k]; });
+  const multi = sv !== null && sv > cfg.shadow_levels_max;
+  res.shadow_levels = { value: sv, threshold: cfg.shadow_levels_max, conflict: multi };
+  if (multi) {
+    per.forEach((p) => { p.flagged = false; });
+    res.verdict = 'CONFLICT'; res.reason = MULTI_REASON; res.flagged = [];
     return res;
   }
   const panel = [];

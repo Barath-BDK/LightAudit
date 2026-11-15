@@ -111,15 +111,19 @@ def _fuse_core(A, weights, excluded=None, cfg: Config = Config(), centers=None, 
     return res
 
 
+MULTI_REASON = "cast shadows on a flat surface show more than one darkness level: several light sources"
 SOFT_REASON = "the light looks diffuse (overcast, or everything in shade): shading carries no direction"
 
 
 def fuse(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: bool = True,
-         contrast=None, panel_z=None) -> dict:
+         contrast=None, panel_z=None, shadow_mid=None) -> dict:
     """Consensus fusion plus two scene-level checks (mirrored in viewer/fusion.js):
 
     contrast[k]: P10/P90 of region k's linearised luminance (or None). If the median over the reliable regions is
       above cfg.soft_contrast the light is too diffuse to carry a direction -> INSUFFICIENT.
+    shadow_mid[k]: cast-shadow-level score of a large flat region (or None). If the largest value over the
+      non-excluded regions is above cfg.shadow_levels_max, the shadows show more than one darkness level,
+      i.e. several lights -> CONFLICT (checked after the soft-light test, before the panel test).
     panel_z[k]: panel-residual score of an ROI region (or None). Above cfg.tau_panel the ROI is flagged, whatever
       the direction test says (it needs only the panel the ROI sits on), unless the verdict is CONFLICT.
     """
@@ -130,10 +134,20 @@ def fuse(A, weights, excluded=None, cfg: Config = Config(), centers=None, loo: b
     soft = med is not None and med > cfg.soft_contrast
     res["soft_light"] = dict(contrast=med, threshold=cfg.soft_contrast, abstain=soft)
     res["panel_flagged"] = []
+    res["shadow_levels"] = dict(value=None, threshold=cfg.shadow_levels_max, conflict=False)
     if soft:
         for q in per:
             q["flagged"] = False
         res.update(verdict="INSUFFICIENT", reason=SOFT_REASON, flagged=[])
+        return res
+    sl = [shadow_mid[k] for k in range(len(per)) if shadow_mid and shadow_mid[k] is not None and not per[k]["excluded"]]
+    sv = max(sl) if sl else None
+    multi = sv is not None and sv > cfg.shadow_levels_max
+    res["shadow_levels"] = dict(value=sv, threshold=cfg.shadow_levels_max, conflict=multi)
+    if multi:
+        for q in per:
+            q["flagged"] = False
+        res.update(verdict="CONFLICT", reason=MULTI_REASON, flagged=[])
         return res
     panel = [k for k in range(len(per)) if panel_z and panel_z[k] is not None and panel_z[k] > cfg.tau_panel
              and not per[k]["excluded"]]

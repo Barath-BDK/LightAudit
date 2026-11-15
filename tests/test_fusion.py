@@ -119,3 +119,14 @@ def test_panel_score_flags_roi():
     assert f["verdict"] == "SUSPICIOUS" and f["flagged"] == [3] and f["panel_flagged"] == [3]
     assert fuse(A, w, None, cfg, centers, panel_z=[None, None, None, 1.0])["verdict"] == "CONSISTENT"
     assert fuse(A, w, [False, False, False, True], cfg, centers, panel_z=[None, None, None, 5.0])["verdict"] == "CONSISTENT"
+
+
+def test_shadow_levels_conflict():
+    A, w, centers, _ = run([(30, 40), (33, 42), (28, 38), (-120, 30)])
+    cfg = replace(CFG, shadow_levels_max=0.30)
+    f = fuse(A, w, None, cfg, centers, shadow_mid=[0.7, None, None, None])
+    assert f["verdict"] == "CONFLICT" and "several light" in f["reason"] and f["flagged"] == []
+    f = fuse(A, w, None, cfg, centers, shadow_mid=[0.1, None, None, None])  # one shadow level: normal verdict
+    assert f["verdict"] == "SUSPICIOUS" and f["shadow_levels"]["conflict"] is False
+    f = fuse(A, w, [True, False, False, False], cfg, centers, shadow_mid=[0.7, None, None, None])  # excluded region ignored
+    assert f["verdict"] != "CONFLICT"

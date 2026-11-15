@@ -169,3 +169,25 @@ def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Con
     S_ref = np.maximum(dirs @ normals[ys, xs].T.astype(np.float64), 0)
     S_roi = np.maximum(dirs @ normals[rys, rxs].T.astype(np.float64), 0)
     return shared_material_T(S_ref, lin[ys, xs] / alb[ys, xs], S_roi, lin[rys, rxs] / alb[rys, rxs])
+
+
+def shadow_levels(Y, normals, mask, cfg: Config = Config()):
+    """Cast-shadow levels on a large flat region (typically the ground), or None if the region does not qualify.
+
+    A flat surface has one normal, so its brightness varies only with albedo and cast shadows. Under one sun all
+    cast shadows share one darkness level; under two suns each object casts two half-shadows (each blocks one sun)
+    at two different levels. Returns the share of shadow pixels (darker than 0.75 x the median) that are brighter
+    than 1.35 x the darkest shadow level (the 10th percentile of the shadow pixels)."""
+    if mask.sum() < cfg.flat_min_frac * mask.size:
+        return None
+    m = normals[mask].mean(0)
+    if float(np.linalg.norm(m)) < cfg.flat_min_R:
+        return None
+    yl = Y[mask & (Y < cfg.sat_hi)] ** 2.2
+    if len(yl) < 2000:
+        return None
+    med = float(np.median(yl))
+    dark = yl[yl < 0.75 * med]
+    if len(dark) < 200:
+        return None
+    return float((dark > 1.35 * np.percentile(dark, 10)).mean())

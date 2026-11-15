@@ -6,6 +6,8 @@
  "tau_img_05": 6.2943088485391545,
  "tau_img_10": 5.530738695362592,
  "soft_contrast": 0.42475610971450806,
+ "shadow_levels_max": 0.2863132674453429,
+ "n_shadow": 190,
  "n_panel": 59,
  "tau_panel_T_05": 3.9305072882604857,
  "tau_panel_Tr_05": 5.651070517174165,
@@ -16,8 +18,8 @@
  "n_cal": 200,
  "n_shape_scenes": 120,
  "n_shape_regions": 473,
- "n_scored": 166,
- "insufficient_rate": 0.17000000000000004,
+ "n_scored": 161,
+ "insufficient_rate": 0.19499999999999995,
  "seeds": [
   1000,
   1199

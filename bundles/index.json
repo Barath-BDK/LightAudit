@@ -34,8 +34,8 @@
  {
   "name": "demo_multilight",
   "title": "Two suns",
-  "description": "An unedited scene lit by two strong lights (outside the one-light model). Synthetic scene (seed 4051), simulated normals. Audit verdict: CONSISTENT (intended: CONFLICT/INSUFFICIENT; shown as it is).",
-  "verdict": "CONSISTENT",
+  "description": "An unedited scene lit by two strong lights (outside the one-light model). Synthetic scene (seed 4041), simulated normals. Audit verdict: CONFLICT.",
+  "verdict": "CONFLICT",
   "thumb": "demo_multilight/thumb.jpg",
   "source": "synthetic"
  },

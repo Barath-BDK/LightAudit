@@ -18,7 +18,7 @@
   "date": "2026-11-15",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T23:10:18+00:00",
+ "timestamp": "2026-11-15T03:11:03+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "status": "ran",
@@ -46,7 +46,7 @@
   },
   "spliced": {
    "n": 2,
-   "normal_err_median": 22.536038517951965,
+   "normal_err_median": 22.535784482955933,
    "region_light_err_median": 52.44376783895943,
    "n_reliable_regions": 8,
    "verdicts": {
@@ -61,7 +61,7 @@
   "n": 2,
   "suspicious_fixed_normals": 0,
   "suspicious_repredicted": 0,
-  "median_normal_shift_deg": 5.212560176849365
+  "median_normal_shift_deg": 5.211267709732056
  },
  "rows": [
   {
@@ -82,7 +82,7 @@
     "mode": "ensemble"
    },
    "spliced": {
-    "normal_err_median": 42.74414825439453,
+    "normal_err_median": 42.74397659301758,
     "normal_err_mean": 36.09037780761719,
     "verdict": "CONSISTENT",
     "S_img": 3.410284188713899,
@@ -101,11 +101,11 @@
     "verdict_fixed_normals": "CONSISTENT",
     "verdict_repredicted": "CONSISTENT",
     "S_img_fixed": 2.128017389655705,
-    "S_img_repredicted": 1.7771594637827963,
-    "normal_shift_in_car_median": 4.116206169128418,
+    "S_img_repredicted": 0.9518345529619346,
+    "normal_shift_in_car_median": 4.114398002624512,
     "fidelity": {
-     "mean_abs_dY": 0.1253187507390976,
-     "ssim_loss": 0.39233607053756714
+     "mean_abs_dY": 0.1253185123205185,
+     "ssim_loss": 0.3923320770263672
     }
    }
   },
@@ -127,17 +127,17 @@
     "mode": "ensemble"
    },
    "spliced": {
-    "normal_err_median": 2.3279287815093994,
-    "normal_err_mean": 7.793066501617432,
+    "normal_err_median": 2.327592372894287,
+    "normal_err_mean": 7.7930731773376465,
     "verdict": "CONSISTENT",
-    "S_img": 5.657686476856448,
+    "S_img": 5.657637251617988,
     "top_id": 2,
     "n_reliable": 4,
     "light_err": [
      50.827893306758476,
      55.245597385181156,
      31.986560484423357,
-     57.889678426448505
+     58.122595925891545
     ],
     "mode": "ensemble",
     "top_is_car": true
@@ -145,12 +145,12 @@
    "attack_T3a": {
     "verdict_fixed_normals": "INSUFFICIENT",
     "verdict_repredicted": "INSUFFICIENT",
-    "S_img_fixed": 4.155973914157335,
-    "S_img_repredicted": 3.6067299912843294,
-    "normal_shift_in_car_median": 6.3089141845703125,
+    "S_img_fixed": 4.155983839266548,
+    "S_img_repredicted": 3.6067123535680596,
+    "normal_shift_in_car_median": 6.3081374168396,
     "fidelity": {
-     "mean_abs_dY": 0.10305363684892654,
-     "ssim_loss": 0.2867954969406128
+     "mean_abs_dY": 0.10305366665124893,
+     "ssim_loss": 0.28679877519607544
     }
    }
   }

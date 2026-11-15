@@ -18,7 +18,7 @@
   "date": "2026-11-15",
   "source": "calib_default.json"
  },
- "timestamp": "2026-11-14T23:07:42+00:00",
+ "timestamp": "2026-11-15T03:07:07+00:00",
  "python": "3.11.4",
  "platform": "Windows-10-10.0.26200-SP0",
  "n_pristine": 5,
@@ -237,7 +237,7 @@
     0.0,
     0.0
    ],
-   "abstain_pristine_C1": 0.6,
+   "abstain_pristine_C1": 0.4,
    "tpr_fused": 0.2,
    "tpr_fused_ci": [
     0.0,
@@ -249,7 +249,7 @@
     0.0,
     0.0
    ],
-   "abstain_pristine_fused": 0.6
+   "abstain_pristine_fused": 0.4
   },
   "noise:0.01": {
    "kind": "noise",
@@ -282,10 +282,10 @@
   "noise:0.03": {
    "kind": "noise",
    "param": 0.03,
-   "tpr_C1": 0.8,
+   "tpr_C1": 0.4,
    "tpr_C1_ci": [
-    0.4,
-    1.0
+    0.0,
+    0.8
    ],
    "abstain_spliced_C1": 0.0,
    "fpr_C1": 0.0,
@@ -294,10 +294,10 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.8,
+   "tpr_fused": 0.4,
    "tpr_fused_ci": [
-    0.4,
-    1.0
+    0.0,
+    0.8
    ],
    "abstain_spliced_fused": 0.0,
    "fpr_fused": 0.0,
@@ -310,10 +310,10 @@
   "noise:0.06": {
    "kind": "noise",
    "param": 0.06,
-   "tpr_C1": 0.8,
+   "tpr_C1": 0.0,
    "tpr_C1_ci": [
-    0.4,
-    1.0
+    0.0,
+    0.0
    ],
    "abstain_spliced_C1": 0.0,
    "fpr_C1": 0.0,
@@ -322,10 +322,10 @@
     0.0
    ],
    "abstain_pristine_C1": 0.0,
-   "tpr_fused": 0.8,
+   "tpr_fused": 0.0,
    "tpr_fused_ci": [
-    0.4,
-    1.0
+    0.0,
+    0.0
    ],
    "abstain_spliced_fused": 0.0,
    "fpr_fused": 0.0,
@@ -394,10 +394,10 @@
   "tone:contrast1.5": {
    "kind": "tone",
    "param": "contrast1.5",
-   "tpr_C1": 0.6,
+   "tpr_C1": 0.4,
    "tpr_C1_ci": [
-    0.2,
-    1.0
+    0.0,
+    0.8
    ],
    "abstain_spliced_C1": 0.0,
    "fpr_C1": 0.0,
@@ -405,11 +405,11 @@
     0.0,
     0.0
    ],
-   "abstain_pristine_C1": 0.6,
-   "tpr_fused": 0.6,
+   "abstain_pristine_C1": 0.2,
+   "tpr_fused": 0.4,
    "tpr_fused_ci": [
-    0.2,
-    1.0
+    0.0,
+    0.8
    ],
    "abstain_spliced_fused": 0.0,
    "fpr_fused": 0.0,
@@ -417,7 +417,7 @@
     0.0,
     0.0
    ],
-   "abstain_pristine_fused": 0.6
+   "abstain_pristine_fused": 0.2
   }
  }
 }

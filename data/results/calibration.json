@@ -7,6 +7,8 @@
   "tau_img_05": 6.2943088485391545,
   "tau_img_10": 5.530738695362592,
   "soft_contrast": 0.42475610971450806,
+  "shadow_levels_max": 0.2863132674453429,
+  "n_shadow": 190,
   "n_panel": 59,
   "tau_panel_T_05": 3.9305072882604857,
   "tau_panel_Tr_05": 5.651070517174165,
@@ -17,8 +19,8 @@
   "n_cal": 200,
   "n_shape_scenes": 120,
   "n_shape_regions": 473,
-  "n_scored": 166,
-  "insufficient_rate": 0.17000000000000004,
+  "n_scored": 161,
+  "insufficient_rate": 0.19499999999999995,
   "seeds": [
    1000,
    1199
@@ -359,7 +361,6 @@
   1.9973914000718536,
   2.7524615281035105,
   1.5530350274011355,
-  0.24119271019987848,
   0.3739389255668567,
   0.38743849287297666,
   2.121498899391711,
@@ -377,7 +378,6 @@
   4.194496216394145,
   1.5277374615476487,
   0.6439851734392836,
-  4.049723485949125,
   1.4140320928153998,
   2.609962174145354,
   0.37613781603917396,
@@ -402,7 +402,6 @@
   3.4379710474700427,
   3.5178113457696254,
   4.3917231115993705,
-  1.6336965885513781,
   6.095875628752625,
   0.8208683694164223,
   1.4365663237471766,
@@ -416,11 +415,9 @@
   0.7269986060679212,
   3.5944022687802426,
   0.22090013564446692,
-  3.8247454130952505,
   3.8996314891558,
   2.284268172087337,
   1.2205071936259915,
-  2.214178987920007,
   4.031107534490111,
   1.4451607854534423,
   6.640791104882804,
@@ -449,7 +446,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.2281650674603217,
    "contrast": 0.23278602212667465,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07997898055701524
   },
   {
    "seed": 1001,
@@ -457,7 +455,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.715886629200392,
    "contrast": 0.15679903328418732,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.04044054379624849
   },
   {
    "seed": 1002,
@@ -465,7 +464,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.3376454729833506,
    "contrast": 0.02265015197917819,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1879466091411622
   },
   {
    "seed": 1003,
@@ -473,7 +473,8 @@
    "verdict": "CONFLICT",
    "S_img": 2.5232895549351957,
    "contrast": 0.02398855146020651,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.25925925925925924
   },
   {
    "seed": 1004,
@@ -481,7 +482,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.3415833286133498,
    "contrast": 0.09853264689445496,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12227805695142378
   },
   {
    "seed": 1005,
@@ -489,7 +491,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.9976865263810937,
    "contrast": 0.04140694439411163,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1006,
@@ -497,7 +500,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.3824452468538757,
    "contrast": 0.1772807538509369,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06173790270825311
   },
   {
    "seed": 1007,
@@ -508,7 +512,8 @@
    "panel_z": [
     2.3096031868286175,
     3.1505261306017447
-   ]
+   ],
+   "shadow_levels": 0.13042430086788814
   },
   {
    "seed": 1008,
@@ -519,7 +524,8 @@
    "panel_z": [
     0.9739507972538817,
     0.9454952294401885
-   ]
+   ],
+   "shadow_levels": 0.09894641879047589
   },
   {
    "seed": 1009,
@@ -530,7 +536,8 @@
    "panel_z": [
     3.3621265748602123,
     1.0726497865082751
-   ]
+   ],
+   "shadow_levels": 0.06784979980521588
   },
   {
    "seed": 1010,
@@ -538,7 +545,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.8523094053691311,
    "contrast": 0.3416375517845154,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.04687142748266138
   },
   {
    "seed": 1011,
@@ -546,7 +554,8 @@
    "verdict": "CONFLICT",
    "S_img": 2.5811634773443792,
    "contrast": 0.156328022480011,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06199691728035622
   },
   {
    "seed": 1012,
@@ -554,7 +563,8 @@
    "verdict": "CONFLICT",
    "S_img": 4.781250671126951,
    "contrast": 0.3101600408554077,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07084557623245184
   },
   {
    "seed": 1013,
@@ -562,7 +572,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.566584770321795,
    "contrast": 0.1908186376094818,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08395570435230491
   },
   {
    "seed": 1014,
@@ -570,7 +581,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.6677852770954957,
    "contrast": 0.09555584564805031,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06084771684509504
   },
   {
    "seed": 1015,
@@ -578,7 +590,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.589030334574756,
    "contrast": 0.2846134603023529,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05925355906117737
   },
   {
    "seed": 1016,
@@ -586,7 +599,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.9366630616345094,
    "contrast": 0.3647790402173996,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.13356396689730024
   },
   {
    "seed": 1017,
@@ -597,7 +611,8 @@
    "panel_z": [
     1.421715124215505,
     1.4179926970845806
-   ]
+   ],
+   "shadow_levels": 0.08084050780679994
   },
   {
    "seed": 1018,
@@ -608,7 +623,8 @@
    "panel_z": [
     2.2840045768571415,
     1.8966139516693359
-   ]
+   ],
+   "shadow_levels": 0.05939696214010429
   },
   {
    "seed": 1019,
@@ -616,7 +632,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.370259097896922,
    "contrast": 0.2818004786968231,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0951829550717925
   },
   {
    "seed": 1020,
@@ -624,7 +641,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 5.366327464933277,
    "contrast": 0.05149231664836407,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.03660460713158725
   },
   {
    "seed": 1021,
@@ -632,7 +650,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.1251835852409586,
    "contrast": 0.02067488804459572,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.2176599835210107
   },
   {
    "seed": 1022,
@@ -640,7 +659,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.5871321985323625,
    "contrast": 0.0973166860640049,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.04370065606582898
   },
   {
    "seed": 1023,
@@ -648,7 +668,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.6432408396934555,
    "contrast": 0.3832066860049963,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.2655743774877349
   },
   {
    "seed": 1024,
@@ -656,7 +677,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.862779401496213,
    "contrast": 0.3144473135471344,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05511863726113584
   },
   {
    "seed": 1025,
@@ -664,7 +686,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.0945439491586075,
    "contrast": 0.15463843941688538,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0477540834845735
   },
   {
    "seed": 1026,
@@ -672,7 +695,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.7702006628762477,
    "contrast": 0.23009058088064194,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12428459207720795
   },
   {
    "seed": 1027,
@@ -683,7 +707,8 @@
    "panel_z": [
     1.0469129335512766,
     3.505636731981631
-   ]
+   ],
+   "shadow_levels": 0.12889917488428254
   },
   {
    "seed": 1028,
@@ -694,7 +719,8 @@
    "panel_z": [
     1.889082750293817,
     3.1880800959285387
-   ]
+   ],
+   "shadow_levels": 0.0601741274366284
   },
   {
    "seed": 1029,
@@ -705,7 +731,8 @@
    "panel_z": [
     0.3360086948132862,
     2.2850029207946765
-   ]
+   ],
+   "shadow_levels": 0.06373462541930675
   },
   {
    "seed": 1030,
@@ -713,7 +740,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.173436813773238,
    "contrast": 0.09011663682758808,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.20182787509520184
   },
   {
    "seed": 1031,
@@ -721,7 +749,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.251535404284716,
    "contrast": 0.1462118923664093,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.14536340852130325
   },
   {
    "seed": 1032,
@@ -729,7 +758,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.377925709334482,
    "contrast": 0.13987675309181213,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0504074856625415
   },
   {
    "seed": 1033,
@@ -737,7 +767,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.775710312081638,
    "contrast": 0.06302962452173233,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11735205616850551
   },
   {
    "seed": 1034,
@@ -745,7 +776,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.34372498302910776,
    "contrast": 0.03051294945180416,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1992039800995025
   },
   {
    "seed": 1035,
@@ -753,7 +785,8 @@
    "verdict": "CONFLICT",
    "S_img": 4.062197079375728,
    "contrast": 0.18368422240018845,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0955894408919495
   },
   {
    "seed": 1036,
@@ -761,7 +794,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4586278822578131,
    "contrast": 0.3522758334875107,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.13713131313131313
   },
   {
    "seed": 1037,
@@ -772,7 +806,8 @@
    "panel_z": [
     1.4529652195940788,
     0.7166396847481019
-   ]
+   ],
+   "shadow_levels": 0.050650498926361
   },
   {
    "seed": 1038,
@@ -783,7 +818,8 @@
    "panel_z": [
     1.4677404648600565,
     0.9411652256282632
-   ]
+   ],
+   "shadow_levels": 0.1134784892884245
   },
   {
    "seed": 1039,
@@ -794,7 +830,8 @@
    "panel_z": [
     1.204839368366073,
     2.727325220626631
-   ]
+   ],
+   "shadow_levels": 0.21488690163072066
   },
   {
    "seed": 1040,
@@ -802,7 +839,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.8398167925287034,
    "contrast": 0.2824455350637436,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.24028103044496488
   },
   {
    "seed": 1041,
@@ -810,7 +848,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.205932553969464,
    "contrast": 0.25464847683906555,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06920317220543806
   },
   {
    "seed": 1042,
@@ -818,7 +857,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.900070394998758,
    "contrast": 0.30864831805229187,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07852279001288265
   },
   {
    "seed": 1043,
@@ -826,7 +866,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": -0.0009995003330834232,
    "contrast": 0.07900556921958923,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11046274143665752
   },
   {
    "seed": 1044,
@@ -834,7 +875,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.14255795539175,
    "contrast": 0.3378024399280548,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.050090867787369375
   },
   {
    "seed": 1045,
@@ -842,7 +884,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 1.1261672181917821,
    "contrast": 0.11217828840017319,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0526927547462224
   },
   {
    "seed": 1046,
@@ -850,7 +893,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.8597169830579097,
    "contrast": 0.14437266066670418,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10904716073147257
   },
   {
    "seed": 1047,
@@ -861,7 +905,8 @@
    "panel_z": [
     0.37452018084902067,
     0.4182986325660189
-   ]
+   ],
+   "shadow_levels": 0.056073446327683615
   },
   {
    "seed": 1048,
@@ -872,7 +917,8 @@
    "panel_z": [
     1.616734833213451,
     1.818755666021469
-   ]
+   ],
+   "shadow_levels": 0.10948426573426573
   },
   {
    "seed": 1049,
@@ -883,7 +929,8 @@
    "panel_z": [
     0.09653668453421692,
     1.371212165193938
-   ]
+   ],
+   "shadow_levels": 0.40078125
   },
   {
    "seed": 1050,
@@ -891,7 +938,8 @@
    "verdict": "CONFLICT",
    "S_img": 4.37066579791824,
    "contrast": 0.36332932114601135,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08252342936480389
   },
   {
    "seed": 1051,
@@ -899,7 +947,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.704858157006092,
    "contrast": 0.1497102677822113,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06965648854961833
   },
   {
    "seed": 1052,
@@ -907,7 +956,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.033620844206043,
    "contrast": 0.19333777576684952,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12994667415099634
   },
   {
    "seed": 1053,
@@ -915,7 +965,8 @@
    "verdict": "CONFLICT",
    "S_img": 4.916752692754932,
    "contrast": 0.2184496521949768,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07225691347011597
   },
   {
    "seed": 1054,
@@ -923,7 +974,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8056021095958618,
    "contrast": 0.5581755638122559,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1055,
@@ -931,7 +983,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.6766496481011663,
    "contrast": 0.060303762555122375,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0928163813360188
   },
   {
    "seed": 1056,
@@ -939,7 +992,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.020850555258226,
    "contrast": 0.14600002020597458,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11868545911247558
   },
   {
    "seed": 1057,
@@ -950,7 +1004,8 @@
    "panel_z": [
     3.3447601760060306,
     5.651070517174165
-   ]
+   ],
+   "shadow_levels": 0.0622958469435371
   },
   {
    "seed": 1058,
@@ -961,7 +1016,8 @@
    "panel_z": [
     0.5182957145895069,
     2.507432871321117
-   ]
+   ],
+   "shadow_levels": 0.1500189897455374
   },
   {
    "seed": 1059,
@@ -972,7 +1028,8 @@
    "panel_z": [
     0.820507293977133,
     3.1443649980594364
-   ]
+   ],
+   "shadow_levels": 0.09605309116311561
   },
   {
    "seed": 1060,
@@ -980,7 +1037,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.0454781657815833,
    "contrast": 0.06582551635801792,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.13153098420413123
   },
   {
    "seed": 1061,
@@ -988,7 +1046,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.4299921545141682,
    "contrast": 0.024452878162264824,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.04636150234741784
   },
   {
    "seed": 1062,
@@ -996,7 +1055,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.084373708656212,
    "contrast": 0.24435875564813614,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09391719483085027
   },
   {
    "seed": 1063,
@@ -1004,7 +1064,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8497667793792664,
    "contrast": 0.15416431054472923,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08394543546694648
   },
   {
    "seed": 1064,
@@ -1012,7 +1073,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.11627005187038762,
    "contrast": 0.059291815385222435,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10990502035278155
   },
   {
    "seed": 1065,
@@ -1020,7 +1082,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.083262864755173,
    "contrast": 0.13137030601501465,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.04799439481520407
   },
   {
    "seed": 1066,
@@ -1028,7 +1091,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4180734627877456,
    "contrast": 0.3127128779888153,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.2057356608478803
   },
   {
    "seed": 1067,
@@ -1039,7 +1103,8 @@
    "panel_z": [
     0.2456218781646311,
     1.861243267774361
-   ]
+   ],
+   "shadow_levels": 0.07585440400111142
   },
   {
    "seed": 1068,
@@ -1050,7 +1115,8 @@
    "panel_z": [
     0.08448000097918283,
     2.0037709913555557
-   ]
+   ],
+   "shadow_levels": 0.08877928483353884
   },
   {
    "seed": 1069,
@@ -1061,7 +1127,8 @@
    "panel_z": [
     2.625122817055727,
     1.6309008952767556
-   ]
+   ],
+   "shadow_levels": 0.09254054054054055
   },
   {
    "seed": 1070,
@@ -1069,7 +1136,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.904341912254659,
    "contrast": 0.06836476176977158,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1071,
@@ -1077,7 +1145,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.403606764240153,
    "contrast": 0.160812109708786,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06976438067658286
   },
   {
    "seed": 1072,
@@ -1085,7 +1154,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.5345394273932613,
    "contrast": 0.11311525851488113,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09623856319891562
   },
   {
    "seed": 1073,
@@ -1093,7 +1163,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.4163683301032846,
    "contrast": 0.15469098836183548,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05013927576601671
   },
   {
    "seed": 1074,
@@ -1101,7 +1172,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.7729510973455813,
    "contrast": 0.1762021854519844,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07724358974358975
   },
   {
    "seed": 1075,
@@ -1109,7 +1181,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.8141548287576681,
    "contrast": 0.09395852126181126,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07592219986586184
   },
   {
    "seed": 1076,
@@ -1117,7 +1190,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.6345839840219765,
    "contrast": 0.07131453603506088,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1509962127449366
   },
   {
    "seed": 1077,
@@ -1128,7 +1202,8 @@
    "panel_z": [
     3.2467082334149633,
     1.2305030463308855
-   ]
+   ],
+   "shadow_levels": 0.06872418540614961
   },
   {
    "seed": 1078,
@@ -1139,7 +1214,8 @@
    "panel_z": [
     0.38060573886598936,
     2.6661559732349613
-   ]
+   ],
+   "shadow_levels": 0.1706239646604086
   },
   {
    "seed": 1079,
@@ -1150,7 +1226,8 @@
    "panel_z": [
     3.220482915075111,
     1.1605142341618753
-   ]
+   ],
+   "shadow_levels": 0.09486569194151649
   },
   {
    "seed": 1080,
@@ -1158,7 +1235,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 5.530738695362592,
    "contrast": 0.4165659546852112,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0867275020402107
   },
   {
    "seed": 1081,
@@ -1166,7 +1244,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8456576345332149,
    "contrast": 0.3452110290527344,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0490337665910185
   },
   {
    "seed": 1082,
@@ -1174,7 +1253,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.960574356783751,
    "contrast": 0.3523689955472946,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1083,
@@ -1182,7 +1262,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.42299649773929576,
    "contrast": 0.20783158391714096,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0935343977922334
   },
   {
    "seed": 1084,
@@ -1190,7 +1271,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.834807413870462,
    "contrast": 0.10765860229730606,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.14097258147956543
   },
   {
    "seed": 1085,
@@ -1198,7 +1280,8 @@
    "verdict": "CONFLICT",
    "S_img": 6.2943088485391545,
    "contrast": 0.2098080813884735,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1605317898164059
   },
   {
    "seed": 1086,
@@ -1206,7 +1289,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.2977307693407925,
    "contrast": 0.03690003231167793,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.18206727135298564
   },
   {
    "seed": 1087,
@@ -1217,7 +1301,8 @@
    "panel_z": [
     0.3374355347213546,
     1.8392498542066422
-   ]
+   ],
+   "shadow_levels": 0.07708442579968537
   },
   {
    "seed": 1088,
@@ -1228,7 +1313,8 @@
    "panel_z": [
     0.8720414274499164,
     1.570358141686118
-   ]
+   ],
+   "shadow_levels": 0.13313723972443686
   },
   {
    "seed": 1089,
@@ -1239,7 +1325,8 @@
    "panel_z": [
     0.6860698720627225,
     0.6397690211725534
-   ]
+   ],
+   "shadow_levels": 0.039562485454968585
   },
   {
    "seed": 1090,
@@ -1247,7 +1334,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 5.818967229518177,
    "contrast": 0.3195355534553528,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.022273218142548595
   },
   {
    "seed": 1091,
@@ -1255,7 +1343,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.0968834390638382,
    "contrast": 0.1163531243801117,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.13051527306386917
   },
   {
    "seed": 1092,
@@ -1263,7 +1352,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8906326767948312,
    "contrast": 0.03281251061707735,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.23021760633036598
   },
   {
    "seed": 1093,
@@ -1271,7 +1361,8 @@
    "verdict": "CONFLICT",
    "S_img": 6.345583614968217,
    "contrast": 0.17727038264274597,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07170323456231621
   },
   {
    "seed": 1094,
@@ -1279,7 +1370,8 @@
    "verdict": "CONFLICT",
    "S_img": 5.160137277091686,
    "contrast": 0.1863725371658802,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07202323330106486
   },
   {
    "seed": 1095,
@@ -1287,7 +1379,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.047891284681265,
    "contrast": 0.08678220957517624,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.19229825852342408
   },
   {
    "seed": 1096,
@@ -1295,7 +1388,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.3994737691472654,
    "contrast": 0.05986566562205553,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1097,
@@ -1306,7 +1400,8 @@
    "panel_z": [
     1.8720040925081511,
     2.9494615346010464
-   ]
+   ],
+   "shadow_levels": 0.06968481375358167
   },
   {
    "seed": 1098,
@@ -1317,7 +1412,8 @@
    "panel_z": [
     3.9305072882604857,
     1.7574851862779395
-   ]
+   ],
+   "shadow_levels": 0.06363397317906916
   },
   {
    "seed": 1099,
@@ -1328,7 +1424,8 @@
    "panel_z": [
     2.7238138423223717,
     2.025567326059621
-   ]
+   ],
+   "shadow_levels": 0.0613560929350403
   },
   {
    "seed": 1100,
@@ -1336,7 +1433,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.24119271019987848,
    "contrast": 0.01656990498304367,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.2876
   },
   {
    "seed": 1101,
@@ -1344,7 +1442,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.3739389255668567,
    "contrast": 0.1523425430059433,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08875484704868591
   },
   {
    "seed": 1102,
@@ -1352,7 +1451,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.38743849287297666,
    "contrast": 0.11703315377235413,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08706251088281386
   },
   {
    "seed": 1103,
@@ -1360,7 +1460,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.121498899391711,
    "contrast": 0.20096344500780106,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1136472275334608
   },
   {
    "seed": 1104,
@@ -1368,7 +1469,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.500054804796468,
    "contrast": 0.1262294203042984,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07646701124961995
   },
   {
    "seed": 1105,
@@ -1376,7 +1478,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.115248007929238,
    "contrast": 0.019232235848903656,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.17025837752454023
   },
   {
    "seed": 1106,
@@ -1384,7 +1487,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.40499944653916403,
    "contrast": 0.2778772562742233,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.30794775293336285
   },
   {
    "seed": 1107,
@@ -1395,7 +1499,8 @@
    "panel_z": [
     0.2877824414125277,
     2.7513733675805465
-   ]
+   ],
+   "shadow_levels": 0.046411625148279956
   },
   {
    "seed": 1108,
@@ -1406,7 +1511,8 @@
    "panel_z": [
     1.6131215880235035,
     1.171980674800909
-   ]
+   ],
+   "shadow_levels": 0.2863132674453429
   },
   {
    "seed": 1109,
@@ -1417,7 +1523,8 @@
    "panel_z": [
     1.7830612411886817,
     1.3713761510558722
-   ]
+   ],
+   "shadow_levels": 0.07209274242241276
   },
   {
    "seed": 1110,
@@ -1425,7 +1532,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.5731548875190716,
    "contrast": 0.43303439021110535,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0
   },
   {
    "seed": 1111,
@@ -1433,7 +1541,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.3768578867650008,
    "contrast": 0.10877919942140579,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06310517529215359
   },
   {
    "seed": 1112,
@@ -1441,7 +1550,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.162627984170721,
    "contrast": 0.12472165003418922,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11544461778471139
   },
   {
    "seed": 1113,
@@ -1449,7 +1559,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.65580441238158,
    "contrast": 0.042315319180488586,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10438908659549229
   },
   {
    "seed": 1114,
@@ -1457,7 +1568,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4865039223703087,
    "contrast": 0.024607902392745018,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.21783662253310018
   },
   {
    "seed": 1115,
@@ -1465,7 +1577,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.169034692993903,
    "contrast": 0.28490278124809265,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1116,
@@ -1473,7 +1586,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.26195108217890944,
    "contrast": 0.05749265104532242,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.13244240550513614
   },
   {
    "seed": 1117,
@@ -1484,7 +1598,8 @@
    "panel_z": [
     1.9700259560972335,
     1.1391740845491336
-   ]
+   ],
+   "shadow_levels": 0.07107576391795731
   },
   {
    "seed": 1118,
@@ -1495,7 +1610,8 @@
    "panel_z": [
     0.6111183069825726,
     3.1681910373380324
-   ]
+   ],
+   "shadow_levels": 0.2729636048526863
   },
   {
    "seed": 1119,
@@ -1506,7 +1622,8 @@
    "panel_z": [
     3.75362583512217,
     3.4354138254960715
-   ]
+   ],
+   "shadow_levels": 0.1828560371517028
   },
   {
    "seed": 1120,
@@ -1514,7 +1631,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.6439851734392836,
    "contrast": 0.10340282320976257,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09669369931378664
   },
   {
    "seed": 1121,
@@ -1522,7 +1640,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.049723485949125,
    "contrast": 0.0156522449105978,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.41360294117647056
   },
   {
    "seed": 1122,
@@ -1530,7 +1649,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4140320928153998,
    "contrast": 0.33867383003234863,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0769010863350486
   },
   {
    "seed": 1123,
@@ -1538,7 +1658,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.5518539404344878,
    "contrast": 0.4675620496273041,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08754414561260528
   },
   {
    "seed": 1124,
@@ -1546,7 +1667,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.609962174145354,
    "contrast": 0.328990176320076,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10606229349964733
   },
   {
    "seed": 1125,
@@ -1554,7 +1676,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.37613781603917396,
    "contrast": 0.11104430258274078,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05871431886748665
   },
   {
    "seed": 1126,
@@ -1562,7 +1685,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.8109031362684866,
    "contrast": 0.09595244005322456,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.099292235101036
   },
   {
    "seed": 1127,
@@ -1573,7 +1697,8 @@
    "panel_z": [
     1.2755693010603466,
     1.4043643035024638
-   ]
+   ],
+   "shadow_levels": 0.10544094583182531
   },
   {
    "seed": 1128,
@@ -1584,7 +1709,8 @@
    "panel_z": [
     1.197064916936045,
     1.2610810994873356
-   ]
+   ],
+   "shadow_levels": 0.04418875358166189
   },
   {
    "seed": 1129,
@@ -1595,7 +1721,8 @@
    "panel_z": [
     1.5369239623397677,
     0.9647638354935545
-   ]
+   ],
+   "shadow_levels": 0.08865248226950355
   },
   {
    "seed": 1130,
@@ -1603,7 +1730,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.500316307595671,
    "contrast": 0.0897132121026516,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07917633410672854
   },
   {
    "seed": 1131,
@@ -1611,7 +1739,8 @@
    "verdict": "CONFLICT",
    "S_img": 6.906902664258293,
    "contrast": 0.33266761898994446,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09087417422031034
   },
   {
    "seed": 1132,
@@ -1619,7 +1748,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.6728474027306777,
    "contrast": 0.18463518470525742,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.022713899023184655
   },
   {
    "seed": 1133,
@@ -1627,7 +1757,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.566238052126586,
    "contrast": 0.1510033905506134,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07593851025928613
   },
   {
    "seed": 1134,
@@ -1635,7 +1766,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4485346990954646,
    "contrast": 0.13299068808555603,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10315109076218691
   },
   {
    "seed": 1135,
@@ -1643,7 +1775,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 5.524693220538134,
    "contrast": 0.23633994162082672,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12007168458781362
   },
   {
    "seed": 1136,
@@ -1651,7 +1784,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.27209015438773615,
    "contrast": 0.4524434804916382,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09987050825509873
   },
   {
    "seed": 1137,
@@ -1662,7 +1796,8 @@
    "panel_z": [
     0.5243014427707277,
     2.3974891598363177
-   ]
+   ],
+   "shadow_levels": 0.056006281078251764
   },
   {
    "seed": 1138,
@@ -1673,7 +1808,8 @@
    "panel_z": [
     1.6257208368424851,
     3.061443735797072
-   ]
+   ],
+   "shadow_levels": 0.04386326194398682
   },
   {
    "seed": 1139,
@@ -1684,7 +1820,8 @@
    "panel_z": [
     1.469620896208971,
     2.622945282287923
-   ]
+   ],
+   "shadow_levels": 0.133477114785526
   },
   {
    "seed": 1140,
@@ -1692,7 +1829,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.7571634545249732,
    "contrast": 0.14672954380512238,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09306522299561742
   },
   {
    "seed": 1141,
@@ -1700,7 +1838,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.25334765888079575,
    "contrast": 0.03658552374690771,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.31851669941060906
   },
   {
    "seed": 1142,
@@ -1708,7 +1847,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.9496384029162557,
    "contrast": 0.41104885935783386,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08730789613142555
   },
   {
    "seed": 1143,
@@ -1716,7 +1856,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.779323993350492,
    "contrast": 0.3267047628760338,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1519086973632428
   },
   {
    "seed": 1144,
@@ -1724,7 +1865,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.30365237529270955,
    "contrast": 0.13374605774879456,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05438179772471559
   },
   {
    "seed": 1145,
@@ -1732,7 +1874,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.3734571574355594,
    "contrast": 0.1705958992242813,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11611274716028608
   },
   {
    "seed": 1146,
@@ -1740,7 +1883,8 @@
    "verdict": "CONFLICT",
    "S_img": 3.4379710474700427,
    "contrast": 0.33952391147613525,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11420491624972809
   },
   {
    "seed": 1147,
@@ -1751,7 +1895,8 @@
    "panel_z": [
     1.9214027377640168,
     2.2094118832597145
-   ]
+   ],
+   "shadow_levels": 0.07913513513513513
   },
   {
    "seed": 1148,
@@ -1762,7 +1907,8 @@
    "panel_z": [
     0.35213498397315296,
     1.4385674586557586
-   ]
+   ],
+   "shadow_levels": 0.05697445972495088
   },
   {
    "seed": 1149,
@@ -1773,7 +1919,8 @@
    "panel_z": [
     1.8733442086171268,
     2.383123193617236
-   ]
+   ],
+   "shadow_levels": 0.8741007194244604
   },
   {
    "seed": 1150,
@@ -1781,7 +1928,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.095875628752625,
    "contrast": 0.2134355716407299,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07
   },
   {
    "seed": 1151,
@@ -1789,7 +1937,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8208683694164223,
    "contrast": 0.15653163194656372,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.14646464646464646
   },
   {
    "seed": 1152,
@@ -1797,7 +1946,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4365663237471766,
    "contrast": 0.06727342307567596,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.15810179493484142
   },
   {
    "seed": 1153,
@@ -1805,7 +1955,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 5.611638621145939,
    "contrast": 0.2339118868112564,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10933470861268695
   },
   {
    "seed": 1154,
@@ -1813,7 +1964,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.371227644850839,
    "contrast": 0.24182412587106228,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.17893660531697342
   },
   {
    "seed": 1155,
@@ -1821,7 +1973,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.623401812343806,
    "contrast": 0.09069959819316864,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.03812741312741313
   },
   {
    "seed": 1156,
@@ -1829,7 +1982,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.7570103655681955,
    "contrast": 0.2171773687005043,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11479028697571744
   },
   {
    "seed": 1157,
@@ -1840,7 +1994,8 @@
    "panel_z": [
     1.4061394224300852,
     0.22787648655365297
-   ]
+   ],
+   "shadow_levels": 0.07178458894299627
   },
   {
    "seed": 1158,
@@ -1851,7 +2006,8 @@
    "panel_z": [
     0.09365903869223835,
     2.731393620390852
-   ]
+   ],
+   "shadow_levels": 0.1366791243993593
   },
   {
    "seed": 1159,
@@ -1862,7 +2018,8 @@
    "panel_z": [
     0.1948429710786843,
     1.4440976760823543
-   ]
+   ],
+   "shadow_levels": 0.11187438665358194
   },
   {
    "seed": 1160,
@@ -1870,7 +2027,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.7269986060679212,
    "contrast": 0.19141782820224762,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07952358036573628
   },
   {
    "seed": 1161,
@@ -1878,7 +2036,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.01489173612533817,
    "contrast": 0.3934094272553921,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09576008273009307
   },
   {
    "seed": 1162,
@@ -1886,7 +2045,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.5944022687802426,
    "contrast": 0.0811445564031601,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.19995685936151855
   },
   {
    "seed": 1163,
@@ -1894,7 +2054,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.22090013564446692,
    "contrast": 0.0578918494284153,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.08810696692470091
   },
   {
    "seed": 1164,
@@ -1902,7 +2063,8 @@
    "verdict": "CONFLICT",
    "S_img": 6.77167380829538,
    "contrast": 0.551867350935936,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1165,
@@ -1910,7 +2072,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.8247454130952505,
    "contrast": 0.1275089979171753,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.6495327102803738
   },
   {
    "seed": 1166,
@@ -1918,7 +2081,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.8996314891558,
    "contrast": 0.2741648554801941,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12215686274509804
   },
   {
    "seed": 1167,
@@ -1929,7 +2093,8 @@
    "panel_z": [
     1.298330526293606,
     1.299162422745046
-   ]
+   ],
+   "shadow_levels": 0.08864998237574903
   },
   {
    "seed": 1168,
@@ -1940,7 +2105,8 @@
    "panel_z": [
     0.9952647621556251,
     0.7304602702078284
-   ]
+   ],
+   "shadow_levels": 0.07385545637777138
   },
   {
    "seed": 1169,
@@ -1951,7 +2117,8 @@
    "panel_z": [
     0.12309625508444594,
     2.93145534526403
-   ]
+   ],
+   "shadow_levels": 0.288961038961039
   },
   {
    "seed": 1170,
@@ -1959,7 +2126,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 4.031107534490111,
    "contrast": 0.06850405223667622,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.14540270848182466
   },
   {
    "seed": 1171,
@@ -1967,7 +2135,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 1.0207473285588615,
    "contrast": 0.13782415352761745,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07199448846021357
   },
   {
    "seed": 1172,
@@ -1975,7 +2144,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4451607854534423,
    "contrast": 0.21639502048492432,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.047742280920935215
   },
   {
    "seed": 1173,
@@ -1983,7 +2153,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 6.640791104882804,
    "contrast": 0.22569110989570618,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07755369732743073
   },
   {
    "seed": 1174,
@@ -1991,7 +2162,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.6250862364329617,
    "contrast": 0.4188624322414398,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09016393442622951
   },
   {
    "seed": 1175,
@@ -1999,7 +2171,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.7493918789088165,
    "contrast": 0.6336264759302139,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06991661321359846
   },
   {
    "seed": 1176,
@@ -2007,7 +2180,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.5471282609357595,
    "contrast": 0.34327077865600586,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": null
   },
   {
    "seed": 1177,
@@ -2018,7 +2192,8 @@
    "panel_z": [
     0.37652330772613185,
     1.7961613722395706
-   ]
+   ],
+   "shadow_levels": 0.09142894275131587
   },
   {
    "seed": 1178,
@@ -2029,7 +2204,8 @@
    "panel_z": [
     1.5551685656607115,
     2.508085452635946
-   ]
+   ],
+   "shadow_levels": 0.08579335793357934
   },
   {
    "seed": 1179,
@@ -2040,7 +2216,8 @@
    "panel_z": [
     0.22796832371949308,
     0.3748244696975798
-   ]
+   ],
+   "shadow_levels": 0.1981151544335145
   },
   {
    "seed": 1180,
@@ -2048,7 +2225,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 2.2409273113087314,
    "contrast": 0.42475610971450806,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.09924884611903828
   },
   {
    "seed": 1181,
@@ -2056,7 +2234,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.090956461008196,
    "contrast": 0.12647588551044464,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.05678776290630975
   },
   {
    "seed": 1182,
@@ -2064,7 +2243,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.0598509120243467,
    "contrast": 0.10467451065778732,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06712328767123288
   },
   {
    "seed": 1183,
@@ -2072,7 +2252,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.12939385026599476,
    "contrast": 0.3295257091522217,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.0774407831483262
   },
   {
    "seed": 1184,
@@ -2080,7 +2261,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.15077995756916598,
    "contrast": 0.2549744248390198,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06965376782077393
   },
   {
    "seed": 1185,
@@ -2088,7 +2270,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.3677255959940279,
    "contrast": 0.1408616192638874,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.11664366002760797
   },
   {
    "seed": 1186,
@@ -2096,7 +2279,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 3.201360670146415,
    "contrast": 0.3808889091014862,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07755102040816327
   },
   {
    "seed": 1187,
@@ -2107,7 +2291,8 @@
    "panel_z": [
     3.1757267955459527,
     2.4668590858831054
-   ]
+   ],
+   "shadow_levels": null
   },
   {
    "seed": 1188,
@@ -2118,7 +2303,8 @@
    "panel_z": [
     3.1247651742984854,
     1.711827694963907
-   ]
+   ],
+   "shadow_levels": 0.2852556924225457
   },
   {
    "seed": 1189,
@@ -2129,7 +2315,8 @@
    "panel_z": [
     1.6510043842991975,
     2.4980785392176057
-   ]
+   ],
+   "shadow_levels": 0.07281833943363514
   },
   {
    "seed": 1190,
@@ -2137,7 +2324,8 @@
    "verdict": "CONSISTENT",
    "S_img": 0.8465932934240294,
    "contrast": 0.1264769583940506,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07757822625439734
   },
   {
    "seed": 1191,
@@ -2145,7 +2333,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.22217645571121694,
    "contrast": 0.20602339506149292,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.10989301281204597
   },
   {
    "seed": 1192,
@@ -2153,7 +2342,8 @@
    "verdict": "CONSISTENT",
    "S_img": 1.4616761247448977,
    "contrast": 0.07442335039377213,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.2244497406420861
   },
   {
    "seed": 1193,
@@ -2161,7 +2351,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 2.62254750641716,
    "contrast": 0.09960633888840675,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.07701149425287357
   },
   {
    "seed": 1194,
@@ -2169,7 +2360,8 @@
    "verdict": "SUSPICIOUS",
    "S_img": 2.62978271499732,
    "contrast": 0.13113723695278168,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.1855496204666854
   },
   {
    "seed": 1195,
@@ -2177,7 +2369,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 0.0799856735756895,
    "contrast": 0.12466685101389885,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.12357581069237511
   },
   {
    "seed": 1196,
@@ -2185,7 +2378,8 @@
    "verdict": "INSUFFICIENT",
    "S_img": 4.417463506927669,
    "contrast": 0.20708543807268143,
-   "panel_z": null
+   "panel_z": null,
+   "shadow_levels": 0.06011183597390494
   },
   {
    "seed": 1197,
@@ -2196,7 +2390,8 @@
    "panel_z": [
     1.9397786449041583,
     2.749401302796181
-   ]
+   ],
+   "shadow_levels": 0.08557804918855613
   },
   {
    "seed": 1198,
@@ -2207,7 +2402,8 @@
    "panel_z": [
     0.6290234939183718,
     1.6485221889540154
-   ]
+   ],
+   "shadow_levels": null
   },
   {
    "seed": 1199,
@@ -2218,7 +2414,8 @@
    "panel_z": [
     1.1017391579335554,
     1.3802813596108492
-   ]
+   ],
+   "shadow_levels": 0.08382948321028816
   }
  ]
 }

@@ -75,6 +75,11 @@ class Config:
     panel_band: int = 3  # guard band (px) around the ROI boundary for Retinex: pasted regions are feathered
     retinex_thr: float = 0.10  # log-gradient above which Retinex calls an edge reflectance
     panel_min_px: int = 50
+    # several lights: share of cast-shadow pixels on a large flat region that sit clearly above the darkest
+    # shadow level (one sun: one level; two suns: two half-shadow levels). Above this -> CONFLICT (calibrated)
+    shadow_levels_max: float = 0.30
+    flat_min_frac: float = 0.05  # a flat region must cover this fraction of the image
+    flat_min_R: float = 0.95  # ... and have a mean-normal resultant length of at least this
     # shading cue used by the audit: "ls" (least squares, default since it measured ~3x more accurate) or "rank"
     cue: str = "ls"
     # residual
@@ -128,5 +133,6 @@ def calibrated(cfg: Config | None = None, calib: dict | None = None, alpha: floa
                    tau_ref_factor=float(calib.get("tau_ref_factor", 1.0)),
                    w_min=float(calib.get("w_min", cfg.w_min)), alpha=alpha,
                    soft_contrast=float(calib.get("soft_contrast", cfg.soft_contrast)),
+                   shadow_levels_max=float(calib.get("shadow_levels_max", cfg.shadow_levels_max)),
                    tau_panel_T=float(calib.get("tau_panel_T_05" if alpha <= 0.05 else "tau_panel_T_10", cfg.tau_panel_T)),
                    tau_panel_Tr=float(calib.get("tau_panel_Tr_05" if alpha <= 0.05 else "tau_panel_Tr_10", cfg.tau_panel_Tr)))

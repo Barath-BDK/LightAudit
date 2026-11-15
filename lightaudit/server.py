@@ -263,6 +263,15 @@ def create_app() -> FastAPI:
     app = FastAPI(title="LightAudit", version=__version__,
                   description="Lighting-consistency audit. A flag means 'send for human review', never 'fraud'.")
 
+    @app.middleware("http")
+    async def revalidate(request, call_next):
+        # viewer code and bundles change when the project is rebuilt: make browsers revalidate instead of reusing
+        # a heuristically cached copy (a stale viewer showed an old verdict for a rebuilt bundle)
+        resp = await call_next(request)
+        if request.url.path.startswith(("/viewer", "/bundles", "/data", "/results")):
+            resp.headers["Cache-Control"] = "no-cache"
+        return resp
+
     @app.get("/", include_in_schema=False)
     def root():
         return RedirectResponse("/viewer/index.html")

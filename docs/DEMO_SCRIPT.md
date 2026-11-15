@@ -77,8 +77,9 @@ own shading curve should predict the dent's brightness.
 
 - `Overcast`: **INSUFFICIENT**, "the light looks diffuse". The shading contrast of the regions is 0.47, above
   the soft-light threshold 0.42: without a sun there is no light direction to test.
-- `Two suns`: intended CONFLICT, actual verdict **CONSISTENT** (score 4.06). Two strong lights are outside the
-  one-light model and the tool does not notice. A second-light test was tried and did not work. Shown as is.
+- `Two suns`: **CONFLICT**, "cast shadows on a flat surface show more than one darkness level". Point at the ground:
+  each object casts two shadows of different darkness. Shadow-level score 0.78 against an alert level of 0.29. The
+  one-light test does not apply, so the tool makes no automatic decision.
 
 ## 7. Failure example (20 s)
 

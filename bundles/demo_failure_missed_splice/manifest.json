@@ -39,6 +39,7 @@
   "broad_consensus_frac": 0.35,
   "soft_contrast": 0.42476,
   "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
   "tau_panel_T": 3.93051,
   "tau_panel_Tr": 5.65107,
   "source": "calib_default.json"
@@ -74,6 +75,7 @@
    },
    "contrast": 0.91233,
    "panel_z": null,
+   "shadow_mid": 0.12163,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -158,6 +160,7 @@
    },
    "contrast": 0.2602,
    "panel_z": null,
+   "shadow_mid": null,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -239,6 +242,7 @@
    "factors": null,
    "contrast": null,
    "panel_z": null,
+   "shadow_mid": null,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -317,6 +321,7 @@
    "factors": null,
    "contrast": null,
    "panel_z": null,
+   "shadow_mid": null,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -401,6 +406,7 @@
    },
    "contrast": 0.09442,
    "panel_z": null,
+   "shadow_mid": null,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -486,6 +492,7 @@
    },
    "contrast": 0.03327,
    "panel_z": null,
+   "shadow_mid": null,
    "panel_T": null,
    "panel_Tr": null,
    "cues": [
@@ -604,6 +611,11 @@
    "threshold": 0.42476,
    "abstain": false
   },
+  "shadow_levels": {
+   "value": 0.12163,
+   "threshold": 0.28631,
+   "conflict": false
+  },
   "panel_flagged": [],
   "text": "3 regions agree on one light direction (about -13\u00b0 azimuth, 55\u00b0 elevation). The largest disagreement is car body at 52\u00b0 (below the alert level)."
  },
@@ -671,6 +683,11 @@
     "contrast": 0.09442,
     "threshold": 0.42476,
     "abstain": false
+   },
+   "shadow_levels": {
+    "value": 0.12163,
+    "threshold": 0.28631,
+    "conflict": false
    },
    "panel_flagged": [],
    "text": "3 regions agree on one light direction (about -15\u00b0 azimuth, 58\u00b0 elevation). The largest disagreement is car body at 41\u00b0 (below the alert level)."
@@ -752,5 +769,5 @@
  },
  "attacks": [],
  "backends_log": [],
- "created": "2026-11-14T22:53:55+00:00"
+ "created": "2026-11-15T02:51:34+00:00"
 }

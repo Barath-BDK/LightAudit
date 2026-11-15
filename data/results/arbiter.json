@@ -32,8 +32,8 @@
   1000,
   1199
  ],
- "n_cal_scored": 166,
- "cal_insufficient_rate": 0.17000000000000004,
+ "n_cal_scored": 168,
+ "cal_insufficient_rate": 0.16000000000000003,
  "heldout_scenes": 12,
  "heldout_rows": 107,
  "heldout_region_auc": 0.9583333333333333,
@@ -123,5 +123,5 @@
  },
  "model": "HistGradientBoostingClassifier(max_iter=200, learning_rate=0.05, max_leaf_nodes=15, l2=1.0)",
  "composites": "normal scenes: car (even i) / distractor (odd i); damage scenes (i % 10 >= 7): dent in panel mode; delta ~ U[20, 180] deg; plus the pristine audit of every scene",
- "timestamp": "2026-11-14T22:58:13+00:00"
+ "timestamp": "2026-11-15T02:56:37+00:00"
 }

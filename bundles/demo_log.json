@@ -96,15 +96,15 @@
  {
   "name": "demo_multilight",
   "built": true,
-  "seed": 4051,
-  "seeds_tried": 12,
+  "seed": 4041,
+  "seeds_tried": 2,
   "intended": [
    "CONFLICT",
    "INSUFFICIENT"
   ],
-  "verdict": "CONSISTENT",
-  "matched": false,
-  "S_img": 2.7997940880388996,
+  "verdict": "CONFLICT",
+  "matched": true,
+  "S_img": 0.8089720070487036,
   "attacks": []
  },
  {

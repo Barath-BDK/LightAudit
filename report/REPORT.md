@@ -123,7 +123,7 @@ Normals are the ground truth perturbed by spatially correlated noise of 8 degree
 
 Calibration chose h = 14 degrees and T = 1.5; on the calibration split the 68% / 95% sets cover the true
 light 0.70 / 0.90 of the time (473 reliable regions). The alarm level is
-6.29 at alpha = 0.05 and 5.53 at alpha = 0.10; 17.0% of
+6.29 at alpha = 0.05 and 5.53 at alpha = 0.10; 19.5% of
 pristine calibration scenes return INSUFFICIENT.
 
 ### T2 - E3 coverage on the test split
@@ -229,10 +229,10 @@ within the confidence intervals; read the exact values from the table.
 | normal | spliced | 5 | 0.20 | 0.80 | 0.00 | 0.00 | 0.80 [0.40, 1.00] |
 | overcast | pristine | 5 | 0.20 | 0.00 | 0.80 | 0.00 | 1.00 [1.00, 1.00] |
 | overcast | spliced | 5 | 0.00 | 0.20 | 0.80 | 0.00 | 1.00 [1.00, 1.00] |
-| multi | pristine | 5 | 0.60 | 0.00 | 0.40 | 0.00 | 1.00 [1.00, 1.00] |
-| multi | spliced | 5 | 0.60 | 0.20 | 0.20 | 0.00 | 0.25 [0.00, 0.75] |
+| multi | pristine | 5 | 0.00 | 0.00 | 0.40 | 0.60 | n/a |
+| multi | spliced | 5 | 0.00 | 0.00 | 0.20 | 0.80 | n/a |
 | lowres | pristine | 5 | 0.60 | 0.00 | 0.40 | 0.00 | 1.00 [1.00, 1.00] |
-| lowres | spliced | 5 | 0.20 | 0.20 | 0.60 | 0.00 | 0.50 [0.00, 1.00] |
+| lowres | spliced | 5 | 0.20 | 0.20 | 0.40 | 0.20 | 0.50 [0.00, 1.00] |
 
 Suite quick. Spliced = car at 90 deg. Caveat: synthetic scenes with simulated normal predictors unless stated.
 
@@ -297,6 +297,18 @@ Anything normal ensemble, alarm level calibrated on synthetic scenes only:
 | real_airfield_car | dsine+depth_anything | sam | 13 | 7 | CONSISTENT | 3.53 |
 | real_carpark_sunny | dsine+depth_anything | sam | 26 | 6 | CONSISTENT | 3.57 |
 | real_mini_parking | dsine+depth_anything | sam | 26 | 10 | SUSPICIOUS | 6.89 |
+| real_mit_box_clean | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 1.73 |
+| real_mit_box_spliced | depth_anything | mask + ROI | 3 | 2 | INSUFFICIENT | 1.35 |
+| real_mit_cup2_clean | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 0.57 |
+| real_mit_cup2_spliced | depth_anything | mask + ROI | 3 | 3 | SUSPICIOUS | 0.54 |
+| real_mit_frog2_clean | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 1.88 |
+| real_mit_frog2_spliced | depth_anything | mask + ROI | 3 | 3 | SUSPICIOUS | 6.45 |
+| real_mit_pear_clean | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 0.65 |
+| real_mit_pear_spliced | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 2.39 |
+| real_mit_potato_clean | depth_anything | mask + ROI | 3 | 3 | SUSPICIOUS | 4.80 |
+| real_mit_potato_spliced | depth_anything | mask + ROI | 3 | 3 | CONFLICT | 6.91 |
+| real_mit_turtle_clean | depth_anything | mask + ROI | 3 | 3 | CONSISTENT | 1.19 |
+| real_mit_turtle_spliced | depth_anything | mask + ROI | 3 | 3 | SUSPICIOUS | 4.18 |
 | real_peugeot_104 | dsine+depth_anything | sam | 38 | 18 | SUSPICIOUS | 6.91 |
 | real_splice_carpark_sunny_from_peugeot_104 | dsine+depth_anything | sam | 26 | 5 | CONSISTENT | 3.01 |
 | real_street_car | dsine+depth_anything | sam | 20 | 10 | SUSPICIOUS | 6.64 |

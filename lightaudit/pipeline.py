@@ -11,7 +11,7 @@ from .fusion import combine_cues, fuse
 from .grid import eq_dirs, view_vectors
 from .imageio import luminance
 from .posterior import region_posterior
-from .residual import panel_ratio, panel_score, residual_maps
+from .residual import panel_ratio, panel_score, residual_maps, shadow_levels
 from .validity import valid_pixels
 
 ALL_CUES = ("shading", "glint", "contour")
@@ -23,7 +23,8 @@ def analyze_region(Y, normals, unc, mask, view, cfg: Config, seed: int, cue: str
     ys, xs, n_valid = valid_pixels(Y, normals, unc, mask, cfg, seed)
     yl = Y[mask & (Y < cfg.sat_hi)] ** 2.2  # shading contrast, used by the soft-light check
     contrast = float(np.percentile(yl, 10) / max(np.percentile(yl, 90), 1e-6)) if len(yl) >= 50 else None
-    r = dict(n_valid=int(n_valid), ys=ys, xs=xs, glint=None, contour=None, glint_blobs=[], contrast=contrast)
+    r = dict(n_valid=int(n_valid), ys=ys, xs=xs, glint=None, contour=None, glint_blobs=[], contrast=contrast,
+             shadow_mid=shadow_levels(Y, normals, mask, cfg))
     if n_valid < cfg.Nmin:
         D = len(eq_dirs())
         r.update(P=np.ones(D, np.float32), S=np.zeros(D, np.float32), samples=None, rho_max=0.0, sharp_area=1.0,
@@ -58,7 +59,8 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
     fusion = fuse([r["A"] for r in regions], [r["weight"] for r in regions], [r["excluded"] for r in regions], cfg,
                   centers=[r["center"] for r in regions], loo=loo,
                   contrast=[r.get("contrast") if r.get("kind") != "pseudo" else None for r in regions],
-                  panel_z=[r.get("panel_z") for r in regions])
+                  panel_z=[r.get("panel_z") for r in regions],
+                  shadow_mid=[r.get("shadow_mid") for r in regions])
     fusion["tau_panel"] = cfg.tau_panel
     for k in fusion["panel_flagged"]:
         fusion["per_region"][k]["panel_z"] = regions[k]["panel_z"]

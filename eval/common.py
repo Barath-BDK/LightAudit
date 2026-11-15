@@ -37,7 +37,7 @@ RESULTS = ROOT / "data" / "results"
 CACHE = RESULTS / "cache"
 TABLES = RESULTS / "tables"
 FIGS = ROOT / "docs" / "figures"
-CACHE_VERSION = "v6"
+CACHE_VERSION = "v7"
 CAVEAT = "synthetic scenes with simulated normal predictors unless stated"
 
 CUE_SETS = {"C1": ("shading",), "C1+C2": ("shading", "glint"), "C1+C2+C3": ("shading", "glint", "contour")}
@@ -160,7 +160,7 @@ def _progress(label, k, n, t0):
 # ---------------------------------------------------------------------------------------------- slim regions
 SLIM_KEYS = ("id", "name", "kind", "source", "excluded", "exclude_reason", "area_px", "n_valid", "spread_deg",
              "rho_max", "sharp_area", "mean_unc", "factors", "weight", "reason", "center", "samples", "glint_blobs",
-             "contour", "contrast", "panel_z", "panel_T", "panel_Tr")
+             "contour", "contrast", "panel_z", "panel_T", "panel_Tr", "shadow_mid")
 
 
 def slim_region(r: dict) -> dict:

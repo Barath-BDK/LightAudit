@@ -42,5 +42,10 @@ def explain(fusion: dict, regions: list[dict], eps: float = 1e-3) -> str:
             why = f"{fusion['reason']} ({why})"
         return (f"Not enough usable lighting evidence: {why}. "
                 "Try a photo outdoors in direct light with several objects visible.")
+    sl = fusion.get("shadow_levels") or {}
+    if sl.get("conflict"):
+        return (f"Cast shadows on a flat surface show more than one darkness level (shadow-level score "
+                f"{sl['value']:.2f} > alert {sl['threshold']:.2f}), which points to several light sources. The "
+                "one-light test does not apply. No automatic decision.")
     return ("The reference regions disagree among themselves, which usually means several lights or unreliable "
             "geometry. No automatic decision.")

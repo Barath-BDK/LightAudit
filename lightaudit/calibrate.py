@@ -46,11 +46,11 @@ def _score_job(args):
     from .synth import get_sample
     seed, kind, cfg = args
     # the two scene-level checks are switched off here: their thresholds are what is being calibrated
-    raw = replace(cfg, soft_contrast=float("inf"), tau_panel=float("inf"))  # panel flags off; raw statistics kept
+    raw = replace(cfg, soft_contrast=float("inf"), tau_panel=float("inf"), shadow_levels_max=float("inf"))  # panel flags off; raw statistics kept
     res = audit_sample(get_sample(seed, kind), cfg=raw, panel=(kind == "damage"), residual=False)
     pz = next(((r.get("panel_T"), r.get("panel_Tr")) for r in res["regions"] if r["name"] == "ROI"), None)
     pz = None if pz is None or pz[0] is None or pz[1] is None else pz
-    return seed, kind, res["fusion"]["verdict"], res["fusion"]["S_img"], res["fusion"]["soft_light"]["contrast"], pz
+    return seed, kind, res["fusion"]["verdict"], res["fusion"]["S_img"], res["fusion"]["soft_light"]["contrast"], pz, res["fusion"]["shadow_levels"]["value"]
 
 
 def coverage(samples_list, gt_list, h: float, T: float, levels=(0.68, 0.95)) -> list[float]:
@@ -87,16 +87,21 @@ def run_calibration(n_cal: int | None = None, n_shape: int | None = None, out: P
         jobs = [(seed0 + i, cal_kind(i), cfg2) for i in range(n_cal)]
         scored = list(pool.imap(_score_job, jobs))
     # soft-light threshold: 5% of sun-lit calibration scenes may be called diffuse
-    con = [c for _, k, _, _, c, _ in scored if k == "normal" and c is not None]
+    con = [c for _, k, _, _, c, _, _ in scored if k == "normal" and c is not None]
+    # several-lights threshold: 5% of one-sun calibration scenes may be called CONFLICT by their shadows
+    shl = [v for *_, v in scored if v is not None]
+    sh_max = conformal_quantile(shl, 0.05) if shl else cfg.shadow_levels_max
+    sh_max = sh_max if math.isfinite(sh_max) else max(shl)
     soft = conformal_quantile(con, 0.05) if con else cfg.soft_contrast
     soft = soft if math.isfinite(soft) else max(con)
-    pz = [z for *_, z in scored if z is not None]
-    decided = [(v, s) for _, _, v, s, c, _ in scored if v != "INSUFFICIENT" and not (c is not None and c > soft)]
+    pz = [z for *_, z, _ in scored if z is not None]
+    decided = [(v, s) for _, _, v, s, c, _, sh in scored if v != "INSUFFICIENT" and not (c is not None and c > soft)
+               and not (sh is not None and sh > sh_max)]
     scores = [s for _, s in decided]
     calib = dict(
         h=best["h"], T=best["T"], cov68=best["cov68"], cov95=best["cov95"],
         tau_img_05=conformal_quantile(scores, 0.05), tau_img_10=conformal_quantile(scores, 0.10),
-        soft_contrast=soft, n_panel=len(pz),
+        soft_contrast=soft, shadow_levels_max=sh_max, n_shadow=len(shl), n_panel=len(pz),
         # two panel statistics, flagged if either fires: each gets half of alpha (Bonferroni)
         tau_panel_T_05=conformal_quantile([z[0] for z in pz], 0.025) if pz else 1.0,
         tau_panel_Tr_05=conformal_quantile([z[1] for z in pz], 0.025) if pz else 1.0,
@@ -114,5 +119,6 @@ def run_calibration(n_cal: int | None = None, n_shape: int | None = None, out: P
     RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / "calibration.json").write_text(json.dumps(dict(
         calib=calib, grid=grid, scores=scores,
-        verdicts=[dict(seed=s, kind=k, verdict=v, S_img=x, contrast=c, panel_z=z) for s, k, v, x, c, z in scored]), indent=1))
+        verdicts=[dict(seed=s, kind=k, verdict=v, S_img=x, contrast=c, panel_z=z, shadow_levels=sh)
+                  for s, k, v, x, c, z, sh in scored]), indent=1))
     return calib

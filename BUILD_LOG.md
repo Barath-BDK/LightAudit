@@ -3,6 +3,24 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 7 (15 Nov 2026): cast-shadow check for several light sources
+
+- `residual.shadow_levels`: on a large flat region (>= 5% of the image, mean-normal resultant >= 0.95) the share of
+  shadow pixels (darker than 0.75 x the median) that are brighter than 1.35 x the darkest shadow level. One sun
+  gives one level; two suns give two half-shadow levels. Above `shadow_levels_max` the verdict is CONFLICT
+  (checked after the soft-light test, before the panel test). In `fusion.fuse`, `viewer/fusion.js`, the
+  explanation text, calibration, bundle format and eval cache.
+- Pre-test on 60 one-sun + 60 two-sun calibration scenes (ground label given): AUC 0.96. A second-light shading
+  fit with the sky gradient removed reached only 0.70 and was not built.
+- Calibrated threshold 0.286 (conformal 5% on one-sun calibration scenes; 8 of 190 exceed it). Clean calibration
+  scenes with no decision: 19.5% (was 17%).
+- Quick evaluation: two-sun scenes 3 of 5 CONFLICT and 2 of 5 INSUFFICIENT (before: 3 of 5 CONSISTENT); spliced
+  two-sun scenes 4 of 5 CONFLICT; one-sun clean scenes 0 of 5 affected. The two-suns demo is now CONFLICT (seed
+  4041, 2 tried).
+- Viewer: a browser that had cached the previous `fusion.js` kept showing the old verdict. The server now sends
+  `Cache-Control: no-cache` for viewer code and bundles; a previously cached copy needs one hard refresh.
+- Not tested on real photos. Tests: 63 pytest + 506 parity checks pass.
+
 ## Update 6 (15 Nov 2026): shared-material panel test in the pipeline, calibrated and tested on real objects
 
 - Panel mode now computes two shared-material statistics (`residual.panel_shared`): without albedo handling and

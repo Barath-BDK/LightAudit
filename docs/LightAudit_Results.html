@@ -25,7 +25,7 @@
 </style></head><body>
 
 <h1>LightAudit: what works and what does not</h1>
-<div class="sub">Results report &middot; 15 November 2026 &middot; https://github.com/Barath-BDK/LightAudit<br>
+<div class="sub">Results report &middot; 15 November 2026 (updated with the two-sun check) &middot; https://github.com/Barath-BDK/LightAudit<br>
 Every number below was produced by code in the repository. Sample sizes are given because several of them are small.</div>
 
 <div class="good"><b>Headline.</b> The tool now has one capability that is measured to work on <i>real photographs</i>:
@@ -50,8 +50,8 @@ photos). On synthetic scenes it works moderately, and a re-shaded fake defeats i
 <tr><td>Whole object pasted, then re-shaded</td><td>8 synthetic cars</td><td>0 of 8 caught</td><td class="bad">defeated</td></tr>
 <tr><td>Whole object pasted, real indoor scenes</td><td>6 scenes, 150 clean, ~1,400 simulated splices</td><td>AUC 0.49&ndash;0.59 (0.64 at &ge;90&deg;)</td><td class="bad">does not work</td></tr>
 <tr><td>Unedited outdoor photos</td><td>6 photos</td><td>4 of 6 wrongly flagged</td><td class="bad">does not work</td></tr>
-<tr><td>Two-sun scenes recognised</td><td>5 synthetic</td><td>0 of 5 CONFLICT</td><td class="bad">does not work</td></tr>
-<tr><td>Low-resolution images</td><td>5 synthetic</td><td>1 of 5 splices caught, 3 of 5 abstain</td><td class="bad">weak</td></tr>
+<tr><td>Two-sun scenes recognised</td><td>5 synthetic</td><td>3 of 5 CONFLICT, 2 of 5 abstain, none called consistent (before: 3 of 5 called consistent)</td><td class="ok">works</td></tr>
+<tr><td>Low-resolution images</td><td>5 synthetic</td><td>1 of 5 splices caught, 3 of 5 not decided</td><td class="bad">weak</td></tr>
 <tr><td>Viewer, server, upload, tests</td><td>62 Python tests, 470 browser-parity checks</td><td>all pass</td><td class="ok">works</td></tr>
 </table>
 <p>AUC: 0.5 is chance, 1.0 is perfect. "Caught" means the verdict is SUSPICIOUS at the calibrated alert level.</p>
@@ -104,10 +104,14 @@ spliced ones 3 are flagged, 1 returns CONFLICT and 2 are missed.</p>
 <figure><img src="figures/viewer_main.png"><figcaption>Works. Car pasted from a light 120&deg; away: SUSPICIOUS.</figcaption></figure>
 <figure><img src="figures/viewer_dent.png"><figcaption>Works. Pasted dent caught by the marked-area check.</figcaption></figure>
 <figure><img src="figures/viewer_overcast.png"><figcaption>Works. Overcast scene: the tool abstains ("the light looks diffuse").</figcaption></figure>
-<figure><img src="figures/viewer_multilight.png"><figcaption>Fails. Two suns: called CONSISTENT instead of CONFLICT.</figcaption></figure>
+<figure><img src="figures/viewer_multilight.png"><figcaption>Works. Two suns: CONFLICT, because the shadows on the ground show two darkness levels.</figcaption></figure>
 </div>
 <figure><img src="figures/viewer_attack.png"><figcaption>Attack lab. The pasted car is re-shaded to match the scene and passes.</figcaption></figure>
 
+<p><b>Two-sun check.</b> A flat surface has one orientation, so its brightness changes only through cast shadows. With one sun the
+shadows share one darkness level; with two suns each object casts two half-shadows at different levels. If too many shadow
+pixels on a large flat region sit above the darkest level, the verdict is CONFLICT. The threshold is set so that about 4% of
+one-sun calibration scenes trip it (8 of 190).</p>
 <h3>Numbers (quick evaluation: 5&ndash;15 scenes per cell, so the ranges are wide)</h3>
 <table>
 <tr><th>Measure</th><th>Result</th></tr>
@@ -116,7 +120,7 @@ spliced ones 3 are flagged, 1 returns CONFLICT and 2 are missed.</p>
 <tr><td>Pasted car, AUC for differences &ge;30&deg; (n = 15)</td><td>0.65 (rank-cue baseline 0.57)</td></tr>
 <tr><td>Pasted car at 90&deg;, caught at 5% false alarms</td><td>60% (range 33&ndash;87%)</td></tr>
 <tr><td>Smallest difference with half of the cars caught</td><td>60&ndash;90&deg;</td></tr>
-<tr><td>Clean calibration scenes returning INSUFFICIENT</td><td>17% of 200</td></tr>
+<tr><td>Clean calibration scenes with no decision (INSUFFICIENT or CONFLICT)</td><td>19.5% of 200 (about 4% from the two-sun check, about 5% from the overcast check, by design)</td></tr>
 </table>
 <table>
 <tr><th>Attack (8 cases each)</th><th>Pasted car caught</th><th>Pasted object caught</th><th>Pasted dent caught</th></tr>
@@ -145,7 +149,7 @@ matching defeats the dent check but not the whole-object check.</p>
 <li>The rank-based shading cue (the project's original idea): 3 times less accurate than least squares; kept only as a baseline.</li>
 <li>Silhouette cue: no gain on 60 calibration scenes; off by default.</li>
 <li>Sampling several lights per region instead of one best guess: no gain.</li>
-<li>Second-light fit for two-sun scenes: AUC 0.65&ndash;0.70, not enough. (A cast-shadow version scored 0.96 on 60 + 60 scenes and is prepared but not yet built in.)</li>
+<li>Second-light fit for two-sun scenes: AUC 0.65&ndash;0.70, not enough. The cast-shadow test replaced it and is built in.</li>
 <li>Shared paint levels per segment: no gain over no correction.</li>
 <li>Plain Retinex and smoothed Retinex: worse than no correction on composites.</li>
 </ul>
@@ -170,7 +174,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 <tr><th>#</th><th>Step</th><th>Why</th></tr>
 <tr><td>1</td><td>Test the marked-area check on real car photos with real dents, clean and edited</td><td>The real test so far uses tabletop objects; genuine damage with scratches or dirt may raise false alarms</td></tr>
 <tr><td>2</td><td>Add a colour-consistency check for the marked area</td><td>Colour matching defeats the marked-area check</td></tr>
-<tr><td>3</td><td>Build in the cast-shadow test for two light sources</td><td>It separated two-sun scenes at 0.96 in a pre-test</td></tr>
+<tr><td>3</td><td>Test the two-sun check on real photos</td><td>It needs a large flat surface; road markings or stains could look like a second shadow level</td></tr>
 <tr><td>4</td><td>Move the per-region likelihood test with Holm correction into the whole-object check</td><td>Removes the growth of false alarms with region count</td></tr>
 <tr><td>5</td><td>Run the full synthetic evaluation</td><td>Narrow the ranges; every synthetic number here is from the quick suite</td></tr>
 <tr><td>6</td><td>Present the whole-object check as "necessary, not sufficient"</td><td>It is at chance on real photos and re-shading defeats it; that is a finding to report, not to hide</td></tr>

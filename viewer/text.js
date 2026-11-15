@@ -70,6 +70,11 @@ export function explain(fusion, regions, eps = 1e-3) {
     if (sorted.length && fusion.reason) why = `${fusion.reason} (${why})`;
     return `Not enough usable lighting evidence: ${why}. Try a photo outdoors in direct light with several objects visible.`;
   }
+  const sl = fusion.shadow_levels || {};
+  if (sl.conflict) {
+    return `Cast shadows on a flat surface show more than one darkness level (shadow-level score ${f2(sl.value)} > alert `
+      + `${f2(sl.threshold)}), which points to several light sources. The one-light test does not apply. No automatic decision.`;
+  }
   return 'The reference regions disagree among themselves, which usually means several lights or unreliable '
     + 'geometry. No automatic decision.';
 }
