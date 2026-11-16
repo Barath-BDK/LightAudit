@@ -2,6 +2,7 @@
 
 import { VERDICT_META, REVIEW, esc, richText, reasonOf, whatIfText, CUE_NAMES, explain } from './text.js';
 import { azElDeg } from './grid.js';
+import { asciiBackground } from './ascii_bg.js';
 
 export const ICONS = {
   CONSISTENT: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M5 8.2l2 2 4-4.2"/></svg>',
@@ -177,7 +178,7 @@ export function renderTable(tbody, { regions, fusion, display, whatIf, use, sele
 export function renderGallery(root, { index, api, onUpload }) {
   const cards = index.map((b, i) => {
     const fail = /failure/i.test(b.name);
-    return `<a class="card ${fail ? 'failure' : ''}${i < 8 ? ' enter' : ''}" style="--i:${Math.min(i, 7) + 3}" href="?bundle=${encodeURIComponent(b.name)}">
+    return `<a class="card ${fail ? 'failure' : ''}" data-reveal href="?bundle=${encodeURIComponent(b.name)}">
       <div class="thumb"><img src="../bundles/${esc(b.thumb || `${b.name}/thumb.jpg`)}" alt="" loading="lazy" width="320" height="220">
         ${chip(b.verdict)}<span class="tag src">${esc(b.source || 'synthetic')}</span></div>
       <div class="body"><h3>${esc(b.title)}</h3><p>${esc(b.description)}</p><div class="meta">${esc(b.name)}</div></div></a>`;
@@ -192,7 +193,9 @@ export function renderGallery(root, { index, api, onUpload }) {
         <button class="btn ghost" id="help-btn">${ICONS.help}<span class="lbl">Help</span></button>${themeButton()}</nav></header>
     <main class="gallery-main">
       <section class="hero">
-        <div class="hero-copy enter" style="--i:0">
+        <canvas class="hero-bg" id="hero-bg" aria-hidden="true"></canvas>
+        <span class="hero-bg-cap mono" id="hero-bg-cap" aria-hidden="true"></span>
+        <div class="hero-copy" data-hero>
           <h1>Checks whether one light explains every part of a photo, and shows the evidence</h1>
           <p class="lede">For each region of the image, LightAudit estimates which directions the light could come from, using shading, specular highlights and silhouettes. If one region's light disagrees with the light the other regions agree on, the region is flagged. When the photo carries too little lighting evidence it says so instead of guessing.</p>
           <div class="hero-actions">
@@ -202,12 +205,15 @@ export function renderGallery(root, { index, api, onUpload }) {
           <p class="hero-note faint">${api ? 'JPEG or PNG. Mark the area to check, or let it find regions. About 5 minutes on a laptop CPU.' : 'Uploads need the LightAudit server: python -m lightaudit.cli serve'}</p>
           <div class="legend-verdicts">${chip('CONSISTENT')}${chip('SUSPICIOUS')}${chip('INSUFFICIENT')}${chip('CONFLICT')}</div>
         </div>
-        ${featured ? `<a class="hero-visual enter" style="--i:2" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
+      </section>
+      ${featured ? `<section class="example" data-reveal>
+        <div class="section-head"><h2>A real audit</h2><span class="faint">${featured.name === 'real_mit_pear_spliced' ? 'Part of this object was pasted from a photo under another lamp. ' : ''}Open it to inspect every number</span></div>
+        <a class="hero-visual" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
           <div class="hv-photo"><canvas id="hv-canvas" aria-hidden="true"></canvas><span class="hv-cap">${esc(featured.title)}</span></div>
           <div class="hv-card" id="hv-card"><div class="hv-loading faint">Loading the audit</div></div>
-        </a>` : ''}
-      </section>
-      <section class="intro">
+        </a>
+      </section>` : ''}
+      <section class="intro" data-reveal>
         <div><span class="micro">Every number is inspectable</span>
           <p>Drag your own light on the 3D dome, relight the photo, and see where the prediction does not fit. The attack lab then re-lights fakes to measure how easily a forger could pass.</p>
         </div>
@@ -226,6 +232,35 @@ export function renderGallery(root, { index, api, onUpload }) {
     </main></div>`;
   root.querySelectorAll('[data-upload]').forEach((b) => b.addEventListener('click', () => { if (api) onUpload(); }));
   if (featured) heroPreview(root, featured);
+  const cap = root.querySelector('#hero-bg-cap');
+  asciiBackground(root.querySelector('#hero-bg'), {
+    onLight: (az, el) => { cap.textContent = `one light · az ${Math.round(az)}° · el ${Math.round(el)}°`; },
+  });
+  galleryMotion(root);
+}
+
+// Motion on the gallery (anime.js and Lenis, vendored; both optional): the hero enters once, cards rise in as
+// they scroll into view, and the page scrolls smoothly. Nothing moves when the viewer prefers reduced motion.
+function galleryMotion(root) {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const anime = window.anime;
+  if (reduce || !anime) return;
+  document.documentElement.classList.add('js-motion');
+  const ease = 'cubicBezier(.22, 1, .36, 1)';
+  anime({ targets: root.querySelectorAll('[data-hero]'), opacity: [0, 1], translateY: [12, 0], duration: 600, easing: ease, delay: anime.stagger(120) });
+  anime({ targets: '#hero-bg', opacity: [0, 1], duration: 1400, easing: 'linear' });
+  const io = new IntersectionObserver((entries) => {
+    const show = entries.filter((e) => e.isIntersecting).map((e) => e.target);
+    if (!show.length) return;
+    show.forEach((el) => io.unobserve(el));
+    anime({ targets: show, opacity: [0, 1], translateY: [16, 0], duration: 520, easing: ease, delay: anime.stagger(50) });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  root.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+  if (window.Lenis) {
+    const lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
+    const tick = (t) => { lenis.raf(t); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }
 }
 
 // Explanation from a stored manifest, with the current wording: per_region is matched to the regions by id.
