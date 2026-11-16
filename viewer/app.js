@@ -257,12 +257,12 @@ function updateFoot() {
   if (!foot) return;
   const mode = state.mode;
   const desc = {
-    observed: 'The audited photo.',
+    observed: 'The audited photo',
     regions: 'Region labels. Hatched = excluded, red outline = flagged, orange = selected.',
-    relit: 'Each region re-shaded from its fitted light to your light with its own tone curve.',
-    counterfactual: 'How each region should look under the consensus light (exported).',
-    residual: 'Live |observed − predicted| at your light, in units of the expected noise.',
-    normals: 'Estimated surface directions (RGB = xyz).',
+    relit: 'Each region re-shaded from its fitted light to your light with its own tone curve',
+    counterfactual: 'How each region should look under the consensus light (exported)',
+    residual: 'Live |observed − predicted| at your light, in units of the expected noise',
+    normals: 'Estimated surface directions (RGB = xyz)',
   }[mode];
   foot.innerHTML = `<span>${esc(desc)}</span><span class="spacer"></span>${mode === 'residual'
     ? `<span class="faint">z 0</span><canvas class="legend-ramp" id="ramp" width="90" height="8" aria-hidden="true"></canvas><span class="faint">≥ ${(4 / state.heatGain).toFixed(1)}</span>` : ''}`;
@@ -335,7 +335,7 @@ function bindImage() {
     const r = info.index >= 0 ? regs()[info.index] : null;
     const pr = r ? state.fusion.per_region[info.index] : null;
     const d = r ? state.display[info.index] : null;
-    const st = r ? (pr.excluded ? 'excluded' : pr.flagged ? 'FLAGGED' : !pr.reliable ? `unreliable: ${reasonOf(r)}` : 'reliable') : '';
+    const st = r ? (pr.excluded ? 'excluded' : pr.flagged ? 'flagged' : !pr.reliable ? `unreliable: ${reasonOf(r)}` : 'reliable') : '';
     tip.innerHTML = r
       ? `<div class="t-head"><span class="swatch" style="background:${esc(r.color)}"></span>${esc(r.name)}</div>
          <div class="row"><span>status</span><span>${esc(st)}</span></div>

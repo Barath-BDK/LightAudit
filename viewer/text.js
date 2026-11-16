@@ -48,7 +48,7 @@ export function explain(fusion, regions, eps = 1e-3) {
       const p = per[k], r = regions[k];
       if ((fusion.panel_flagged || []).includes(k)) {
         return `The brightness of **${r.name}** is not predicted by the shading of the panel around it `
-          + `(panel score ${f1(p.panel_z)} times the alert level; the largest of the shared-light, shared-material and seam tests): it looks lit differently from its surroundings.`;
+          + `(panel score ${f1(p.panel_z)} times the alert level; the larger of the shared-light and shared-material tests): it looks lit differently from its surroundings.`;
       }
       const agree = Math.exp(-p.shortfall) - eps;
       const cues = r.cues.map((c) => CUE_NAMES[c] || c).join(', ');

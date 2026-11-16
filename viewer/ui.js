@@ -1,6 +1,6 @@
 // DOM building blocks: icons, verdict chip/banner, region table, gallery, toasts, overlays.
 
-import { VERDICT_META, REVIEW, esc, richText, reasonOf, whatIfText, CUE_NAMES } from './text.js';
+import { VERDICT_META, REVIEW, esc, richText, reasonOf, whatIfText, CUE_NAMES, explain } from './text.js';
 import { azElDeg } from './grid.js';
 
 export const ICONS = {
@@ -27,7 +27,7 @@ export const ICONS = {
 
 export function chip(verdict, small = false) {
   const m = VERDICT_META[verdict] || { word: verdict };
-  return `<span class="chip v-${esc(verdict)}"${small ? ' style="height:19px;font-size:10px"' : ''}>${ICONS[verdict] || ''}${esc(verdict)}</span>`;
+  return `<span class="chip v-${esc(verdict)}"${small ? ' style="height:19px;font-size:10px"' : ''}>${ICONS[verdict] || ''}${esc(verdict.charAt(0) + verdict.slice(1).toLowerCase())}</span>`;
 }
 
 export function $(sel, root = document) { return root.querySelector(sel); }
@@ -102,7 +102,7 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
     <div class="verdict-banner v-${v}" aria-live="polite">
       <div class="vicon">${ICONS[v]}</div>
       <div><div class="micro" style="color:inherit;opacity:.85">${modified ? 'Live audit verdict (your settings)' : 'Audit verdict'}</div>
-        <div class="vword">${esc(v)}</div></div>
+        <div class="vword">${esc((VERDICT_META[v] || { word: v }).word)}</div></div>
       <div class="vscore" title="Image score S_img: the largest leave-one-out shortfall among reliable regions. Above the alert level means a region does not fit the light the others agree on.">S<sub>img</sub><b>${fusion.n_reliable ? s.toFixed(2) : '–'}</b>alert ${tau.toFixed(2)}</div>
       <div class="vsub">${esc(m.action)}</div>
     </div>
@@ -132,7 +132,7 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
 export function statusOf(r, p, fusion, tau, disp) {
   if (p.excluded) return { key: 'excl', text: 'excluded', order: 4 };
   if (!p.reliable) return { key: 'unrel', text: `unreliable: ${reasonOf(r)}`, order: 3 };
-  if (p.flagged) return { key: 'flag', text: 'FLAGGED', order: 0 };
+  if (p.flagged) return { key: 'flag', text: 'Flagged', order: 0 };
   const s = disp ? disp.shortfall : p.shortfall;
   if (fusion.verdict === 'INSUFFICIENT') return { key: 'unrel', text: 'not decided', order: 2 };
   if (s !== null && s > tau) return { key: 'disagree', text: 'disagrees', order: 1 };
@@ -182,17 +182,32 @@ export function renderGallery(root, { index, api, onUpload }) {
         ${chip(b.verdict)}<span class="tag src">${esc(b.source || 'synthetic')}</span></div>
       <div class="body"><h3>${esc(b.title)}</h3><p>${esc(b.description)}</p><div class="meta">${esc(b.name)}</div></div></a>`;
   }).join('');
+  // featured audit for the hero: a real photo with a caught paste, else the first real or flagged bundle
+  const featured = index.find((b) => b.name === 'real_mit_pear_spliced')
+    || index.find((b) => b.source === 'real' && b.verdict === 'SUSPICIOUS') || index.find((b) => b.verdict === 'SUSPICIOUS');
   root.innerHTML = `<div class="gallery-page">
     <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
       <span class="muted">Lighting-consistency audit of edited photos</span><span class="spacer"></span>
       <nav><button class="btn ghost" id="help-btn">${ICONS.help}<span class="lbl">Help</span></button>${themeButton()}</nav></header>
     <main class="gallery-main">
-      <section class="intro">
-        <div><span class="micro">What it does</span>
-          <h2>Checks whether one light explains every part of a photo, and shows the evidence.</h2>
-          <p>For each region of the image, LightAudit estimates which directions the light could come from, using shading, specular highlights and silhouettes. If one region's light disagrees with the light the other regions agree on, the region is flagged. When the photo carries too little lighting evidence it says so instead of guessing.</p>
-          <p>Every number is inspectable: drag your own light on the 3D dome, relight the photo, and see where the prediction does not fit. The attack lab then re-lights fakes to measure how easily a forger could pass.</p>
+      <section class="hero">
+        <div class="hero-copy">
+          <h1>Checks whether one light explains every part of a photo, and shows the evidence</h1>
+          <p class="lede">For each region of the image, LightAudit estimates which directions the light could come from, using shading, specular highlights and silhouettes. If one region's light disagrees with the light the other regions agree on, the region is flagged. When the photo carries too little lighting evidence it says so instead of guessing.</p>
+          <div class="hero-actions">
+            ${featured ? `<a class="btn accent lg" href="?bundle=${encodeURIComponent(featured.name)}">Open this audit</a>` : ''}
+            <button class="btn lg" type="button" data-help>How to read a verdict</button>
+          </div>
           <div class="legend-verdicts">${chip('CONSISTENT')}${chip('SUSPICIOUS')}${chip('INSUFFICIENT')}${chip('CONFLICT')}</div>
+        </div>
+        ${featured ? `<a class="hero-visual" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
+          <div class="hv-photo"><canvas id="hv-canvas" aria-hidden="true"></canvas><span class="hv-cap">${esc(featured.title)}</span></div>
+          <div class="hv-card" id="hv-card"><div class="hv-loading faint">Loading the audit</div></div>
+        </a>` : ''}
+      </section>
+      <section class="intro">
+        <div><span class="micro">Every number is inspectable</span>
+          <p>Drag your own light on the 3D dome, relight the photo, and see where the prediction does not fit. The attack lab then re-lights fakes to measure how easily a forger could pass.</p>
         </div>
         <div><span class="micro">What it does not claim</span>
           <ul>
@@ -214,6 +229,64 @@ export function renderGallery(root, { index, api, onUpload }) {
     </main></div>`;
   const up = root.querySelector('#upload-card');
   up.addEventListener('click', () => { if (api) onUpload(); });
+  root.querySelector('[data-help]').addEventListener('click', () => root.querySelector('#help-btn').click());
+  if (featured) heroPreview(root, featured);
+}
+
+// Explanation from a stored manifest, with the current wording: per_region is matched to the regions by id.
+function whyText(m) {
+  const byId = new Map(m.regions.map((r) => [r.id, r]));
+  const regs = m.fusion.per_region.map((p) => byId.get(p.id));
+  const per = m.fusion.per_region.map((p, k) => ({ ...regs[k], ...p, index: k }));
+  const idx = (ids) => (ids || []).map((id) => regs.findIndex((r) => r.id === id));  // bundles store region ids
+  return explain({ ...m.fusion, per_region: per, flagged: idx(m.fusion.flagged), panel_flagged: idx(m.fusion.panel_flagged) }, regs)
+    .split(' Please review')[0];
+}
+
+// The hero shows a real audit: the photo with its marked area outlined and the verdict from its own manifest.
+async function heroPreview(root, b) {
+  const base = `../bundles/${b.name}/`;
+  const card = root.querySelector('#hv-card');
+  try {
+    const m = await (await fetch(base + 'manifest.json')).json();
+    const f = m.fusion;
+    const roi = m.regions.find((r) => r.name === 'ROI') || m.regions[f.top_region ?? 0];
+    const pr = f.per_region.find((p) => p.flagged) || null;
+    const meta = VERDICT_META[f.verdict] || { word: f.verdict, action: '' };
+    const z = roi && roi.panel_z != null ? roi.panel_z : null;
+    card.innerHTML = `<div class="hv-head v-${esc(f.verdict)}">${ICONS[f.verdict] || ''}<span>${esc(meta.word)}</span></div>
+      <p class="hv-action">${esc(meta.action)}</p>
+      ${z != null ? `<div class="hv-score"><span class="faint">Marked area vs its panel</span><span class="num">${z.toFixed(1)}× alert</span></div>
+        <div class="gauge v-${esc(f.verdict)}"><i class="fill" style="width:${Math.min(100, z / 3 * 100).toFixed(1)}%"></i><i class="tau" style="left:${(100 / 3).toFixed(1)}%"></i></div>
+        <div class="gauge-scale"><span>0</span><span>alert</span><span>3×</span></div>` : ''}
+      <p class="hv-why">${richText(whyText(m))}</p>
+      <div class="hv-meta mono faint">${esc(m.image.source)} photo · ${esc(m.normals_backend)} normals${pr ? ` · ${esc(m.regions[f.per_region.indexOf(pr)].name)} flagged` : ''}</div>`;
+    const [img, lab] = await Promise.all(['image.png', 'labels.png'].map((n) => new Promise((ok, bad) => {
+      const im = new Image(); im.onload = () => ok(im); im.onerror = bad; im.src = base + n;
+    })));
+    const cv = root.querySelector('#hv-canvas');
+    cv.width = img.width; cv.height = img.height;
+    const ctx = cv.getContext('2d');
+    ctx.drawImage(lab, 0, 0);
+    const L = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    ctx.drawImage(img, 0, 0);
+    if (roi) {  // outline the marked area: ROI pixels with a non-ROI neighbour
+      const out = ctx.getImageData(0, 0, cv.width, cv.height);
+      const W = cv.width, H = cv.height, id = roi.id;
+      const col = getComputedStyle(document.documentElement).getPropertyValue('--bad').trim() || '#f0524f';
+      const [cr, cg, cb] = [1, 3, 5].map((i) => parseInt(col.slice(i, i + 2), 16));
+      for (let y = 2; y < H - 2; y++) for (let x = 2; x < W - 2; x++) {
+        const k = y * W + x;
+        if (L[k * 4] !== id) continue;
+        if ([1, 2].some((d) => L[(k - d) * 4] !== id || L[(k + d) * 4] !== id || L[(k - d * W) * 4] !== id || L[(k + d * W) * 4] !== id)) {  // 2 px line
+          out.data[k * 4] = cr; out.data[k * 4 + 1] = cg; out.data[k * 4 + 2] = cb;
+        }
+      }
+      ctx.putImageData(out, 0, 0);
+    }
+  } catch (e) {
+    card.innerHTML = '<div class="hv-loading faint">Preview unavailable</div>';
+  }
 }
 
 // ------------------------------------------------------------------ main workspace skeleton

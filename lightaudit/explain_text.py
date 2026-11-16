@@ -25,7 +25,7 @@ def explain(fusion: dict, regions: list[dict], eps: float = 1e-3) -> str:
             p, r = per[k], regions[k]
             if k in fusion.get("panel_flagged", []):
                 out.append(f"The brightness of **{r['name']}** is not predicted by the shading of the panel around it "
-                           f"(panel score {p['panel_z']:.1f} times the alert level; the largest of the shared-light, shared-material and seam tests): it looks lit "
+                           f"(panel score {p['panel_z']:.1f} times the alert level; the larger of the shared-light and shared-material tests): it looks lit "
                            "differently from its surroundings.")
                 continue
             agree = float(np.exp(-p["shortfall"])) - eps
