@@ -9,16 +9,19 @@
   --t: 150ms;
   --ease: cubic-bezier(.22, 1, .36, 1);
 
-  --bg: #0b0d10;
-  --bg-1: #111418;
-  --bg-2: #161a1f;
-  --bg-3: #1d2228;
-  --bg-hover: #1f252c;
-  --line: #232930;
-  --line-2: #323a43;
-  --text: #e6e9ed;
-  --text-2: #a2abb5;
-  --text-3: #737c87;
+  --bg: #0f0f10;
+  --bg-1: #161617;
+  --bg-2: #1c1c1e;
+  --bg-3: #242426;
+  --bg-hover: #262628;
+  --line: #262628;
+  --line-2: #36363a;
+  --text: #ededed;
+  --text-2: #a1a1a6;
+  --text-3: #85858b;
+  --primary: #ededed;      /* primary button: off-white with dark ink */
+  --primary-ink: #141415;
+  --lift: inset 0 1px 0 rgba(255, 255, 255, .06);
   --accent: #ff8a3d;
   --accent-ink: #1b0e04;
   --accent-soft: rgba(255, 138, 61, .14);
@@ -31,24 +34,27 @@
   --bad-soft: rgba(240, 82, 79, .13);
   --na-soft: rgba(142, 153, 166, .12);
   --conflict-soft: rgba(234, 164, 60, .13);
-  --canvas-bg: #07090b;
+  --canvas-bg: #0b0b0c;
   --paper: #ffffff;
   --shadow: 0 12px 40px rgba(0, 0, 0, .5);
-  --scrim: rgba(4, 6, 8, .72);
+  --scrim: rgba(8, 8, 9, .72);
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bg: #eef0f3;
+  --bg: #f4f4f5;
   --bg-1: #ffffff;
-  --bg-2: #f6f7f9;
-  --bg-3: #eceef1;
-  --bg-hover: #f0f2f5;
-  --line: #dde1e6;
-  --line-2: #c8ced5;
-  --text: #121519;
-  --text-2: #444e59;
-  --text-3: #66707b;
+  --bg-2: #fafafa;
+  --bg-3: #efeff0;
+  --bg-hover: #f2f2f3;
+  --line: #e4e4e7;
+  --line-2: #d4d4d8;
+  --text: #171717;
+  --text-2: #525252;
+  --text-3: #6b6b70;
+  --primary: #171717;
+  --primary-ink: #ffffff;
+  --lift: inset 0 1px 0 rgba(255, 255, 255, .5);
   --accent: #c2560b;
   --accent-ink: #ffffff;
   --accent-soft: rgba(194, 86, 11, .1);
@@ -61,9 +67,9 @@
   --bad-soft: rgba(196, 43, 43, .08);
   --na-soft: rgba(89, 99, 110, .09);
   --conflict-soft: rgba(156, 88, 0, .09);
-  --canvas-bg: #e4e7eb;
-  --shadow: 0 12px 40px rgba(20, 30, 40, .18);
-  --scrim: rgba(230, 233, 237, .78);
+  --canvas-bg: #e8e8ea;
+  --shadow: 0 8px 24px rgba(0, 0, 0, .08);
+  --scrim: rgba(240, 240, 241, .78);
   color-scheme: light;
 }
 
@@ -100,18 +106,20 @@ a { color: inherit; }
   display: inline-flex; align-items: center; gap: 6px;
   height: 28px; padding: 0 10px;
   border: 1px solid var(--line-2); border-radius: var(--r);
-  background: var(--bg-2); color: var(--text);
+  background: var(--bg-2); color: var(--text); box-shadow: var(--lift);
   cursor: pointer; white-space: nowrap;
-  transition: background var(--t) var(--ease), border-color var(--t) var(--ease), color var(--t) var(--ease);
+  transition: background var(--t) var(--ease), border-color var(--t) var(--ease), color var(--t) var(--ease), transform 90ms var(--ease);
 }
 .btn:hover { background: var(--bg-hover); border-color: var(--text-3); }
-.btn:active { transform: translateY(.5px); }
+.btn:active { transform: scale(.98); }
 .btn[disabled], .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
-.btn.ghost { background: transparent; border-color: transparent; color: var(--text-2); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--text-2); box-shadow: none; }
 .btn.ghost:hover { background: var(--bg-hover); color: var(--text); }
 .btn.ghost[aria-pressed="true"], .btn.ghost[aria-current="page"] { color: var(--text); background: var(--bg-3); }
 .btn.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
 .btn.accent:hover { filter: brightness(1.06); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); font-weight: 500; }
+.btn.primary:hover { background: color-mix(in srgb, var(--primary) 88%, var(--bg)); border-color: transparent; }
 .btn.sm { height: 24px; padding: 0 8px; font-size: 12px; }
 .btn svg { width: 14px; height: 14px; flex: none; }
 .kbd {
@@ -620,6 +628,25 @@ blockquote.limits { margin: 0; padding: 12px 14px; border-left: 3px solid var(--
   .dialog { max-height: 100vh; border-radius: 0; }
 }
 
+/* ---------------------------------------------------------------- motion: one entrance, numbers that tween */
+@keyframes enter { from { opacity: 0; transform: translateY(8px); } }
+.enter { animation: enter 420ms var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.hv-photo canvas { opacity: 0; transition: opacity 400ms var(--ease); }
+.hv-photo canvas.ready { opacity: 1; }
+.hv-card .gauge .fill { transition: width 700ms var(--ease); }
+
+/* ---------------------------------------------------------------- sun control (relight) */
+.sun { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; min-width: 0; white-space: nowrap; }
+.sun .readout { min-width: 0; }
+.sun label { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); }
+.sun input[type="range"] { width: 80px; }
+.sun input[type="range"]::-webkit-slider-thumb { background: var(--accent); }
+.sun input[type="range"]::-moz-range-thumb { background: var(--accent); }
+.sun output { font: 12px var(--mono); color: var(--text); min-width: 36px; text-align: right; }
+.btn[aria-pressed="true"].sweep { color: var(--accent); border-color: var(--accent); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+.hero-note { margin: 12px 0 0; font-size: 12px; }
+.btn.lg svg { width: 16px; height: 16px; }

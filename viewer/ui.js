@@ -175,9 +175,9 @@ export function renderTable(tbody, { regions, fusion, display, whatIf, use, sele
 
 // ------------------------------------------------------------------ gallery
 export function renderGallery(root, { index, api, onUpload }) {
-  const cards = index.map((b) => {
+  const cards = index.map((b, i) => {
     const fail = /failure/i.test(b.name);
-    return `<a class="card ${fail ? 'failure' : ''}" href="?bundle=${encodeURIComponent(b.name)}">
+    return `<a class="card ${fail ? 'failure' : ''}${i < 8 ? ' enter' : ''}" style="--i:${Math.min(i, 7) + 3}" href="?bundle=${encodeURIComponent(b.name)}">
       <div class="thumb"><img src="../bundles/${esc(b.thumb || `${b.name}/thumb.jpg`)}" alt="" loading="lazy" width="320" height="220">
         ${chip(b.verdict)}<span class="tag src">${esc(b.source || 'synthetic')}</span></div>
       <div class="body"><h3>${esc(b.title)}</h3><p>${esc(b.description)}</p><div class="meta">${esc(b.name)}</div></div></a>`;
@@ -188,19 +188,21 @@ export function renderGallery(root, { index, api, onUpload }) {
   root.innerHTML = `<div class="gallery-page">
     <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
       <span class="muted">Lighting-consistency audit of edited photos</span><span class="spacer"></span>
-      <nav><button class="btn ghost" id="help-btn">${ICONS.help}<span class="lbl">Help</span></button>${themeButton()}</nav></header>
+      <nav><button class="btn sm" type="button" data-upload aria-disabled="${!api}" title="${api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve'}">${ICONS.upload}<span class="lbl">Audit your photo</span></button>
+        <button class="btn ghost" id="help-btn">${ICONS.help}<span class="lbl">Help</span></button>${themeButton()}</nav></header>
     <main class="gallery-main">
       <section class="hero">
-        <div class="hero-copy">
+        <div class="hero-copy enter" style="--i:0">
           <h1>Checks whether one light explains every part of a photo, and shows the evidence</h1>
           <p class="lede">For each region of the image, LightAudit estimates which directions the light could come from, using shading, specular highlights and silhouettes. If one region's light disagrees with the light the other regions agree on, the region is flagged. When the photo carries too little lighting evidence it says so instead of guessing.</p>
           <div class="hero-actions">
-            ${featured ? `<a class="btn accent lg" href="?bundle=${encodeURIComponent(featured.name)}">Open this audit</a>` : ''}
-            <button class="btn lg" type="button" data-help>How to read a verdict</button>
+            <button class="btn primary lg" type="button" data-upload aria-disabled="${!api}" title="${api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve'}">${ICONS.upload}Audit your photo</button>
+            ${featured ? `<a class="btn lg" href="?bundle=${encodeURIComponent(featured.name)}">Open the example audit</a>` : ''}
           </div>
+          <p class="hero-note faint">${api ? 'JPEG or PNG. Mark the area to check, or let it find regions. About 5 minutes on a laptop CPU.' : 'Uploads need the LightAudit server: python -m lightaudit.cli serve'}</p>
           <div class="legend-verdicts">${chip('CONSISTENT')}${chip('SUSPICIOUS')}${chip('INSUFFICIENT')}${chip('CONFLICT')}</div>
         </div>
-        ${featured ? `<a class="hero-visual" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
+        ${featured ? `<a class="hero-visual enter" style="--i:2" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
           <div class="hv-photo"><canvas id="hv-canvas" aria-hidden="true"></canvas><span class="hv-cap">${esc(featured.title)}</span></div>
           <div class="hv-card" id="hv-card"><div class="hv-loading faint">Loading the audit</div></div>
         </a>` : ''}
@@ -219,17 +221,10 @@ export function renderGallery(root, { index, api, onUpload }) {
         </div>
       </section>
       <div class="section-head"><h2 class="micro">Audited images</h2><span class="faint">${index.length} bundle${index.length === 1 ? '' : 's'} · open one to inspect</span></div>
-      <div class="cards">${cards}
-        <button class="card upload" id="upload-card" aria-disabled="${!api}" title="${api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve'}">
-          <div class="thumb">${ICONS.upload}<span>Upload a photo</span></div>
-          <div class="body"><h3>Audit your own photo</h3><p>${api ? 'Runs the full pipeline on the server (segmentation, normals, cues, fusion) and opens the result.' : 'Unavailable here: start the LightAudit server (python -m lightaudit.cli serve) to enable uploads.'}</p></div>
-        </button>
-      </div>
+      <div class="cards">${cards}</div>
       <p class="gallery-foot">Synthetic scenes use simulated surface normals unless stated. ${esc(REVIEW)}</p>
     </main></div>`;
-  const up = root.querySelector('#upload-card');
-  up.addEventListener('click', () => { if (api) onUpload(); });
-  root.querySelector('[data-help]').addEventListener('click', () => root.querySelector('#help-btn').click());
+  root.querySelectorAll('[data-upload]').forEach((b) => b.addEventListener('click', () => { if (api) onUpload(); }));
   if (featured) heroPreview(root, featured);
 }
 
@@ -256,11 +251,23 @@ async function heroPreview(root, b) {
     const z = roi && roi.panel_z != null ? roi.panel_z : null;
     card.innerHTML = `<div class="hv-head v-${esc(f.verdict)}">${ICONS[f.verdict] || ''}<span>${esc(meta.word)}</span></div>
       <p class="hv-action">${esc(meta.action)}</p>
-      ${z != null ? `<div class="hv-score"><span class="faint">Marked area vs its panel</span><span class="num">${z.toFixed(1)}× alert</span></div>
-        <div class="gauge v-${esc(f.verdict)}"><i class="fill" style="width:${Math.min(100, z / 3 * 100).toFixed(1)}%"></i><i class="tau" style="left:${(100 / 3).toFixed(1)}%"></i></div>
+      ${z != null ? `<div class="hv-score"><span class="faint">Marked area vs its panel</span><span class="num"><span id="hv-z">0.0</span>× alert</span></div>
+        <div class="gauge v-${esc(f.verdict)}"><i class="fill" id="hv-fill" style="width:0%"></i><i class="tau" style="left:${(100 / 3).toFixed(1)}%"></i></div>
         <div class="gauge-scale"><span>0</span><span>alert</span><span>3×</span></div>` : ''}
       <p class="hv-why">${richText(whyText(m))}</p>
       <div class="hv-meta mono faint">${esc(m.image.source)} photo · ${esc(m.normals_backend)} normals${pr ? ` · ${esc(m.regions[f.per_region.indexOf(pr)].name)} flagged` : ''}</div>`;
+    if (z != null) {
+      const fill = card.querySelector('#hv-fill'), out = card.querySelector('#hv-z');
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => { fill.style.width = `${Math.min(100, z / 3 * 100).toFixed(1)}%`; });
+      const t0 = performance.now();
+      const step = (t) => {
+        const k = reduce ? 1 : Math.min(1, (t - t0) / 700);
+        out.textContent = (z * (1 - (1 - k) ** 3)).toFixed(1);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
     const [img, lab] = await Promise.all(['image.png', 'labels.png'].map((n) => new Promise((ok, bad) => {
       const im = new Image(); im.onload = () => ok(im); im.onerror = bad; im.src = base + n;
     })));
@@ -284,6 +291,7 @@ async function heroPreview(root, b) {
       }
       ctx.putImageData(out, 0, 0);
     }
+    cv.classList.add('ready');
   } catch (e) {
     card.innerHTML = '<div class="hv-loading faint">Preview unavailable</div>';
   }
@@ -337,10 +345,17 @@ export function workspaceHTML(b) {
       </div>
       <div class="stage" id="dome-stage"></div>
       <div class="panel-foot">
-        <span class="readout"><span class="sw" aria-hidden="true"></span>Your light <b class="mono" id="light-readout">–</b></span>
+        <div class="sun" role="group" aria-label="Sun position: moves your light and relights the photo">
+          <span class="readout"><span class="sw" aria-hidden="true"></span>Sun</span>
+          <label title="Direction round the scene: 0 = from the camera side, +90 = from the right">Azimuth
+            <input type="range" id="sun-az" min="-180" max="180" step="1" value="0"><output id="sun-az-o" for="sun-az">0°</output></label>
+          <label title="Height above the horizon: 0 = grazing, 90 = straight above">Elevation
+            <input type="range" id="sun-el" min="-10" max="90" step="1" value="45"><output id="sun-el-o" for="sun-el">45°</output></label>
+          <button class="btn sm sweep" id="sun-sweep" type="button" aria-pressed="false" title="Swing the sun once round the scene and watch the relit photo">Sweep</button>
+        </div>
         <span class="spacer"></span>
-        <button class="btn sm" id="snap-cons" title="Move your light to the consensus direction">Snap to consensus</button>
-        <button class="btn sm" id="snap-sel" title="Move your light to the selected region's own estimate">Snap to selected</button>
+        <button class="btn ghost sm" id="snap-cons" title="Snap the sun to the direction the regions agree on">Consensus</button>
+        <button class="btn ghost sm" id="snap-sel" title="Snap the sun to the selected region's own estimate">Selected</button>
       </div>
     </section>
     <section class="panel" id="verdict-panel" aria-label="Verdict">

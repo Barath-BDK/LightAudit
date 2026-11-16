@@ -1,7 +1,7 @@
 // LightAudit viewer entry point: routing (gallery | bundle), live fusion, wiring of the views.
 
 import { state, prefs, loadBundle, fetchJSON, detectApi, BUNDLES } from './state.js';
-import { D, dir, azElDeg, normalize, hpd, coneHalfAngleDeg } from './grid.js';
+import { D, dir, azElDeg, fromAzElDeg, normalize, hpd, coneHalfAngleDeg } from './grid.js';
 import { fuse, combineCues, logMaps, whatIf, displayShortfalls, mapArgmax, DEFAULT_CFG } from './fusion.js';
 import { explain, reasonOf, esc, VERDICT_META } from './text.js';
 import { ImageView, MODES, MODE_LABELS } from './relight.js';
@@ -173,8 +173,7 @@ function renderPanels() {
   const rb = $('#reset-btn');
   if (rb) rb.addEventListener('click', resetSettings);
   $('#table-note').textContent = `${state.fusion.n_reliable} reliable of ${regs.length}`;
-  const [az, el] = azElDeg(state.light);
-  $('#light-readout').textContent = `az ${az.toFixed(1)}°  el ${el.toFixed(1)}°`;
+  syncSun();
   updateFoot();
 }
 
@@ -278,6 +277,7 @@ function updateFoot() {
 
 // ------------------------------------------------------------------ image view interaction
 function setMode(m) {
+  if (m !== 'relit') stopSweep();
   if (!MODES.includes(m)) return;
   const avail = { counterfactual: !!B.images.counterfactual, residual: !!B.images.normals && !!B.images.unc, normals: !!B.images.normals, relit: !!B.images.normals };
   if (avail[m] === false) { toast(`${MODE_LABELS[m]} needs files missing from this bundle.`, 'warn'); return; }
@@ -419,6 +419,47 @@ function select(i) {
   renderPanels();
 }
 
+// Sun control: two sliders and a sweep that move your light; the photo switches to the relit view so the
+// effect of the new sun position is visible at once. Dragging on the dome keeps the sliders in sync.
+let sweepRaf = 0;
+function syncSun() {
+  const az = $('#sun-az'), el = $('#sun-el');
+  if (!az) return;
+  const [a, e] = azElDeg(state.light);
+  if (document.activeElement !== az) az.value = Math.round(a);
+  if (document.activeElement !== el) el.value = Math.round(e);
+  $('#sun-az-o').textContent = `${Math.round(a)}°`;
+  $('#sun-el-o').textContent = `${Math.round(e)}°`;
+}
+function sunTo(az, el) {
+  if (state.mode !== 'relit' && B.images.normals) setMode('relit');  // relit needs normals; else only the dome moves
+  setLight(fromAzElDeg(az, el));
+}
+function stopSweep() {
+  if (sweepRaf) cancelAnimationFrame(sweepRaf);
+  sweepRaf = 0;
+  const b = $('#sun-sweep');
+  if (b) b.setAttribute('aria-pressed', 'false');
+}
+function bindSun() {
+  const az = $('#sun-az'), el = $('#sun-el');
+  const onInput = () => { stopSweep(); sunTo(+az.value, +el.value); };
+  az.addEventListener('input', onInput);
+  el.addEventListener('input', onInput);
+  $('#sun-sweep').addEventListener('click', (ev) => {
+    if (sweepRaf) { stopSweep(); return; }
+    ev.currentTarget.setAttribute('aria-pressed', 'true');
+    const start = +az.value, e = +el.value, t0 = performance.now(), T = 8000;  // one full turn in 8 s
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / T);
+      sunTo(((start + 180 + 360 * k) % 360) - 180, e);
+      sweepRaf = k < 1 ? requestAnimationFrame(step) : (stopSweep(), 0);
+    };
+    sweepRaf = requestAnimationFrame(step);
+  });
+  syncSun();
+}
+
 let lightRaf = 0;
 function setLight(l) {
   state.light = normalize(l);
@@ -427,6 +468,7 @@ function setLight(l) {
   lightRaf = requestAnimationFrame(() => {
     lightRaf = 0;
     dome.setLight(state.light);
+    syncSun();
     updateWhatIf(true);
     if (state.mode === 'residual') renderModeTools();
   });
@@ -490,6 +532,7 @@ function bindWorkspace() {
     updateDome();
     if (state.baseline === 'ls') toast(`Baseline cue "${B.manifest.baseline_ls.cue || 'ls'}" (comparison only): its own verdict would be ${lsFusion.verdict}. The audit uses the "${B.manifest.cue || 'rank'}" cue.`);
   }));
+  bindSun();
   $('#snap-cons').addEventListener('click', () => { if (state.fusion.consensus) setLight(state.fusion.consensus.dir); else toast('No consensus: fewer than one reliable region.', 'warn'); });
   $('#snap-sel').addEventListener('click', () => {
     const r = allRegions()[state.selected];
