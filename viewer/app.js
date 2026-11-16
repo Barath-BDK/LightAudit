@@ -430,17 +430,46 @@ function select(i) {
   renderPanels();
 }
 
-// Sun control: two sliders and a sweep that move your light; the photo switches to the relit view so the
-// effect of the new sun position is visible at once. Dragging on the dome keeps the sliders in sync.
+// Sun control: the sky map (drag), two hidden range inputs and a sweep move your light; the photo switches to the relit view so the
+// effect of the new sun position is visible at once. Dragging on the dome keeps the sky map in sync.
 let sweepRaf = 0;
 function syncSun() {
   const az = $('#sun-az'), el = $('#sun-el');
   if (!az) return;
   const [a, e] = azElDeg(state.light);
-  if (document.activeElement !== az) az.value = Math.round(a);
-  if (document.activeElement !== el) el.value = Math.round(e);
+  az.value = Math.round(a);
+  el.value = Math.round(e);
   $('#sun-az-o').textContent = `${Math.round(a)}°`;
   $('#sun-el-o').textContent = `${Math.round(e)}°`;
+  drawSky();
+}
+
+// Sky map: the scene seen from above. Centre = straight overhead, rim = horizon, camera side at the bottom.
+// Dots: every reliable region's own light estimate, the consensus, and your sun (draggable).
+const SKY_R = 100;
+function skyXY(dirv) {
+  const [a, e] = azElDeg(dirv);
+  const r = Math.min(1.12, (90 - e) / 90) * SKY_R, t = a * Math.PI / 180;
+  return [r * Math.sin(t), r * Math.cos(t)];
+}
+function drawSky() {
+  const svg = $('#sky-svg');
+  if (!svg || !state.fusion) return;
+  const regs = allRegions();
+  const rings = [0, 30, 60].map((e) => `<circle class="sky-ring" r="${((90 - e) / 90 * SKY_R).toFixed(1)}"/>`).join('');
+  const spokes = [0, 90, 180, 270].map((d) => { const t = d * Math.PI / 180; return `<line class="sky-ring" x1="0" y1="0" x2="${(SKY_R * Math.sin(t)).toFixed(1)}" y2="${(SKY_R * Math.cos(t)).toFixed(1)}"/>`; }).join('');
+  const labels = [['camera', 0, 1], ['right', 1, 0], ['back', 0, -1], ['left', -1, 0]]
+    .map(([t, x, y]) => `<text class="sky-lab" x="${x * 112}" y="${y * 112 + 3}" text-anchor="middle">${t}</text>`).join('');
+  const dots = regs.map((r, i) => {
+    const p = state.fusion.per_region[i];
+    if (!p || !p.reliable || !(r.r68_deg < 179)) return '';
+    const [x, y] = skyXY(r.center);
+    return `<circle class="sky-reg${p.flagged ? ' flag' : ''}${state.selected === i ? ' sel' : ''}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${state.selected === i ? 6 : 4.5}" style="--c:${r.color}"><title>${esc(r.name)}: own light estimate</title></circle>`;
+  }).join('');
+  const cons = state.fusion.consensus ? (() => { const [x, y] = skyXY(state.fusion.consensus.dir); return `<circle class="sky-cons" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8"><title>consensus light</title></circle>`; })() : '';
+  const [sx, sy] = skyXY(state.light);
+  svg.innerHTML = `<circle class="sky-disc" r="${SKY_R}"/>${rings}${spokes}${labels}${dots}${cons}
+    <g class="sky-sun" transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" tabindex="0" role="slider" aria-label="Sun position" aria-valuetext="azimuth ${$('#sun-az').value} degrees, elevation ${$('#sun-el').value} degrees"><circle r="11" class="sky-halo"/><circle r="6.5"/></g>`;
 }
 function sunTo(az, el) {
   if (state.mode !== 'relit' && B.images.normals) setMode('relit');  // relit needs normals; else only the dome moves
@@ -453,10 +482,28 @@ function stopSweep() {
   if (b) b.setAttribute('aria-pressed', 'false');
 }
 function bindSun() {
-  const az = $('#sun-az'), el = $('#sun-el');
+  const az = $('#sun-az'), el = $('#sun-el'), svg = $('#sky-svg');
   const onInput = () => { stopSweep(); sunTo(+az.value, +el.value); };
   az.addEventListener('input', onInput);
   el.addEventListener('input', onInput);
+  const fromPointer = (ev) => {
+    const r = svg.getBoundingClientRect();
+    const x = (ev.clientX - r.left) / r.width * 240 - 120, y = (ev.clientY - r.top) / r.height * 240 - 120;
+    const e = Math.max(-10, Math.min(90, 90 - Math.hypot(x, y) / SKY_R * 90));
+    stopSweep();
+    sunTo(Math.atan2(x, y) * 180 / Math.PI, e);
+  };
+  let dragging = false;
+  svg.addEventListener('pointerdown', (ev) => { dragging = true; svg.setPointerCapture(ev.pointerId); fromPointer(ev); });
+  svg.addEventListener('pointermove', (ev) => { if (dragging) fromPointer(ev); });
+  svg.addEventListener('pointerup', () => { dragging = false; });
+  svg.addEventListener('keydown', (ev) => {  // the sun handle: arrows move it 2 degrees
+    const d = { ArrowLeft: [-2, 0], ArrowRight: [2, 0], ArrowUp: [0, 2], ArrowDown: [0, -2] }[ev.key];
+    if (!d) return;
+    ev.preventDefault();
+    sunTo(+az.value + d[0], Math.max(-10, Math.min(90, +el.value + d[1])));
+    requestAnimationFrame(() => { const g = $('.sky-sun'); if (g) g.focus(); });
+  });
   $('#sun-sweep').addEventListener('click', (ev) => {
     if (sweepRaf) { stopSweep(); return; }
     ev.currentTarget.setAttribute('aria-pressed', 'true');

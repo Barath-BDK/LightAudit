@@ -32,9 +32,9 @@ function shade(d, L) {
     const t = (GROUND - o[1]) / d[1];
     p = [o[0] + d[0] * t, GROUND, o[2] + d[2] * t];
     n = [0, 1, 0];
-    if (p[2] < -26) return 0;  // fade the floor into the dark
+    if (p[2] < -26) return null;  // the floor ends in the distance
   } else {
-    return 0;
+    return null;  // nothing hit: empty sky
   }
   let lam = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
   if (lam > 0) {  // cast shadow: anything between the point and the light
@@ -42,7 +42,7 @@ function shade(d, L) {
     if (SPHERES.some((s, k) => k !== hit && hitSphere(q, L, s) > 0)) lam = 0;
   }
   const floorFade = hit >= 0 ? 1 : Math.max(0, 1 + p[2] / 26);
-  return Math.min(1, ((hit >= 0 ? 0.16 : 0.07) + 0.9 * lam) * floorFade);  // objects keep a little ambient so their form reads when backlit
+  return [Math.min(1, (hit >= 0 ? 0.16 : 0.07) + 0.9 * lam), floorFade];  // [light, how much of it to draw]; objects keep a little ambient
 }
 
 export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
@@ -50,7 +50,7 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cols = 0, rows = 0, atlas = null, dpr = 1, raf = 0, last = 0, visible = true;
   const css = getComputedStyle(document.documentElement);
-  let ember = "#ff8a3d", dim = "#85858b";  // re-read from the theme in build()
+  let ember = "#ff8a3d", dim = "#85858b", paper = false;  // re-read from the theme in build()
 
   function mix(a, b, k) {  // two #rrggbb colours
     const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
@@ -59,7 +59,8 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
 
   function build() {
     ember = css.getPropertyValue("--accent").trim() || "#ff8a3d";
-    dim = css.getPropertyValue("--text-3").trim() || "#85858b";
+    paper = document.documentElement.dataset.theme === "light";
+    dim = css.getPropertyValue(paper ? "--text-2" : "--text-3").trim() || "#85858b";  // darker ink on paper
     dpr = Math.min(2, window.devicePixelRatio || 1);
     const { width, height } = canvas.getBoundingClientRect();
     canvas.width = Math.max(1, Math.round(width * dpr));
@@ -78,8 +79,10 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
     pen.textBaseline = 'middle';
     [...CHARS].forEach((ch, i) => {
       const k = i / (CHARS.length - 1);
-      pen.fillStyle = mix(dim.startsWith('#') ? dim : '#85858b', ember.startsWith('#') ? ember : '#ff8a3d', Math.pow(k, 1.6));
-      pen.globalAlpha = 0.35 + 0.65 * k;
+      // screen: brightness is light (dim grey to ember). Paper: ink is shadow (thin ember on lit faces, dense dark ink in shade)
+      pen.fillStyle = paper ? mix(ember.startsWith('#') ? ember : '#b4470f', dim.startsWith('#') ? dim : '#5c5347', Math.pow(k, 0.8))
+        : mix(dim.startsWith('#') ? dim : '#85858b', ember.startsWith('#') ? ember : '#ff8a3d', Math.pow(k, 1.6));
+      pen.globalAlpha = paper ? 0.6 + 0.4 * k : 0.35 + 0.65 * k;
       pen.fillText(ch, i * c + c / 2, c / 2);
     });
   }
@@ -96,8 +99,11 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
         let d = [u, v * 0.62 + TILT, -f];
         const m = Math.hypot(d[0], d[1], d[2]);
         d = [d[0] / m, d[1] / m, d[2] / m];
-        const s = shade(d, L);
-        const k = Math.min(CHARS.length - 1, Math.round(s * (CHARS.length - 1)));
+        const hitv = shade(d, L);
+        if (!hitv) continue;
+        const [s, fade] = hitv;
+        const ink = (paper ? Math.max(0.12, 1 - s) : s) * fade;  // on paper the ink density follows darkness
+        const k = Math.min(CHARS.length - 1, Math.round(ink * (CHARS.length - 1)));
         if (k > 0) ctx.drawImage(atlas, k * c, 0, c, c, x * c, y * c, c, c);
       }
     }

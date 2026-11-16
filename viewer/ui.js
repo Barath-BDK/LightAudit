@@ -108,12 +108,9 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
       <div class="vscore" title="Image score S_img: the largest leave-one-out shortfall among reliable regions. Above the alert level means a region does not fit the light the others agree on.">S<sub>img</sub><b>${fusion.n_reliable ? s.toFixed(2) : '–'}</b>alert ${tau.toFixed(2)}</div>
       <div class="vsub">${esc(m.action)}</div>
     </div>
-    <div class="verdict-section">
-      <div class="gauge v-${v}" role="img" aria-label="Image score ${s.toFixed(2)} against alert level ${tau.toFixed(2)}">
-        <div class="fill" style="width:${Math.min(100, s / sMax * 100).toFixed(1)}%"></div>
-        <div class="tau" style="left:${Math.min(100, tau / sMax * 100).toFixed(1)}%" title="alert level ${tau.toFixed(2)}"></div>
-      </div>
-      <div class="gauge-scale"><span>0 · full agreement</span><span>shortfall</span><span>6.9 · no overlap</span></div>
+    <div class="verdict-section meter-row">
+      ${meter(s, tau, sMax, v, fusion.n_reliable)}
+      <div class="meter-note"><b>${fusion.n_reliable ? s.toFixed(2) : '–'}</b> image score<br><span class="faint">alert at ${tau.toFixed(2)} · 0 = full agreement · 6.9 = no overlap</span></div>
     </div>
     </div>
     <div class="verdict-detail">
@@ -131,6 +128,18 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
     ${notAssessed.length ? `<div class="verdict-section not-assessed"><div class="micro">Could not be assessed (never flagged)</div><ul>${
       notAssessed.map(({ r, p }) => `<li>${esc(r.name)}: <span class="faint">${p.excluded ? 'excluded' + (r.reason ? ` (${esc(r.reason)})` : '') : esc(reasonOf(r))}</span></li>`).join('')}</ul></div>` : ''}
     </div>`;
+}
+
+// Round score meter: the arc is the image score on 0..6.9, the tick is the alert level.
+function meter(s, tau, sMax, v, ok) {
+  const R = 34, C = 2 * Math.PI * R, sweep = 0.75;  // a 270-degree dial, open at the bottom
+  const f = ok ? Math.min(1, s / sMax) : 0, t = Math.min(1, tau / sMax);
+  const a = (-225 + 270 * t) * Math.PI / 180;
+  return `<svg class="meter v-${v}" viewBox="-44 -44 88 88" role="img" aria-label="Image score ${ok ? s.toFixed(2) : 'none'} against alert level ${tau.toFixed(2)}">
+    <circle r="${R}" class="m-track" stroke-dasharray="${C * sweep} ${C}" transform="rotate(135)"/>
+    <circle r="${R}" class="m-fill" stroke-dasharray="${C * sweep * f} ${C}" transform="rotate(135)"/>
+    <line class="m-tau" x1="${(R - 7) * Math.cos(a)}" y1="${(R - 7) * Math.sin(a)}" x2="${(R + 7) * Math.cos(a)}" y2="${(R + 7) * Math.sin(a)}"/>
+  </svg>`;
 }
 
 // ------------------------------------------------------------------ region table
@@ -343,11 +352,11 @@ export function skeletonHTML(name) {
   <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
     <div class="title"><h1 class="muted">${esc(name)}</h1></div><span class="spacer"></span><nav>${themeButton()}</nav></header>
   <div class="load-line" role="progressbar" aria-label="Loading the audit"><i id="lp"></i></div>
-  <main class="workspace">
-    <section class="panel" style="grid-area:verdict"><div class="skel-verdict"><div>${bars([30, 55, 70])}</div><div>${bars([20, 90, 80, 60])}</div></div></section>
-    <section class="panel" style="grid-area:image"><div class="panel-head"><span class="micro">Image</span></div><div class="stage"></div></section>
-    <section class="panel" style="grid-area:dome"><div class="panel-head"><span class="micro">Light dome</span></div><div class="stage"></div></section>
-    <section class="panel" style="grid-area:table"><div class="panel-head"><span class="micro">Regions</span></div><div style="padding:16px;display:grid;gap:12px">${bars([100, 100, 100])}</div></section>
+  <main class="workspace lt">
+    <aside class="rail"><section class="panel"><div style="padding:24px;display:grid;gap:12px">${bars([40, 70, 55])}</div></section>
+      <section class="panel"><div style="padding:16px 24px;display:grid;gap:12px">${bars([100, 100, 100])}</div></section></aside>
+    <section class="panel"><div class="panel-head"><span class="micro">Image</span></div><div class="stage"></div></section>
+    <section class="panel"><div class="panel-head"><span class="micro">Light dome</span></div><div class="stage"></div></section>
   </main></div>`;
 }
 
@@ -369,7 +378,29 @@ export function workspaceHTML(b) {
       ${themeButton()}
     </nav>
   </header>
-  <main class="workspace">
+  <main class="workspace lt">
+    <aside class="rail" aria-label="Case file">
+    <section class="panel" id="verdict-panel" aria-label="Verdict">
+      <div class="panel-head"><span class="micro">Verdict</span><span id="live-tag"></span><span class="spacer"></span>
+        <button class="btn ghost sm" id="tune-btn" aria-expanded="false" title="Cue weights and thresholds">${ICONS.tune}Tune</button></div>
+      <div class="verdict-body" id="verdict-body"></div>
+    </section>
+    <section class="panel" id="table-panel" aria-label="Regions">
+      <div class="panel-head"><span class="micro">Regions</span><span class="faint" id="table-note"></span><span class="spacer"></span>
+        <span class="faint" style="font-size:11px">tick = used in the fusion</span></div>
+      <div class="table-wrap"><table class="regions">
+        <thead><tr>
+          <th class="plain" scope="col"><span class="sr-only">Use</span>Use</th>
+          <th scope="col" data-sort="name"><button>Region</button></th>
+          <th scope="col" data-sort="weight"><button>Weight</button></th>
+          <th scope="col" data-sort="shortfall"><button>Shortfall</button></th>
+          <th scope="col" data-sort="angle"><button>Angle</button></th>
+          <th scope="col" data-sort="like"><button title="agreement of each region with your light">At your light</button></th>
+          <th class="plain" scope="col">Cues</th>
+          <th scope="col" data-sort="status"><button>Status</button></th>
+        </tr></thead><tbody id="region-rows"></tbody></table></div>
+    </section>
+    </aside>
     <section class="panel" id="image-panel" aria-label="Image view">
       <div class="panel-head">
         <span class="micro">Image</span>
@@ -398,39 +429,24 @@ export function workspaceHTML(b) {
           <button data-b="ls" aria-pressed="false" title="The other shading cue (rank or least squares), for comparison only">Baseline cue</button></div>
       </div>
       <div class="stage" id="dome-stage"></div>
-      <div class="panel-foot">
-        <div class="sun" role="group" aria-label="Sun position: moves your light and relights the photo">
-          <span class="readout"><span class="sw" aria-hidden="true"></span>Sun</span>
-          <label title="Direction round the scene: 0 = from the camera side, +90 = from the right">Azimuth
-            <input type="range" id="sun-az" min="-180" max="180" step="1" value="0"><output id="sun-az-o" for="sun-az">0°</output></label>
-          <label title="Height above the horizon: 0 = grazing, 90 = straight above">Elevation
-            <input type="range" id="sun-el" min="-10" max="90" step="1" value="45"><output id="sun-el-o" for="sun-el">45°</output></label>
-          <button class="btn sm sweep" id="sun-sweep" type="button" aria-pressed="false" title="Swing the sun once round the scene and watch the relit photo">Sweep</button>
+      <div class="sky-dock">
+        <div class="sky" id="sky" role="group" aria-label="Sky map: drag the sun to relight the photo">
+          <svg id="sky-svg" viewBox="-120 -120 240 240" aria-hidden="true"></svg>
         </div>
-        <span class="spacer"></span>
-        <button class="btn ghost sm" id="snap-cons" title="Snap the sun to the direction the regions agree on">Consensus</button>
-        <button class="btn ghost sm" id="snap-sel" title="Snap the sun to the selected region's own estimate">Selected</button>
+        <div class="sky-side">
+          <div class="micro">Sun</div>
+          <div class="sky-read"><span>Azimuth</span><output id="sun-az-o">0°</output></div>
+          <div class="sky-read"><span>Elevation</span><output id="sun-el-o">45°</output></div>
+          <input type="range" id="sun-az" min="-180" max="180" step="1" value="0" aria-label="Sun azimuth">
+          <input type="range" id="sun-el" min="-10" max="90" step="1" value="45" aria-label="Sun elevation">
+          <div class="sky-legend"><span><i class="k-sun"></i>your sun</span><span><i class="k-cons"></i>consensus</span><span><i class="k-reg"></i>region estimates</span></div>
+          <div class="sky-actions">
+            <button class="btn sm sweep" id="sun-sweep" type="button" aria-pressed="false" title="Swing the sun once round the scene and watch the relit photo">Sweep</button>
+            <button class="btn ghost sm" id="snap-cons" title="Snap the sun to the direction the regions agree on">Consensus</button>
+            <button class="btn ghost sm" id="snap-sel" title="Snap the sun to the selected region's own estimate">Selected</button>
+          </div>
+        </div>
       </div>
-    </section>
-    <section class="panel" id="verdict-panel" aria-label="Verdict">
-      <div class="panel-head"><span class="micro">Verdict</span><span id="live-tag"></span><span class="spacer"></span>
-        <button class="btn ghost sm" id="tune-btn" aria-expanded="false" title="Cue weights and thresholds">${ICONS.tune}Tune</button></div>
-      <div class="verdict-body" id="verdict-body"></div>
-    </section>
-    <section class="panel" id="table-panel" aria-label="Regions">
-      <div class="panel-head"><span class="micro">Regions</span><span class="faint" id="table-note"></span><span class="spacer"></span>
-        <span class="faint" style="font-size:11px">click a row to select · checkbox = use in fusion</span></div>
-      <div class="table-wrap"><table class="regions">
-        <thead><tr>
-          <th class="plain" scope="col"><span class="sr-only">Use</span>Use</th>
-          <th scope="col" data-sort="name"><button>Region</button></th>
-          <th scope="col" data-sort="weight"><button>Weight</button></th>
-          <th scope="col" data-sort="shortfall"><button>Shortfall</button></th>
-          <th scope="col" data-sort="angle"><button>Angle</button></th>
-          <th scope="col" data-sort="like"><button title="agreement of each region with your light">At your light</button></th>
-          <th class="plain" scope="col">Cues</th>
-          <th scope="col" data-sort="status"><button>Status</button></th>
-        </tr></thead><tbody id="region-rows"></tbody></table></div>
     </section>
   </main></div>`;
 }
