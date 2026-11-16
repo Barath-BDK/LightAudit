@@ -3,6 +3,33 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 10 (16 Nov 2026): outside methods tried; seam test taken out of the verdict
+
+Fallback before this work: tag `fallback-2026-11-16` (commit 59ffc31, seam test in the verdict).
+
+| Method | Benchmark | Current method | New method | Kept? |
+|---|---|---|---|---|
+| Seam test S, stress test (`eval/seam_robust.py`, held-out objects, 10% level, 3-statistic thresholds) | plain paste, 1.5 px feather | T+Tr 38.5% | S 20.0%, T+Tr+S 49.7% (FA 6.8%) | — |
+| | 4 px feather | 31.8% | S 4.0%, T+Tr+S 35.5% | — |
+| | 8 px feather | 25.8% | S 3.5%, T+Tr+S 29.2% | — |
+| | Poisson blending (`cv2.seamlessClone`) | **4.8%** | S 5.2%, T+Tr+S 10.0% | — |
+| | marked area 4 px too tight (clean FA / caught) | 4.3% / 34.5% | S **64.2%** / 76% | — |
+| | marked area 4 / 10 px too loose | 29.2% / 14.0% | S 9.8% / 6.8% | — |
+| | → S only helps a forger who colour-matches without feathering; it fails near the object outline | | | **no**: reported (`panel_S`), not voted |
+| Light-colour consistency (`eval/colour_bench.py`, 6 real scenes, grey-world / grey-edge / white-patch per region) | relit region AUC | 0.49-0.59 (shading) | 0.51 / 0.52 / 0.51 | **no** |
+| | pasted from another room, AUC | — | 0.53 / 0.53 / 0.52 | **no** |
+| Cast-shadow consistency (Kee et al. 2013; `shadow_pairs.shadow_consistency`, `eval/shadow_bench.py`, synthetic, 5 pairs) | clean false alarms | — | 0 of 60 (1 px and 3 px marking noise) | yes (library) |
+| | second sun 10-30 / 30-60 / 60-90 / ≥90° | — | 58% / 70% / 93% / 92% caught; right object 57-93% | |
+| Learned intrinsic decomposition (Careaga & Aksoy) | — | — | not run: package install blocked for the assistant | pending |
+| CarDD real dents | — | — | not run: the authors release the data only after a signed licence form | pending |
+
+- New finding about the current method: Poisson blending of the pasted area defeats the marked-area check
+  (38.5% → 4.8% caught) and wider feathering weakens it (25.8% at 8 px). Earlier numbers used a 1.5 px feather.
+- The multi-illumination scenes are all lit by one flash, so light colour carries no splice signal there; the cue
+  needs photos whose light sources differ in colour (outdoor sun vs shade, mixed indoor light) to be judged.
+- Thresholds: `calib_real_panel.json` restored to the T, Tr values of Update 8; `eval/mit_panel.py` writes only
+  those and reports T+Tr+S as a comparison row. Demos back to the Update 8 verdicts. Tests: 65 pytest + 506 parity.
+
 ## Update 9 (16 Nov 2026): normal-free seam test for the marked-area check
 
 - Workflow: design doc `docs/designs/seam_test.md`, reviewed by a fresh-context agent before it was built

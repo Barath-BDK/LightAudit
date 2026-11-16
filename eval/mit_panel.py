@@ -94,8 +94,9 @@ def main():
             print(f"{'+'.join(keys):8s} alpha {alpha}: " + " ".join(f"tau_{k} {v:.3f}" for k, v in tau.items()) +
                   f" | held-out false alarms {lv['false_alarms']:.3f} (n {len(tc)}) | detected {lv['detected']:.3f} (n {len(ts)}) | "
                   "by angle {" + ", ".join(f"{k}: {v['detected']:.2f} (n {v['n']})" for k, v in lv["by_angle"].items()) + "}", flush=True)
-    a5, a10 = res["levels"]["0.05"], res["levels"]["0.1"]
-    OUT.write_text(json.dumps(dict(**{f"tau_panel_{k}_{a}": lv["tau"][k] for a, lv in (("05", a5), ("10", a10)) for k in KEYS},
+    # the verdict uses T + Tr only: S is defeated by 4 px feathering (eval/seam_robust.py), so it is reported, not used
+    a5, a10 = res["pair_T_Tr"]["0.05"], res["pair_T_Tr"]["0.1"]
+    OUT.write_text(json.dumps(dict(**{f"tau_panel_{k}_{a}": lv["tau"][k] for a, lv in (("05", a5), ("10", a10)) for k in ("T", "Tr")},
                                    n_cal=len(cal), objects=cal_objs,
                                    source="MIT Intrinsic Images, even-index objects, Depth Anything normals"), indent=1))
     (ROOT / "data" / "results").mkdir(parents=True, exist_ok=True)

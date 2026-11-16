@@ -1,6 +1,12 @@
 # Design: normal-free seam test for the marked-area (panel) check
 
-Status: draft for review, 16 Nov 2026. Context: `HANDOVER.md` (sections 4–8).
+Status: **built, measured, taken out of the verdict** (16 Nov 2026). Context: `HANDOVER.md` (sections 4–8).
+
+**Outcome.** The fresh-context review predicted the two failures and the measurements confirmed them
+(`BUILD_LOG.md` Update 10): a 4 px feather cuts S's detection from 20% to 4%, Poisson blending defeats it, and a
+marked area drawn 4 px tight raises its false alarms to 64% (sectors near the object outline). At matched false
+alarms it adds nothing on plain pastes and about +10 points on colour-matched, lightly feathered pastes. S is still
+computed and stored (`panel_S`) but `tau_panel_S` is infinite, so it never votes.
 
 ## Problem
 

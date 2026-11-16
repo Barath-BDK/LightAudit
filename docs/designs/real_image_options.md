@@ -22,6 +22,15 @@ untested on real cars), and whether it runs here (Windows, CPU only; package ins
 | 12 | **Outdoor sun / sky models** (Hold-Geoffroy et al. CVPR 2017; Lalonde et al.) | yes for whole-image sun estimation | outdoor car scenes | model availability unclear; one estimate per image, not per object | low |
 | 13 | **Face-based 3-D lighting** (Kee & Farid 2010; Peng et al. TIFS 2017) | yes, for faces | — | — | none: our photos have no faces |
 
+## Measured so far (`BUILD_LOG.md` Update 10)
+
+- Option 5 (light colour): chance level on the MIT scenes (AUC 0.51-0.53), because they are lit by one flash.
+  Still untested on photos with light sources of different colours.
+- Option 6 (seam test): defeated by 4 px feathering and Poisson blending; out of the verdict.
+- Option 3 (shadow consistency): built as a library test; 0% false alarms and 92-93% detection at >= 60 deg on
+  synthetic scenes. Real-photo use needs a person to mark the pairs.
+- Options 1 and 2: blocked (licence form; package install), see below.
+
 ## Recommended order
 
 1. CarDD clean dents through `cli audit` in panel mode → real false-alarm rate (and the dent-rim risk).

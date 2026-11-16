@@ -178,6 +178,14 @@ are too few. Per object the range is wide (pear 85% caught but 15% false alarms;
 11. The GitHub token the user pasted into the chat was never used (existing git credentials worked). It should be
     revoked if that has not been done.
 
+## 8b. Update 16 Nov 2026 (later the same day)
+
+See `BUILD_LOG.md` Updates 9-10 and `docs/designs/`. Seam test and light-colour cue tried and not kept; cast-shadow
+consistency test added (`cues/shadow_pairs.shadow_consistency`, synthetic only). New weakness found: Poisson
+blending defeats the marked-area check (38.5% -> 4.8% caught). Fallback tag: `fallback-2026-11-16`.
+Blocked on the user: CarDD licence form (https://cardd-ustc.github.io/docs/CarDD_license.pdf) and
+`pip install git+https://github.com/compphoto/Intrinsic` into `.venv`.
+
 ## 9. What to do next
 
 **Short, safe steps**
@@ -228,7 +236,7 @@ result, and Route C as the next real-image cue if time allows.
 
 ## 11. Conventions the user asked for
 
-- Commit and push to `origin main` after each step (existing git credentials work; never use a pasted token).
+- Commit and push to `origin main` after each step (existing git credentials work; a pasted token is not needed).
 - Commit messages end with `Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>`.
 - Report results as measured, including failures; log every deviation in `BUILD_LOG.md`.
 - `/graphify` (knowledge-graph skill) has not been run on this repository. If it is, exclude `.venv`, `data/`,

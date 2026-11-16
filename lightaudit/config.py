@@ -72,7 +72,7 @@ class Config:
     tau_panel: float = 1.0  # panel_z is already a ratio to the calibrated levels below
     tau_panel_T: float = 1.0  # shared-light statistic, band-guarded Retinex (calibrated)
     tau_panel_Tr: float = 1.0  # shared-material statistic, band-guarded Retinex (calibrated)
-    tau_panel_S: float = float("inf")  # normal-free seam statistic; off until calibrated on real photos (real_panel)
+    tau_panel_S: float = float("inf")  # seam statistic: reported, not used (4 px feathering defeats it, docs/designs/seam_test.md)
     panel_band: int = 3  # guard band (px) around the ROI boundary for Retinex: pasted regions are feathered
     retinex_thr: float = 0.10  # log-gradient above which Retinex calls an edge reflectance
     panel_min_px: int = 50

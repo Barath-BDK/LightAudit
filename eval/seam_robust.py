@@ -1,5 +1,5 @@
 """Stress tests for the seam statistic S (docs/designs/seam_test.md, review findings 1-3), on the held-out objects of
-eval/mit_panel.py with the thresholds it wrote (10% level, lightaudit/calib_real_panel.json):
+eval/mit_panel.py with its three-statistic thresholds (10% level, data/results/real_panel.json):
 
   * wider feathering of the pasted area (Gaussian sigma 1.5 / 4 / 8 px before the 2x upscale);
   * Poisson blending (cv2.seamlessClone), the standard tool for hiding a paste edge;
@@ -91,8 +91,7 @@ def main():
     from eval import mit_bench as mb
     objs = mb.objects()
     test = objs[1::2]
-    tau = json.loads((ROOT / "lightaudit" / "calib_real_panel.json").read_text())
-    tau = {k: tau[f"tau_panel_{k}_10"] for k in KEYS}
+    tau = json.loads((ROOT / "data" / "results" / "real_panel.json").read_text())["levels"]["0.1"]["tau"]  # T, Tr, S at alpha/3
     with mp.Pool(5) as p:
         rows = [r for rs in p.map(_one, test) for r in rs]
     over = lambda r, keys: any(r[k] is not None and r[k] > tau[k] for k in keys)  # noqa: E731
