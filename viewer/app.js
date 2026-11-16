@@ -6,7 +6,7 @@ import { fuse, combineCues, logMaps, whatIf, displayShortfalls, mapArgmax, DEFAU
 import { explain, reasonOf, esc, VERDICT_META } from './text.js';
 import { ImageView, MODES, MODE_LABELS } from './relight.js';
 import { Dome } from './dome.js';
-import { $, $$, chip, toast, renderVerdict, renderTable, renderGallery, workspaceHTML, closeTopDialog, dialogOpen, openDialog, ICONS } from './ui.js';
+import { $, $$, chip, toast, renderVerdict, renderTable, renderGallery, workspaceHTML, skeletonHTML, closeTopDialog, dialogOpen, openDialog, ICONS } from './ui.js';
 import { openExplain, openHelp } from './explain.js';
 import { openAttackLab } from './attack.js';
 import { ShadowTool } from './shadow_tool.js';
@@ -25,7 +25,19 @@ function bindTheme(onChange) {
   if (!btn) return;
   btn.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = next;
+    // circle reveal from the button (View Transitions); a plain switch where unsupported or motion is reduced
+    const r = btn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const apply = () => { document.documentElement.dataset.theme = next; if (onChange) onChange(); };
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) { apply(); after(next); return; }
+    document.documentElement.classList.add('theme-vt');
+    const vt = document.startViewTransition(apply);
+    vt.ready.then(() => document.documentElement.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px at ${x}px ${y}px)`] },
+      { duration: 520, easing: 'cubic-bezier(.22, 1, .36, 1)', pseudoElement: '::view-transition-new(root)' })).catch(() => {});
+    vt.finished.catch(() => {}).finally(() => document.documentElement.classList.remove('theme-vt'));
+    after(next);
+  });
+  function after(next) {
     prefs.set('theme', next);
     btn.outerHTML = (/** rebuilt to swap the icon */ '');
     const nav = document.querySelector('.topbar nav');
@@ -33,8 +45,7 @@ function bindTheme(onChange) {
     nav.insertAdjacentHTML('beforeend', `<button class="btn ghost" id="theme-btn" aria-label="Switch to ${light ? 'dark' : 'light'} theme" title="Switch to ${light ? 'dark' : 'light'} theme">${light ? ICONS.moon : ICONS.sun}</button>`);
     bindTheme(onChange);
     $('#theme-btn').focus();
-    if (onChange) onChange();
-  });
+  }
 }
 
 // ------------------------------------------------------------------ gallery
@@ -620,7 +631,8 @@ async function reloadBundle() {
 }
 
 async function showBundle(name) {
-  root.innerHTML = `<div class="load-screen"><div><div class="micro">LightAudit</div><p>Loading <b>${esc(name)}</b>...</p><div class="progress"><i id="lp"></i></div></div></div>`;
+  root.innerHTML = skeletonHTML(name);
+  bindTheme();
   try {
     B = await loadBundle(name, (p) => { const i = $('#lp'); if (i) i.style.width = `${Math.round(p * 100)}%`; });
   } catch (e) {
@@ -629,6 +641,7 @@ async function showBundle(name) {
   }
   document.title = `LightAudit · ${B.manifest.title}`;
   root.innerHTML = workspaceHTML(B);
+  $('.workspace').classList.add('ready');
   state.cfg = cfgFromManifest(B.manifest);
   state.use = B.regions.map((r) => !r.excluded);
   const regs = B.regions;

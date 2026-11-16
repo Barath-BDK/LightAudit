@@ -50,8 +50,7 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cols = 0, rows = 0, atlas = null, dpr = 1, raf = 0, last = 0, visible = true;
   const css = getComputedStyle(document.documentElement);
-  const ember = css.getPropertyValue('--accent').trim() || '#ff8a3d';
-  const dim = css.getPropertyValue('--text-3').trim() || '#85858b';
+  let ember = "#ff8a3d", dim = "#85858b";  // re-read from the theme in build()
 
   function mix(a, b, k) {  // two #rrggbb colours
     const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
@@ -59,6 +58,8 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
   }
 
   function build() {
+    ember = css.getPropertyValue("--accent").trim() || "#ff8a3d";
+    dim = css.getPropertyValue("--text-3").trim() || "#85858b";
     dpr = Math.min(2, window.devicePixelRatio || 1);
     const { width, height } = canvas.getBoundingClientRect();
     canvas.width = Math.max(1, Math.round(width * dpr));
@@ -112,6 +113,7 @@ export function asciiBackground(canvas, { cell = 10, fps = 10, onLight } = {}) {
 
   build();
   new ResizeObserver(() => { build(); draw(last || 9000); }).observe(canvas);
+  new MutationObserver(() => { build(); draw(last || 9000); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
   if (reduce) draw(9000);
   else raf = requestAnimationFrame(loop);

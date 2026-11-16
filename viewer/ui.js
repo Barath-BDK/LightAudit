@@ -100,6 +100,7 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
     .filter(({ p, r }) => !p.reliable && r.kind !== 'pseudo');
   const [az, elv] = azElDeg(light);
   el.innerHTML = `
+    <div class="verdict-main">
     <div class="verdict-banner v-${v}" aria-live="polite">
       <div class="vicon">${ICONS[v]}</div>
       <div><div class="micro" style="color:inherit;opacity:.85">${modified ? 'Live audit verdict (your settings)' : 'Audit verdict'}</div>
@@ -114,6 +115,8 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
       </div>
       <div class="gauge-scale"><span>0 · full agreement</span><span>shortfall</span><span>6.9 · no overlap</span></div>
     </div>
+    </div>
+    <div class="verdict-detail">
     <div class="verdict-section">
       <div class="micro" style="margin-bottom:4px">Why</div>
       <p class="why">${richText(fusion.text)}</p>
@@ -126,7 +129,8 @@ export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modifie
       <div class="whatif" style="margin-top:3px">${whatIf ? esc(whatIfText(whatIf, regions)) : ''}</div>
     </div>
     ${notAssessed.length ? `<div class="verdict-section not-assessed"><div class="micro">Could not be assessed (never flagged)</div><ul>${
-      notAssessed.map(({ r, p }) => `<li>${esc(r.name)}: <span class="faint">${p.excluded ? 'excluded' + (r.reason ? ` (${esc(r.reason)})` : '') : esc(reasonOf(r))}</span></li>`).join('')}</ul></div>` : ''}`;
+      notAssessed.map(({ r, p }) => `<li>${esc(r.name)}: <span class="faint">${p.excluded ? 'excluded' + (r.reason ? ` (${esc(r.reason)})` : '') : esc(reasonOf(r))}</span></li>`).join('')}</ul></div>` : ''}
+    </div>`;
 }
 
 // ------------------------------------------------------------------ region table
@@ -330,6 +334,21 @@ async function heroPreview(root, b) {
   } catch (e) {
     card.innerHTML = '<div class="hv-loading faint">Preview unavailable</div>';
   }
+}
+
+// ------------------------------------------------------------------ loading skeleton
+export function skeletonHTML(name) {
+  const bars = (ws) => ws.map((w) => `<div class="skel-bar" style="width:${w}%"></div>`).join('');
+  return `<div class="app skel" aria-busy="true">
+  <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
+    <div class="title"><h1 class="muted">${esc(name)}</h1></div><span class="spacer"></span><nav>${themeButton()}</nav></header>
+  <div class="load-line" role="progressbar" aria-label="Loading the audit"><i id="lp"></i></div>
+  <main class="workspace">
+    <section class="panel" style="grid-area:verdict"><div class="skel-verdict"><div>${bars([30, 55, 70])}</div><div>${bars([20, 90, 80, 60])}</div></div></section>
+    <section class="panel" style="grid-area:image"><div class="panel-head"><span class="micro">Image</span></div><div class="stage"></div></section>
+    <section class="panel" style="grid-area:dome"><div class="panel-head"><span class="micro">Light dome</span></div><div class="stage"></div></section>
+    <section class="panel" style="grid-area:table"><div class="panel-head"><span class="micro">Regions</span></div><div style="padding:16px;display:grid;gap:12px">${bars([100, 100, 100])}</div></section>
+  </main></div>`;
 }
 
 // ------------------------------------------------------------------ main workspace skeleton

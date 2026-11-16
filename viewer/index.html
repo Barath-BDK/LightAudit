@@ -11,7 +11,7 @@
 <script src="vendor/anime.min.js"></script>
 <script>
   // Theme before first paint (localStorage may be unavailable: private mode, file://).
-  try { var t = localStorage.getItem('lightaudit.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  try { var t = JSON.parse(localStorage.getItem('lightaudit.theme')); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}  // prefs stores JSON
 </script>
 <script>
   // Import map: vendored Three.js (offline) with the jsDelivr CDN as a fallback when viewer/vendor/ is absent.
