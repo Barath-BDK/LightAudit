@@ -72,6 +72,7 @@ class Config:
     tau_panel: float = 1.0  # panel_z is already a ratio to the calibrated levels below
     tau_panel_T: float = 1.0  # shared-light statistic, band-guarded Retinex (calibrated)
     tau_panel_Tr: float = 1.0  # shared-material statistic, band-guarded Retinex (calibrated)
+    tau_panel_S: float = float("inf")  # normal-free seam statistic; off until calibrated on real photos (real_panel)
     panel_band: int = 3  # guard band (px) around the ROI boundary for Retinex: pasted regions are feathered
     retinex_thr: float = 0.10  # log-gradient above which Retinex calls an edge reflectance
     panel_min_px: int = 50
@@ -147,4 +148,5 @@ def real_panel(cfg: Config) -> Config:
     if not CALIB_REAL_PANEL.exists():
         return cfg
     c = json.loads(CALIB_REAL_PANEL.read_text())
-    return replace(cfg, tau_panel_T=float(c["tau_panel_T_10"]), tau_panel_Tr=float(c["tau_panel_Tr_10"]))
+    return replace(cfg, tau_panel_T=float(c["tau_panel_T_10"]), tau_panel_Tr=float(c["tau_panel_Tr_10"]),
+                   tau_panel_S=float(c.get("tau_panel_S_10", cfg.tau_panel_S)))

@@ -62,12 +62,56 @@ def panel_score(Y, normals, unc, labels, regions: list[dict], cfg: Config = Conf
     roi["panel_T"] = panel_shared(Y, normals, unc, labels, regions, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band,
                                   shape_only=True)
     roi["panel_Tr"] = panel_shared(Y, normals, unc, labels, regions, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band)
+    roi["panel_S"] = seam_S(Y, labels, regions, cfg)
     roi["panel_z"] = panel_ratio(roi, cfg)
 
 
 def panel_ratio(r: dict, cfg: Config):
-    v = [t / tau for t, tau in ((r.get("panel_T"), cfg.tau_panel_T), (r.get("panel_Tr"), cfg.tau_panel_Tr)) if t is not None]
+    v = [t / tau for t, tau in ((r.get("panel_T"), cfg.tau_panel_T), (r.get("panel_Tr"), cfg.tau_panel_Tr),
+                                (r.get("panel_S"), cfg.tau_panel_S)) if t is not None]
     return float(max(v)) if v else None
+
+
+def seam_S(Y, labels, regions: list[dict], cfg: Config = Config(), gap: int = 2, width: int = 6, sectors: int = 24,
+           min_px: int = 8, y_min: float = 0.02):
+    """Normal-free seam statistic (docs/designs/seam_test.md). The ROI lies on the same continuous surface as the
+    panel, so the log-brightness jump across its boundary may be a constant (paint, or a forger's gain) but must
+    not change round the boundary; a paste from another light makes it change. Per angular sector, each side is
+    fitted as L = c + m * signed distance on the band gap..gap+width px from the boundary (skips feathering) and
+    extrapolated to it. S = median |jump - median jump| over sectors; None if under half the sectors are usable."""
+    from scipy import ndimage as ndi
+    roi = next((r for r in regions if r["name"] == "ROI"), None)
+    ring = next((r for r in regions if r["name"] == "ring"), None)
+    rest = next((r for r in regions if r["name"].endswith("(rest)")), None)
+    if roi is None or ring is None or rest is None:
+        return None
+    m_roi = labels == roi["id"]
+    if not m_roi.any():
+        return None
+    outside = ((labels == ring["id"]) | (labels == rest["id"])) & ~m_roi
+    din, (jy, jx) = ndi.distance_transform_edt(m_roi, return_indices=True)
+    dout, (iy, ix) = ndi.distance_transform_edt(~m_roi, return_indices=True)
+    sd = np.where(m_roi, 0.5 - din, dout - 0.5)
+    cy, cx = np.argwhere(m_roi).mean(0)
+    # both sides take the angle of their nearest boundary point, so a sector holds one stretch of the seam
+    th = np.arctan2(np.where(m_roi, jy, iy) - cy, np.where(m_roi, jx, ix) - cx)
+    sec = np.clip(((th + np.pi) / (2 * np.pi) * sectors).astype(int), 0, sectors - 1)
+    band = (np.abs(sd) >= gap) & (np.abs(sd) <= gap + width) & (Y > y_min)
+    L = np.log(np.maximum(Y.astype(np.float64) ** 2.2, 1e-3))
+    jumps = []
+    for k in range(sectors):
+        c = []
+        for side in (m_roi, outside):
+            m = band & side & (sec == k)
+            if m.sum() < min_px:
+                break
+            c.append(np.linalg.lstsq(np.c_[np.ones(m.sum()), sd[m]], L[m], rcond=None)[0][0])
+        if len(c) == 2:
+            jumps.append(c[0] - c[1])
+    if len(jumps) < sectors // 2:
+        return None
+    j = np.array(jumps)
+    return float(np.median(np.abs(j - np.median(j))))
 
 
 def retinex_albedo(lin: np.ndarray, mask: np.ndarray, thr: float = 0.10, lab=None, blur: float = 0.0,

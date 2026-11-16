@@ -18,7 +18,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-KEYS = ("T", "Tr", "Ts", "Tsr")
+KEYS = ("T", "Tr", "Ts", "Tsr", "S")
 
 
 def _one(obj):
@@ -26,7 +26,7 @@ def _one(obj):
     from lightaudit.attacks import t1_color_transfer
     from lightaudit.config import Config
     from lightaudit.regions import apply_roi
-    from lightaudit.residual import panel_shared
+    from lightaudit.residual import panel_shared, seam_S
     cfg = Config()
     d = mb.load(obj)
     mb.prepare(obj)
@@ -45,8 +45,9 @@ def _one(obj):
         a = (Y, n_b, unc, labels, regs, cfg)
         kw = dict(thr=cfg.retinex_thr, band=cfg.panel_band)
         v = (panel_shared(*a, retinex=False), panel_shared(*a, retinex=True, **kw),
-             panel_shared(*a, retinex=False, shape_only=True), panel_shared(*a, retinex=True, shape_only=True, **kw))
-        return None if any(x is None for x in v) else dict(zip(KEYS, v))
+             panel_shared(*a, retinex=False, shape_only=True), panel_shared(*a, retinex=True, shape_only=True, **kw),
+             seam_S(Y, labels, regs, cfg))
+        return None if any(x is None for x in v[:4]) else dict(zip(KEYS, v))  # S may be None: no vote
 
     for part in range(1, 5):
         roi = lab == part
@@ -84,9 +85,10 @@ def main():
     test = [r for r in rows if r["obj"] in objs[1::2]]
     out = dict(n_cal=len(cal), sets={})
     for name, keys in (("material (T, Tr)", ("T", "Tr")), ("light only (Ts, Tsr)", ("Ts", "Tsr")), ("all four", KEYS),
-                       ("T, Tr, Tsr", ("T", "Tr", "Tsr")), ("Tr, Tsr", ("Tr", "Tsr")), ("T, Tsr", ("T", "Tsr")), ("T, Tr, Ts", ("T", "Tr", "Ts"))):
-        tau = {k: conformal_quantile([r[k] for r in cal], 0.10 / len(keys)) for k in keys}
-        hit = lambda r: any(r[k] > tau[k] for k in keys)  # noqa: E731
+                       ("T, Tr, Tsr", ("T", "Tr", "Tsr")), ("Tr, Tsr", ("Tr", "Tsr")), ("T, Tsr", ("T", "Tsr")), ("T, Tr, Ts", ("T", "Tr", "Ts")),
+                       ("seam S alone", ("S",)), ("Tr, Tsr, S (pipeline)", ("Tr", "Tsr", "S"))):
+        tau = {k: conformal_quantile([r[k] for r in cal if r[k] is not None], 0.10 / len(keys)) for k in keys}
+        hit = lambda r: any(r[k] is not None and r[k] > tau[k] for k in keys)  # noqa: E731
         res = {kind: (float(np.mean([hit(r) for r in test if r["kind"] == kind])), sum(r["kind"] == kind for r in test))
                for kind in ("clean", "splice", "harmonised")}
         out["sets"][name] = dict(tau=tau, **{k: dict(rate=v[0], n=v[1]) for k, v in res.items()})

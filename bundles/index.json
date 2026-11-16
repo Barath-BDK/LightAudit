@@ -90,8 +90,8 @@
  {
   "name": "real_mit_box_spliced",
   "title": "Real object (box), spliced",
-  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 6). Audit verdict: INSUFFICIENT.",
-  "verdict": "INSUFFICIENT",
+  "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 6). Audit verdict: SUSPICIOUS.",
+  "verdict": "SUSPICIOUS",
   "thumb": "real_mit_box_spliced/thumb.jpg",
   "source": "real"
  },

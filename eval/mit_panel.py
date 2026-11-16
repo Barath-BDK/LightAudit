@@ -20,6 +20,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 OUT = ROOT / "lightaudit" / "calib_real_panel.json"
+KEYS = ("T", "Tr", "S")  # shared light, shared material (both need normals), seam (normal-free)
 
 
 def _one(obj):
@@ -27,7 +28,7 @@ def _one(obj):
     from eval import mit_bench as mb
     from lightaudit.config import Config
     from lightaudit.regions import apply_roi
-    from lightaudit.residual import panel_shared
+    from lightaudit.residual import panel_shared, seam_S
     cfg = Config()
     d = mb.load(obj)
     mb.prepare(obj)
@@ -57,10 +58,11 @@ def _one(obj):
                 Y = np.round(np.clip(Y, 0, 1) * 255) / 255  # 8-bit, as a real photo
                 T = panel_shared(Y, n_b, unc, labels, regs, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band, shape_only=True)
                 Tr = panel_shared(Y, n_b, unc, labels, regs, cfg, retinex=True, thr=cfg.retinex_thr, band=cfg.panel_band)
-                if T is None or Tr is None:
+                S = seam_S(Y, labels, regs, cfg)
+                if T is None or Tr is None:  # S may be None (too little seam inside the panel): no vote
                     continue
                 ang = float(np.degrees(np.arccos(np.clip(ld[i] @ ld[j], -1, 1)))) if ld is not None else float("nan")
-                rows.append(dict(obj=obj, part=part, lamp=i, src=j, kind=tag, T=T, Tr=Tr, angle=ang))
+                rows.append(dict(obj=obj, part=part, lamp=i, src=j, kind=tag, T=T, Tr=Tr, S=S, angle=ang))
     return rows
 
 
@@ -72,31 +74,33 @@ def main():
         rows = [r for rs in p.map(_one, objs) for r in rs]
     cal_objs, test_objs = objs[0::2], objs[1::2]
     cal = [r for r in rows if r["obj"] in cal_objs and r["kind"] == "clean"]
-    res = dict(calibration_objects=cal_objs, test_objects=test_objs, n_cal=len(cal), levels={})
-    for alpha in (0.05, 0.10):
-        tT = conformal_quantile([r["T"] for r in cal], alpha / 2)
-        tR = conformal_quantile([r["Tr"] for r in cal], alpha / 2)
-        hit = lambda r: (r["T"] > tT) or (r["Tr"] > tR)  # noqa: E731
-        tc = [r for r in rows if r["obj"] in test_objs and r["kind"] == "clean"]
-        ts = [r for r in rows if r["obj"] in test_objs and r["kind"] == "splice"]
-        lv = dict(tau_T=tT, tau_Tr=tR, false_alarms=float(np.mean([hit(r) for r in tc])), n_clean=len(tc),
-                  detected=float(np.mean([hit(r) for r in ts])), n_splice=len(ts), by_angle={}, by_object={})
-        for lo, hi in ((0, 25), (25, 50), (50, 80), (80, 181)):
-            b = [r for r in ts if lo <= r["angle"] < hi]
-            if b:
-                lv["by_angle"][f"{lo}-{hi}"] = dict(detected=float(np.mean([hit(r) for r in b])), n=len(b))
-        for o in test_objs:
-            lv["by_object"][o] = dict(false_alarms=float(np.mean([hit(r) for r in tc if r["obj"] == o] or [0])),
-                                      detected=float(np.mean([hit(r) for r in ts if r["obj"] == o] or [0])))
-        res["levels"][str(alpha)] = lv
-        print(f"alpha {alpha}: tau_T {tT:.2f} tau_Tr {tR:.2f} | held-out false alarms {lv['false_alarms']:.3f} (n {len(tc)}) | "
-              f"detected {lv['detected']:.3f} (n {len(ts)}) | by angle {{" + ", ".join(f"{k}: {v['detected']:.2f} (n {v['n']})" for k, v in lv["by_angle"].items()) + "}", flush=True)
+    res = dict(calibration_objects=cal_objs, test_objects=test_objs, n_cal=len(cal), levels={}, pair_T_Tr={})
+    for keys, store in ((("T", "Tr"), res["pair_T_Tr"]), (KEYS, res["levels"])):
+        for alpha in (0.05, 0.10):
+            tau = {k: conformal_quantile([r[k] for r in cal if r[k] is not None], alpha / len(keys)) for k in keys}  # Bonferroni split
+            hit = lambda r: any(r[k] is not None and r[k] > tau[k] for k in keys)  # noqa: E731
+            tc = [r for r in rows if r["obj"] in test_objs and r["kind"] == "clean"]
+            ts = [r for r in rows if r["obj"] in test_objs and r["kind"] == "splice"]
+            lv = dict(tau=tau, false_alarms=float(np.mean([hit(r) for r in tc])), n_clean=len(tc),
+                      detected=float(np.mean([hit(r) for r in ts])), n_splice=len(ts), by_angle={}, by_object={})
+            for lo, hi in ((0, 25), (25, 50), (50, 80), (80, 181)):
+                b = [r for r in ts if lo <= r["angle"] < hi]
+                if b:
+                    lv["by_angle"][f"{lo}-{hi}"] = dict(detected=float(np.mean([hit(r) for r in b])), n=len(b))
+            for o in test_objs:
+                lv["by_object"][o] = dict(false_alarms=float(np.mean([hit(r) for r in tc if r["obj"] == o] or [0])),
+                                          detected=float(np.mean([hit(r) for r in ts if r["obj"] == o] or [0])))
+            store[str(alpha)] = lv
+            print(f"{'+'.join(keys):8s} alpha {alpha}: " + " ".join(f"tau_{k} {v:.3f}" for k, v in tau.items()) +
+                  f" | held-out false alarms {lv['false_alarms']:.3f} (n {len(tc)}) | detected {lv['detected']:.3f} (n {len(ts)}) | "
+                  "by angle {" + ", ".join(f"{k}: {v['detected']:.2f} (n {v['n']})" for k, v in lv["by_angle"].items()) + "}", flush=True)
     a5, a10 = res["levels"]["0.05"], res["levels"]["0.1"]
-    OUT.write_text(json.dumps(dict(tau_panel_T_05=a5["tau_T"], tau_panel_Tr_05=a5["tau_Tr"], tau_panel_T_10=a10["tau_T"],
-                                   tau_panel_Tr_10=a10["tau_Tr"], n_cal=len(cal), objects=cal_objs,
+    OUT.write_text(json.dumps(dict(**{f"tau_panel_{k}_{a}": lv["tau"][k] for a, lv in (("05", a5), ("10", a10)) for k in KEYS},
+                                   n_cal=len(cal), objects=cal_objs,
                                    source="MIT Intrinsic Images, even-index objects, Depth Anything normals"), indent=1))
     (ROOT / "data" / "results").mkdir(parents=True, exist_ok=True)
     (ROOT / "data" / "results" / "real_panel.json").write_text(json.dumps(res, indent=1))
+    (ROOT / "data" / "results" / "real_panel_rows.json").write_text(json.dumps(rows))
 
 
 if __name__ == "__main__":

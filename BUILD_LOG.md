@@ -3,6 +3,31 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 9 (16 Nov 2026): normal-free seam test for the marked-area check
+
+- Workflow: design doc `docs/designs/seam_test.md`, reviewed by a fresh-context agent before it was built
+  (elephant/goldfish model); the review's points were measured rather than argued.
+- First try on whole indoor scenes (MIT Multi-Illumination): boundary-jump statistic, AUC 0.57-0.59. Clean region
+  boundaries are mostly occlusion edges (median jump std 0.61 log units) against 0.28 of injected splice signal.
+  Not built for the whole-object check.
+- `residual.seam_S`: in the panel case the ROI sits on one continuous surface, so the log-brightness jump across its
+  boundary may be constant but must not vary round it. Per angular sector both sides are fitted linearly against
+  signed distance (2-8 px band) and extrapolated to the boundary; S = median absolute deviation of the jumps.
+  No normals, no light model. None when fewer than half the sectors have panel pixels outside (ROI on the object
+  edge): 25% of the benchmark cases; the other two tests still vote there.
+- `panel_ratio` takes the max of T, Tr, S over their thresholds; `tau_panel_S` comes only from the real
+  calibration (`calib_real_panel.json`), so synthetic audits are unchanged. Viewer needs no change (reads panel_z).
+- Held-out real objects (`eval/mit_panel.py`, 400 clean / 400 spliced): current pair T+Tr at the 10% level 5.2%
+  false alarms / 45.0% caught (reproduces Update 8); with S 6.8% / 49.7%. 5% level: 2.2% / 33.8% vs 3.5% / 34.0%.
+- Matched held-out false alarms (`eval/panel_compare.py`, per-object bootstrap, 90% intervals): plain pastes, no
+  gain (5%: 44.7% vs 44.5%; 10%: 56.6% vs 59.8%, gain +3.1 [-7.4, +10.1]). Colour-matched pastes
+  (`eval/mit_attack.py` rows): 10%: 38.3% -> 48.2%, gain +10.0 [-1.2, +14.5]; 5%: +3.0 [-15.5, +13.3]. The seam
+  statistic alone barely drops under colour matching (34.3% -> 32.0% at 6.5% false alarms).
+- Real demos (`tools/make_mit_demo.py`): box splice now SUSPICIOUS (was missed; S 0.47 vs 0.24); other verdicts
+  unchanged, no clean demo newly flagged; S undefined on frog, potato, turtle.
+- Explanation text now says "panel score ... the largest of the shared-light, shared-material and seam tests".
+- Research brief of outside methods ranked by fit: `docs/designs/real_image_options.md`.
+
 ## Update 8 (15 Nov 2026): colour-matching-resistant panel test; real thresholds for real photos
 
 - Measured on real objects (`eval/mit_attack.py`, 400 clean / 400 spliced / 400 colour-matched splices of 10

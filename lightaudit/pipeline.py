@@ -49,7 +49,7 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
     for r in regions:
         if r.get("kind") == "pseudo":
             continue
-        if r.get("panel_T") is not None or r.get("panel_Tr") is not None:
+        if any(r.get(k) is not None for k in ("panel_T", "panel_Tr", "panel_S")):
             r["panel_z"] = panel_ratio(r, cfg)  # re-derived so a changed calibration applies to cached regions
         g = r["glint"] if "glint" in cues else None
         c = r["contour"] if "contour" in cues and cfg.w_contour > 0 else None

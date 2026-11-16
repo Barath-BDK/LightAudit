@@ -1,0 +1,12 @@
+.venv/
+data/
+bundles/
+viewer/vendor/
+unslop/
+blender/
+figures/
+*.png
+*.jpg
+*.jpeg
+*.zip
+lightaudit.egg-info/

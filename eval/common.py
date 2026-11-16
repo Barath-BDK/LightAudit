@@ -160,7 +160,7 @@ def _progress(label, k, n, t0):
 # ---------------------------------------------------------------------------------------------- slim regions
 SLIM_KEYS = ("id", "name", "kind", "source", "excluded", "exclude_reason", "area_px", "n_valid", "spread_deg",
              "rho_max", "sharp_area", "mean_unc", "factors", "weight", "reason", "center", "samples", "glint_blobs",
-             "contour", "contrast", "panel_z", "panel_T", "panel_Tr", "shadow_mid")
+             "contour", "contrast", "panel_z", "panel_T", "panel_Tr", "panel_S", "shadow_mid")
 
 
 def slim_region(r: dict) -> dict:

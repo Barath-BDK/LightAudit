@@ -26,8 +26,154 @@
  "n_cal": 400,
  "levels": {
   "0.05": {
-   "tau_T": 1.036814557689317,
-   "tau_Tr": 2.773118967274235,
+   "tau": {
+    "T": 1.2292020273308883,
+    "Tr": 2.8895301450804,
+    "S": 0.3502341157963779
+   },
+   "false_alarms": 0.035,
+   "n_clean": 400,
+   "detected": 0.34,
+   "n_splice": 400,
+   "by_angle": {
+    "0-25": {
+     "detected": 0.2835820895522388,
+     "n": 67
+    },
+    "25-50": {
+     "detected": 0.23776223776223776,
+     "n": 143
+    },
+    "50-80": {
+     "detected": 0.375,
+     "n": 120
+    },
+    "80-181": {
+     "detected": 0.5428571428571428,
+     "n": 70
+    }
+   },
+   "by_object": {
+    "box": {
+     "false_alarms": 0.025,
+     "detected": 0.225
+    },
+    "cup2": {
+     "false_alarms": 0.025,
+     "detected": 0.55
+    },
+    "dinosaur": {
+     "false_alarms": 0.0,
+     "detected": 0.1
+    },
+    "frog2": {
+     "false_alarms": 0.0,
+     "detected": 0.175
+    },
+    "paper1": {
+     "false_alarms": 0.0,
+     "detected": 0.275
+    },
+    "pear": {
+     "false_alarms": 0.075,
+     "detected": 0.725
+    },
+    "potato": {
+     "false_alarms": 0.025,
+     "detected": 0.3
+    },
+    "squirrel": {
+     "false_alarms": 0.0,
+     "detected": 0.275
+    },
+    "teabag1": {
+     "false_alarms": 0.2,
+     "detected": 0.45
+    },
+    "turtle": {
+     "false_alarms": 0.0,
+     "detected": 0.325
+    }
+   }
+  },
+  "0.1": {
+   "tau": {
+    "T": 0.9569117998440381,
+    "Tr": 2.6252346341471955,
+    "S": 0.2426326732550852
+   },
+   "false_alarms": 0.0675,
+   "n_clean": 400,
+   "detected": 0.4975,
+   "n_splice": 400,
+   "by_angle": {
+    "0-25": {
+     "detected": 0.373134328358209,
+     "n": 67
+    },
+    "25-50": {
+     "detected": 0.43356643356643354,
+     "n": 143
+    },
+    "50-80": {
+     "detected": 0.5833333333333334,
+     "n": 120
+    },
+    "80-181": {
+     "detected": 0.6,
+     "n": 70
+    }
+   },
+   "by_object": {
+    "box": {
+     "false_alarms": 0.025,
+     "detected": 0.375
+    },
+    "cup2": {
+     "false_alarms": 0.125,
+     "detected": 0.65
+    },
+    "dinosaur": {
+     "false_alarms": 0.0,
+     "detected": 0.2
+    },
+    "frog2": {
+     "false_alarms": 0.0,
+     "detected": 0.35
+    },
+    "paper1": {
+     "false_alarms": 0.0,
+     "detected": 0.5
+    },
+    "pear": {
+     "false_alarms": 0.1,
+     "detected": 0.85
+    },
+    "potato": {
+     "false_alarms": 0.025,
+     "detected": 0.5
+    },
+    "squirrel": {
+     "false_alarms": 0.05,
+     "detected": 0.35
+    },
+    "teabag1": {
+     "false_alarms": 0.35,
+     "detected": 0.675
+    },
+    "turtle": {
+     "false_alarms": 0.0,
+     "detected": 0.525
+    }
+   }
+  }
+ },
+ "pair_T_Tr": {
+  "0.05": {
+   "tau": {
+    "T": 1.036814557689317,
+    "Tr": 2.773118967274235
+   },
    "false_alarms": 0.0225,
    "n_clean": 400,
    "detected": 0.3375,
@@ -94,8 +240,10 @@
    }
   },
   "0.1": {
-   "tau_T": 0.8514900203623473,
-   "tau_Tr": 2.4082908060331945,
+   "tau": {
+    "T": 0.8514900203623473,
+    "Tr": 2.4082908060331945
+   },
    "false_alarms": 0.0525,
    "n_clean": 400,
    "detected": 0.45,

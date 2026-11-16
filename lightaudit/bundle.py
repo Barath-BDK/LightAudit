@@ -57,7 +57,7 @@ def region_manifest(r: dict, i: int) -> dict:
         id=r["id"], name=r["name"], kind=r["kind"], excluded=r["excluded"], area_px=r["area_px"], bbox=r["bbox"],
         color=PALETTE[i % len(PALETTE)], n_valid=r["n_valid"], spread_deg=r["spread_deg"], rho_max=r["rho_max"],
         sharp_area=r["sharp_area"], mean_unc=r["mean_unc"], weight=r["weight"], reliable=r["reliable"],
-        reason=r["reason"], factors=r.get("factors"), contrast=r.get("contrast"), panel_z=r.get("panel_z"), shadow_mid=r.get("shadow_mid"), panel_T=r.get("panel_T"), panel_Tr=r.get("panel_Tr"), cues=r["cues"], center=r["center"], r68_deg=r["r68_deg"],
+        reason=r["reason"], factors=r.get("factors"), contrast=r.get("contrast"), panel_z=r.get("panel_z"), shadow_mid=r.get("shadow_mid"), panel_T=r.get("panel_T"), panel_Tr=r.get("panel_Tr"), panel_S=r.get("panel_S"), cues=r["cues"], center=r["center"], r68_deg=r["r68_deg"],
         r95_deg=r["r95_deg"], g_lut=r.get("g_lut"), sigma=r.get("sigma"), slope=r.get("slope"), landscape_index=i)
 
 
