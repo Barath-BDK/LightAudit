@@ -14,5 +14,4 @@ docs/LightAudit_Guide.html.tmp
 data/multilum/*/
 !data/multilum/scenes.json
 data/mit_intrinsic/
-bundles/real_mit_*/
 graphify-out/cache/

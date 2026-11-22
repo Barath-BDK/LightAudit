@@ -1,0 +1,360 @@
+{
+ "version": 1,
+ "name": "real_mit_box_spliced",
+ "title": "Real object (box), spliced",
+ "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 6). Audit verdict: INSUFFICIENT.",
+ "cue": "ls",
+ "image": {
+  "w": 868,
+  "h": 800,
+  "fov_deg": 60.0,
+  "source": "real"
+ },
+ "ground_truth": null,
+ "normals_backend": "depth_anything",
+ "regions_backend": "mask + ROI",
+ "calibration": {
+  "h": 14.0,
+  "T": 1.5,
+  "tau_img": 6.29431,
+  "tau_ref": 6.29431,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.0,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
+  "tau_panel_T": 0.85149,
+  "tau_panel_Tr": 2.40829,
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "box (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 212952,
+   "bbox": [
+    152,
+    72,
+    728,
+    708
+   ],
+   "color": "#4c78a8",
+   "n_valid": 160074,
+   "spread_deg": 88.32305,
+   "rho_max": 0.7048,
+   "sharp_area": 0.05981,
+   "mean_unc": 12.0,
+   "weight": 0.95452,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.88039,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.12553,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "glint"
+   ],
+   "center": [
+    -0.78662,
+    0.04032,
+    0.61612
+   ],
+   "r68_deg": 28.43898,
+   "r95_deg": 46.66748,
+   "g_lut": [
+    0.53206,
+    0.74706,
+    0.75836,
+    0.75836,
+    0.75836,
+    0.75836,
+    0.75836,
+    0.75836,
+    0.75836,
+    0.76533,
+    0.76533,
+    0.76533,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83515,
+    0.83813,
+    0.84477,
+    0.86145,
+    0.86145,
+    0.86731,
+    0.87342,
+    0.87342,
+    0.90536
+   ],
+   "sigma": 0.09481,
+   "slope": 0.3733,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0,
+    "glint": 1,
+    "contour": 2
+   }
+  },
+  {
+   "id": 2,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 75648,
+   "bbox": [
+    426,
+    398,
+    738,
+    728
+   ],
+   "color": "#f58518",
+   "n_valid": 68111,
+   "spread_deg": 69.20581,
+   "rho_max": 0.17214,
+   "sharp_area": 0.02631,
+   "mean_unc": 12.0,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "weak directional shading (overcast/soft light?)",
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.94738,
+    "f_dir": 0.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.14516,
+   "panel_z": 0.97372,
+   "shadow_mid": null,
+   "panel_T": 0.749,
+   "panel_Tr": 2.345,
+   "panel_S": 0.46852,
+   "cues": [
+    "shading",
+    "panel"
+   ],
+   "center": [
+    0.45987,
+    -0.3599,
+    -0.81178
+   ],
+   "r68_deg": 180.0,
+   "r95_deg": 180.0,
+   "g_lut": [
+    0.60459,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.67428,
+    0.68,
+    0.68,
+    0.68
+   ],
+   "sigma": 0.2746,
+   "slope": 0.07541,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 3
+   }
+  },
+  {
+   "id": 3,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 12952,
+   "bbox": [
+    406,
+    378,
+    724,
+    714
+   ],
+   "color": "#54a24b",
+   "n_valid": 5055,
+   "spread_deg": 57.65009,
+   "rho_max": 0.92137,
+   "sharp_area": 0.27627,
+   "mean_unc": 12.0,
+   "weight": 0.83368,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.44745,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.04867,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.75215,
+    -0.37477,
+    0.54204
+   ],
+   "r68_deg": 31.80238,
+   "r95_deg": 52.30255,
+   "g_lut": [
+    0.33732,
+    0.61603,
+    0.79675,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.79811,
+    0.80616,
+    0.89673,
+    0.89673,
+    0.96187,
+    0.96601,
+    0.96601
+   ],
+   "sigma": 0.0719,
+   "slope": 0.62869,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 4,
+    "contour": 5
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "INSUFFICIENT",
+  "reason": "only 2 reliable region(s); at least 3 are needed",
+  "S_img": 1.34976,
+  "n_reliable": 2,
+  "top_region": 1,
+  "flagged": [],
+  "consensus": {
+   "dir": [
+    -0.91032,
+    -0.2191,
+    0.35115
+   ],
+   "az_deg": -68.90625,
+   "el_deg": -12.65625,
+   "r68_deg": 31.97138,
+   "r95_deg": 56.89582,
+   "frac95": 0.10662
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": 1.34976,
+    "angle_deg": 23.57757,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": -0.001,
+    "angle_deg": 128.67014,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": 0.93344,
+    "angle_deg": 26.86107,
+    "flagged": false
+   }
+  ],
+  "soft_light": {
+   "contrast": 0.0871,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "shadow_levels": {
+   "value": null,
+   "threshold": 0.28631,
+   "conflict": false
+  },
+  "panel_flagged": [],
+  "text": "Not enough usable lighting evidence: only 2 reliable region(s); at least 3 are needed (1 region(s): weak directional shading (overcast/soft light?)). Try a photo outdoors in direct light with several objects visible."
+ },
+ "baseline_ls": {
+  "present": false
+ },
+ "attacks": [],
+ "backends_log": [
+  "MIT Intrinsic Images object 'box', lamp 1, ROI from lamp 6"
+ ],
+ "created": "2026-11-16T13:00:21+00:00"
+}

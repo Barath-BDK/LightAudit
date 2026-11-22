@@ -1,0 +1,359 @@
+{
+ "version": 1,
+ "name": "real_mit_potato_spliced",
+ "title": "Real object (potato), spliced",
+ "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 10). Audit verdict: CONFLICT.",
+ "cue": "ls",
+ "image": {
+  "w": 668,
+  "h": 400,
+  "fov_deg": 60.0,
+  "source": "real"
+ },
+ "ground_truth": null,
+ "normals_backend": "depth_anything",
+ "regions_backend": "mask + ROI",
+ "calibration": {
+  "h": 14.0,
+  "T": 1.5,
+  "tau_img": 6.29431,
+  "tau_ref": 6.29431,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.0,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
+  "tau_panel_T": 0.85149,
+  "tau_panel_Tr": 2.40829,
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "potato (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 70488,
+   "bbox": [
+    68,
+    50,
+    432,
+    306
+   ],
+   "color": "#4c78a8",
+   "n_valid": 64463,
+   "spread_deg": 65.68002,
+   "rho_max": 0.88757,
+   "sharp_area": 0.0182,
+   "mean_unc": 12.0,
+   "weight": 0.97191,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.96359,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.246,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.90415,
+    0.38337,
+    0.18852
+   ],
+   "r68_deg": 27.36965,
+   "r95_deg": 44.48609,
+   "g_lut": [
+    0.45553,
+    0.53978,
+    0.58283,
+    0.58283,
+    0.59526,
+    0.59526,
+    0.59526,
+    0.59526,
+    0.62409,
+    0.64101,
+    0.64101,
+    0.64101,
+    0.64101,
+    0.64101,
+    0.64101,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.70058,
+    0.76505,
+    0.77383,
+    0.79915,
+    0.84056,
+    0.86989,
+    0.86989
+   ],
+   "sigma": 0.09881,
+   "slope": 0.41436,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0,
+    "contour": 1
+   }
+  },
+  {
+   "id": 2,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 30316,
+   "bbox": [
+    410,
+    62,
+    606,
+    294
+   ],
+   "color": "#f58518",
+   "n_valid": 25436,
+   "spread_deg": 50.19377,
+   "rho_max": 0.84395,
+   "sharp_area": 0.02882,
+   "mean_unc": 12.0,
+   "weight": 0.96759,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.94236,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.28584,
+   "panel_z": 1.67774,
+   "shadow_mid": null,
+   "panel_T": 1.42858,
+   "panel_Tr": 3.08947,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "panel"
+   ],
+   "center": [
+    0.43816,
+    -0.44037,
+    0.78364
+   ],
+   "r68_deg": 28.94544,
+   "r95_deg": 46.57963,
+   "g_lut": [
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852,
+    0.74852
+   ],
+   "sigma": 0.1628,
+   "slope": 0.0,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 2,
+    "contour": 3
+   }
+  },
+  {
+   "id": 3,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 6516,
+   "bbox": [
+    390,
+    56,
+    458,
+    298
+   ],
+   "color": "#54a24b",
+   "n_valid": 4432,
+   "spread_deg": 64.5046,
+   "rho_max": 0.86331,
+   "sharp_area": 0.07759,
+   "mean_unc": 12.0,
+   "weight": 0.94668,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.84483,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.17739,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.152,
+    0.85249,
+    0.50016
+   ],
+   "r68_deg": 34.90151,
+   "r95_deg": 58.07042,
+   "g_lut": [
+    0.32232,
+    0.4549,
+    0.47843,
+    0.48268,
+    0.49167,
+    0.49569,
+    0.52131,
+    0.53769,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.54317,
+    0.56532,
+    0.57557,
+    0.59424,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547,
+    0.60547
+   ],
+   "sigma": 0.0518,
+   "slope": 0.28315,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 4,
+    "contour": 5
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "CONFLICT",
+  "reason": "reference regions disagree: several lights or poor geometry",
+  "S_img": 6.9075,
+  "n_reliable": 3,
+  "top_region": 1,
+  "flagged": [],
+  "consensus": {
+   "dir": [
+    -0.57096,
+    0.68954,
+    0.44558
+   ],
+   "az_deg": -52.03125,
+   "el_deg": 43.59375,
+   "r68_deg": 66.21709,
+   "r95_deg": 113.24444,
+   "frac95": 0.27881
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": 6.9075,
+    "angle_deg": 100.99837,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 6.90749,
+    "angle_deg": 101.80901,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": 5.14359,
+    "angle_deg": 71.9367,
+    "flagged": false
+   }
+  ],
+  "soft_light": {
+   "contrast": 0.246,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "shadow_levels": {
+   "value": null,
+   "threshold": 0.28631,
+   "conflict": false
+  },
+  "panel_flagged": [],
+  "text": "The reference regions disagree among themselves, which usually means several lights or unreliable geometry. No automatic decision."
+ },
+ "baseline_ls": {
+  "present": false
+ },
+ "attacks": [],
+ "backends_log": [
+  "MIT Intrinsic Images object 'potato', lamp 3, ROI from lamp 10"
+ ],
+ "created": "2026-11-16T13:00:05+00:00"
+}

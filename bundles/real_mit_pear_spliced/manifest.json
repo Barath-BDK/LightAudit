@@ -1,0 +1,363 @@
+{
+ "version": 1,
+ "name": "real_mit_pear_spliced",
+ "title": "Real object (pear), spliced",
+ "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 7). Audit verdict: SUSPICIOUS.",
+ "cue": "ls",
+ "image": {
+  "w": 568,
+  "h": 668,
+  "fov_deg": 60.0,
+  "source": "real"
+ },
+ "ground_truth": null,
+ "normals_backend": "depth_anything",
+ "regions_backend": "mask + ROI",
+ "calibration": {
+  "h": 14.0,
+  "T": 1.5,
+  "tau_img": 6.29431,
+  "tau_ref": 6.29431,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.0,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
+  "tau_panel_T": 0.85149,
+  "tau_panel_Tr": 2.40829,
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "pear (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 101556,
+   "bbox": [
+    82,
+    72,
+    478,
+    522
+   ],
+   "color": "#4c78a8",
+   "n_valid": 92836,
+   "spread_deg": 60.57032,
+   "rho_max": 0.91169,
+   "sharp_area": 0.00504,
+   "mean_unc": 12.0,
+   "weight": 0.97717,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.98993,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.20594,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.02448,
+    0.29368,
+    0.95559
+   ],
+   "r68_deg": 26.20143,
+   "r95_deg": 42.50736,
+   "g_lut": [
+    0.2298,
+    0.2298,
+    0.2298,
+    0.2298,
+    0.2298,
+    0.2298,
+    0.25383,
+    0.26275,
+    0.27153,
+    0.28052,
+    0.28052,
+    0.28052,
+    0.29857,
+    0.30697,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.3098,
+    0.31566,
+    0.33042,
+    0.3763,
+    0.40392,
+    0.43275,
+    0.44325,
+    0.45264,
+    0.50588
+   ],
+   "sigma": 0.05444,
+   "slope": 0.27608,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0,
+    "contour": 1
+   }
+  },
+  {
+   "id": 2,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 36116,
+   "bbox": [
+    88,
+    378,
+    366,
+    574
+   ],
+   "color": "#f58518",
+   "n_valid": 31496,
+   "spread_deg": 37.65667,
+   "rho_max": 0.94059,
+   "sharp_area": 0.01471,
+   "mean_unc": 12.0,
+   "weight": 0.97332,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.97059,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.11439,
+   "panel_z": 2.24541,
+   "shadow_mid": null,
+   "panel_T": 1.91194,
+   "panel_Tr": 2.07383,
+   "panel_S": 0.19627,
+   "cues": [
+    "shading",
+    "panel"
+   ],
+   "center": [
+    0.65694,
+    0.15562,
+    0.7377
+   ],
+   "r68_deg": 27.82206,
+   "r95_deg": 44.9902,
+   "g_lut": [
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.29609,
+    0.30175,
+    0.31751,
+    0.32621,
+    0.34905,
+    0.39314,
+    0.41347,
+    0.44258,
+    0.44957,
+    0.4672,
+    0.48043,
+    0.53137,
+    0.56409,
+    0.56409,
+    0.56409,
+    0.57237,
+    0.58824,
+    0.58824
+   ],
+   "sigma": 0.08937,
+   "slope": 0.29215,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 2,
+    "contour": 3
+   }
+  },
+  {
+   "id": 3,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 9864,
+   "bbox": [
+    86,
+    358,
+    386,
+    536
+   ],
+   "color": "#54a24b",
+   "n_valid": 4776,
+   "spread_deg": 49.32117,
+   "rho_max": 0.9363,
+   "sharp_area": 0.02253,
+   "mean_unc": 12.0,
+   "weight": 0.97016,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.95493,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.32706,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    0.09638,
+    0.26595,
+    0.95916
+   ],
+   "r68_deg": 35.99857,
+   "r95_deg": 58.26484,
+   "g_lut": [
+    0.27686,
+    0.27686,
+    0.27686,
+    0.27686,
+    0.27686,
+    0.28627,
+    0.29184,
+    0.31084,
+    0.31327,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.32271,
+    0.33333,
+    0.34902,
+    0.35765,
+    0.38722,
+    0.38722,
+    0.40392,
+    0.41978,
+    0.41978,
+    0.41978,
+    0.42487,
+    0.44162,
+    0.44162,
+    0.46405,
+    0.46405,
+    0.46405
+   ],
+   "sigma": 0.03751,
+   "slope": 0.18719,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 4,
+    "contour": 5
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "SUSPICIOUS",
+  "reason": "",
+  "S_img": 2.38921,
+  "n_reliable": 3,
+  "top_region": 2,
+  "flagged": [
+   2
+  ],
+  "consensus": {
+   "dir": [
+    0.30232,
+    0.26671,
+    0.91513
+   ],
+   "az_deg": 18.28125,
+   "el_deg": 15.46875,
+   "r68_deg": 31.5123,
+   "r95_deg": 57.63536,
+   "frac95": 0.06192
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": 1.19926,
+    "angle_deg": 26.96488,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 2.38921,
+    "angle_deg": 39.8422,
+    "flagged": true
+   },
+   {
+    "id": 3,
+    "shortfall": 0.26907,
+    "angle_deg": 14.7977,
+    "flagged": false
+   }
+  ],
+  "soft_light": {
+   "contrast": 0.20594,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "shadow_levels": {
+   "value": null,
+   "threshold": 0.28631,
+   "conflict": false
+  },
+  "panel_flagged": [
+   2
+  ],
+  "text": "The brightness of **ROI** is not predicted by the shading of the panel around it (panel score 2.2 times the alert level; the largest of the shared-light, shared-material and seam tests): it looks lit differently from its surroundings. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+ },
+ "baseline_ls": {
+  "present": false
+ },
+ "attacks": [],
+ "backends_log": [
+  "MIT Intrinsic Images object 'pear', lamp 1, ROI from lamp 7"
+ ],
+ "created": "2026-11-16T13:00:13+00:00"
+}

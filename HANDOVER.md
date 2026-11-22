@@ -69,8 +69,8 @@ roughly 30–45 minutes on this laptop. One real photo with SAM takes 5–7 minu
 - `data/mit_intrinsic/` — MIT Intrinsic Images (102 MB tar from
   `https://www.cs.toronto.edu/~rgrosse/intrinsic/intrinsic-data.tar.gz`); extract so that
   `data/mit_intrinsic/<object>/light01.png` exists.
-- `bundles/real_mit_*` — rebuilt by `tools/make_mit_demo.py`.
 - `data/real/*.jpg` (six Wikimedia Commons photos, CC BY / CC BY-SA) **are** committed; attribute them if shown.
+- `bundles/real_mit_*` (the 12 real-object demo bundles the gallery lists) **are** committed since 22 Nov 2026; rebuild with `tools/make_mit_demo.py`. The raw MIT datasets they come from stay out of git (public repo, licence unclear).
 
 ## 4. How the method works now (and how it differs from the brief)
 

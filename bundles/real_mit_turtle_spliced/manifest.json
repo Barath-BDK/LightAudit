@@ -1,0 +1,361 @@
+{
+ "version": 1,
+ "name": "real_mit_turtle_spliced",
+ "title": "Real object (turtle), spliced",
+ "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: edited: the ROI was taken from a photo of the same object under a different lamp (lamp 10). Audit verdict: CONSISTENT.",
+ "cue": "ls",
+ "image": {
+  "w": 934,
+  "h": 600,
+  "fov_deg": 60.0,
+  "source": "real"
+ },
+ "ground_truth": null,
+ "normals_backend": "depth_anything",
+ "regions_backend": "mask + ROI",
+ "calibration": {
+  "h": 14.0,
+  "T": 1.5,
+  "tau_img": 6.29431,
+  "tau_ref": 6.29431,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.0,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
+  "tau_panel_T": 0.85149,
+  "tau_panel_Tr": 2.40829,
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "turtle (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 144536,
+   "bbox": [
+    198,
+    74,
+    824,
+    526
+   ],
+   "color": "#4c78a8",
+   "n_valid": 128012,
+   "spread_deg": 92.38918,
+   "rho_max": 0.83301,
+   "sharp_area": 0.04428,
+   "mean_unc": 12.0,
+   "weight": 0.96116,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.91144,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.03291,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "glint"
+   ],
+   "center": [
+    -0.06598,
+    0.83659,
+    0.54384
+   ],
+   "r68_deg": 26.55,
+   "r95_deg": 43.01673,
+   "g_lut": [
+    0.26369,
+    0.36863,
+    0.38497,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.41594,
+    0.4976,
+    0.4976,
+    0.4976,
+    0.4976,
+    0.4976,
+    0.52734,
+    0.52734,
+    0.57965,
+    0.63968,
+    0.63968,
+    0.71282,
+    0.73357,
+    0.761,
+    0.761,
+    0.80696,
+    0.81223,
+    0.81223,
+    0.86539,
+    0.86636,
+    0.86636
+   ],
+   "sigma": 0.12096,
+   "slope": 0.60268,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0,
+    "glint": 1,
+    "contour": 2
+   }
+  },
+  {
+   "id": 2,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 62420,
+   "bbox": [
+    76,
+    156,
+    356,
+    530
+   ],
+   "color": "#f58518",
+   "n_valid": 54028,
+   "spread_deg": 81.23923,
+   "rho_max": 0.59305,
+   "sharp_area": 0.0086,
+   "mean_unc": 12.0,
+   "weight": 0.97185,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.98279,
+    "f_dir": 0.98014,
+    "f_norm": 0.9
+   },
+   "contrast": 0.10801,
+   "panel_z": 0.50412,
+   "shadow_mid": null,
+   "panel_T": 0.34129,
+   "panel_Tr": 1.21408,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "panel"
+   ],
+   "center": [
+    0.41345,
+    0.09786,
+    0.90525
+   ],
+   "r68_deg": 29.44146,
+   "r95_deg": 48.25291,
+   "g_lut": [
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.3965,
+    0.42004,
+    0.46539,
+    0.46539,
+    0.529,
+    0.53691,
+    0.53691,
+    0.55126,
+    0.55126,
+    0.55126
+   ],
+   "sigma": 0.10395,
+   "slope": 0.15476,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 3,
+    "contour": 4
+   }
+  },
+  {
+   "id": 3,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 9908,
+   "bbox": [
+    178,
+    136,
+    376,
+    452
+   ],
+   "color": "#54a24b",
+   "n_valid": 4788,
+   "spread_deg": 57.83335,
+   "rho_max": 0.91472,
+   "sharp_area": 0.03063,
+   "mean_unc": 12.0,
+   "weight": 0.96685,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.93875,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.08504,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading"
+   ],
+   "center": [
+    -0.1942,
+    0.78214,
+    0.59207
+   ],
+   "r68_deg": 30.27195,
+   "r95_deg": 48.82313,
+   "g_lut": [
+    0.18218,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24314,
+    0.24961,
+    0.26917,
+    0.30854,
+    0.3281,
+    0.3281,
+    0.3281,
+    0.39262,
+    0.44275,
+    0.44275,
+    0.45882,
+    0.72062,
+    0.72729,
+    0.75451,
+    0.77914,
+    0.83903,
+    0.83903,
+    0.83903,
+    0.85799,
+    0.85799,
+    0.85799,
+    0.85799,
+    0.88024,
+    0.89433,
+    0.90196
+   ],
+   "sigma": 0.05236,
+   "slope": 0.71978,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 5,
+    "contour": 6
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "CONSISTENT",
+  "reason": "",
+  "S_img": 4.17564,
+  "n_reliable": 3,
+  "top_region": 2,
+  "flagged": [],
+  "consensus": {
+   "dir": [
+    0.08866,
+    0.68954,
+    0.7188
+   ],
+   "az_deg": 7.03125,
+   "el_deg": 43.59375,
+   "r68_deg": 35.39679,
+   "r95_deg": 73.9841,
+   "frac95": 0.07366
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": 2.23536,
+    "angle_deg": 29.68467,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 4.17564,
+    "angle_deg": 66.09203,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": 0.76468,
+    "angle_deg": 25.43578,
+    "flagged": false
+   }
+  ],
+  "soft_light": {
+   "contrast": 0.08504,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "shadow_levels": {
+   "value": null,
+   "threshold": 0.28631,
+   "conflict": false
+  },
+  "panel_flagged": [],
+  "text": "3 regions agree on one light direction (about 7\u00b0 azimuth, 44\u00b0 elevation). The largest disagreement is ROI at 66\u00b0 (below the alert level)."
+ },
+ "baseline_ls": {
+  "present": false
+ },
+ "attacks": [],
+ "backends_log": [
+  "MIT Intrinsic Images object 'turtle', lamp 4, ROI from lamp 10"
+ ],
+ "created": "2026-11-16T13:00:10+00:00"
+}

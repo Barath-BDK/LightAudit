@@ -1,0 +1,363 @@
+{
+ "version": 1,
+ "name": "real_mit_box_clean",
+ "title": "Real object (box), clean",
+ "description": "Real photo from the MIT Intrinsic Images dataset, panel mode. Truth: unedited: the whole object is under one lamp. Audit verdict: CONSISTENT.",
+ "cue": "ls",
+ "image": {
+  "w": 868,
+  "h": 800,
+  "fov_deg": 60.0,
+  "source": "real"
+ },
+ "ground_truth": null,
+ "normals_backend": "depth_anything",
+ "regions_backend": "mask + ROI",
+ "calibration": {
+  "h": 14.0,
+  "T": 1.5,
+  "tau_img": 6.29431,
+  "tau_ref": 6.29431,
+  "w_min": 0.35,
+  "alpha": 0.05,
+  "eps": 0.001,
+  "w_glint": 0.5,
+  "w_contour": 0.0,
+  "min_reliable": 3,
+  "broad_consensus_frac": 0.35,
+  "soft_contrast": 0.42476,
+  "tau_panel": 1.0,
+  "shadow_levels_max": 0.28631,
+  "tau_panel_T": 0.85149,
+  "tau_panel_Tr": 2.40829,
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+ },
+ "regions": [
+  {
+   "id": 1,
+   "name": "box (rest)",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 212952,
+   "bbox": [
+    152,
+    72,
+    728,
+    708
+   ],
+   "color": "#4c78a8",
+   "n_valid": 160074,
+   "spread_deg": 88.32305,
+   "rho_max": 0.7048,
+   "sharp_area": 0.05981,
+   "mean_unc": 12.0,
+   "weight": 0.95452,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.88039,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.12553,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "glint"
+   ],
+   "center": [
+    -0.78662,
+    0.04032,
+    0.61612
+   ],
+   "r68_deg": 28.43898,
+   "r95_deg": 46.66748,
+   "g_lut": [
+    0.5435,
+    0.72399,
+    0.72399,
+    0.72399,
+    0.72399,
+    0.72399,
+    0.72399,
+    0.72399,
+    0.74641,
+    0.81778,
+    0.81778,
+    0.81778,
+    0.81778,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.84602,
+    0.8604,
+    0.8604,
+    0.8604,
+    0.87025,
+    0.87025,
+    0.87025,
+    0.96078
+   ],
+   "sigma": 0.09452,
+   "slope": 0.41728,
+   "landscape_index": 0,
+   "cue_maps": {
+    "shading": 0,
+    "glint": 1,
+    "contour": 2
+   }
+  },
+  {
+   "id": 2,
+   "name": "ROI",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 75648,
+   "bbox": [
+    426,
+    398,
+    738,
+    728
+   ],
+   "color": "#f58518",
+   "n_valid": 68015,
+   "spread_deg": 69.50271,
+   "rho_max": 0.83755,
+   "sharp_area": 0.14098,
+   "mean_unc": 12.0,
+   "weight": 0.91638,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.71804,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.04115,
+   "panel_z": 0.35814,
+   "shadow_mid": null,
+   "panel_T": 0.30495,
+   "panel_Tr": 0.46918,
+   "panel_S": 0.06424,
+   "cues": [
+    "shading",
+    "panel"
+   ],
+   "center": [
+    -0.75316,
+    -0.28788,
+    0.59151
+   ],
+   "r68_deg": 29.08568,
+   "r95_deg": 46.76939,
+   "g_lut": [
+    0.39686,
+    0.80784,
+    0.81882,
+    0.82518,
+    0.83802,
+    0.87745,
+    0.87745,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.8784,
+    0.93725,
+    0.93725
+   ],
+   "sigma": 0.18024,
+   "slope": 0.5404,
+   "landscape_index": 1,
+   "cue_maps": {
+    "shading": 3,
+    "contour": 4
+   }
+  },
+  {
+   "id": 3,
+   "name": "ring",
+   "kind": "region",
+   "excluded": false,
+   "area_px": 12952,
+   "bbox": [
+    406,
+    378,
+    724,
+    714
+   ],
+   "color": "#54a24b",
+   "n_valid": 5053,
+   "spread_deg": 57.66164,
+   "rho_max": 0.92354,
+   "sharp_area": 0.27557,
+   "mean_unc": 12.0,
+   "weight": 0.8342,
+   "reliable": true,
+   "reason": null,
+   "factors": {
+    "f_size": 1.0,
+    "f_spread": 1.0,
+    "f_sharp": 0.44887,
+    "f_dir": 1.0,
+    "f_norm": 0.9
+   },
+   "contrast": 0.03996,
+   "panel_z": null,
+   "shadow_mid": null,
+   "panel_T": null,
+   "panel_Tr": null,
+   "panel_S": null,
+   "cues": [
+    "shading",
+    "glint"
+   ],
+   "center": [
+    -0.75697,
+    -0.36655,
+    0.54095
+   ],
+   "r68_deg": 31.53093,
+   "r95_deg": 52.05822,
+   "g_lut": [
+    0.33627,
+    0.6145,
+    0.78784,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79787,
+    0.79915,
+    0.79915,
+    0.88549,
+    0.90808,
+    0.96169,
+    0.96169
+   ],
+   "sigma": 0.06977,
+   "slope": 0.62542,
+   "landscape_index": 2,
+   "cue_maps": {
+    "shading": 5,
+    "glint": 6,
+    "contour": 7
+   }
+  }
+ ],
+ "fusion": {
+  "verdict": "CONSISTENT",
+  "reason": "",
+  "S_img": 1.72666,
+  "n_reliable": 3,
+  "top_region": 1,
+  "flagged": [],
+  "consensus": {
+   "dir": [
+    -0.85295,
+    -0.3599,
+    0.37809
+   ],
+   "az_deg": -66.09375,
+   "el_deg": -21.09375,
+   "r68_deg": 31.01703,
+   "r95_deg": 56.07515,
+   "frac95": 0.06587
+  },
+  "per_region": [
+   {
+    "id": 1,
+    "shortfall": 1.72666,
+    "angle_deg": 32.30989,
+    "flagged": false
+   },
+   {
+    "id": 2,
+    "shortfall": 0.53014,
+    "angle_deg": 19.27561,
+    "flagged": false
+   },
+   {
+    "id": 3,
+    "shortfall": 1.69983,
+    "angle_deg": 18.13234,
+    "flagged": false
+   }
+  ],
+  "soft_light": {
+   "contrast": 0.04115,
+   "threshold": 0.42476,
+   "abstain": false
+  },
+  "shadow_levels": {
+   "value": null,
+   "threshold": 0.28631,
+   "conflict": false
+  },
+  "panel_flagged": [],
+  "text": "3 regions agree on one light direction (about -66\u00b0 azimuth, -21\u00b0 elevation). The largest disagreement is box (rest) at 32\u00b0 (below the alert level)."
+ },
+ "baseline_ls": {
+  "present": false
+ },
+ "attacks": [],
+ "backends_log": [
+  "MIT Intrinsic Images object 'box', lamp 1"
+ ],
+ "created": "2026-11-16T13:00:20+00:00"
+}
