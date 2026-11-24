@@ -1,16 +1,30 @@
 """Deck A, "One Light": night-ink slides lit by a single sun that moves (Morph) from slide to slide.
 
-    python presentation/build/deck_a.py      -> presentation/LightAudit_A_One_Light.pptx
+    python presentation/build/deck_a.py           -> presentation/LightAudit_A_One_Light.pptx
+    python presentation/build/deck_a.py photon    -> presentation/LightAudit_C_Photon.pptx
+
+Photon mode: the mascot is a small photon that carries every transition. Between two slides an auto-advancing
+keyframe slide holds the photon's light flooding the whole screen, so in Slide Show the photon bursts, the old slide
+dissolves into its light, and the light collapses into the photon's next spot. Text then arrives in order of its
+distance from the photon, drifting outward from it, as if lit by it.
 """
+import math
+import sys
 from pathlib import Path
 
+from lxml import etree
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.oxml.ns import qn
 
 import pptlib as L
 
 HERE = Path(__file__).resolve().parent
 A = HERE / "assets"
-OUT = HERE.parent / "LightAudit_A_One_Light.pptx"
+PHOTON = len(sys.argv) > 1 and sys.argv[1] == "photon"
+OUT = HERE.parent / ("LightAudit_C_Photon.pptx" if PHOTON else "LightAudit_A_One_Light.pptx")
+# where the photon rests on each slide (inches); chosen in empty space next to the content
+PHOTON_AT = {1: (10.6, 2.7), 2: (7.55, 0.85), 3: (2.2, 5.6), 4: (12.35, 1.15), 5: (7.45, 0.8), 6: (12.35, 1.05),
+             7: (12.4, 1.05), 8: (11.6, 0.95), 9: (12.55, 0.95), 10: (12.35, 1.05), 11: (12.35, 1.05), 12: (6.67, 2.9)}
 
 BG, PANEL, LINE = "0A0E1A", "131A2B", "27304A"
 TXT, MUTED, DIM = "F5F1E8", "A3ACBD", "6E7890"
@@ -21,19 +35,75 @@ prs = L.new_deck()
 N = [0]
 
 
+def soft_edge(shape, rad_in):
+    spPr = shape._element.spPr
+    eff = spPr.find(qn("a:effectLst"))  # rect() already wrote one (shadow off); a second one corrupts the file
+    if eff is None:
+        eff = etree.SubElement(spPr, qn("a:effectLst"))
+    se = etree.SubElement(eff, qn("a:softEdge"))
+    se.set("rad", str(int(rad_in * 914400)))
+
+
+def flash(s, cx, cy, d, alpha):
+    """The photon's light as a soft disc; Morph scales it from a speck to the whole screen and back."""
+    o = L.rect(s, cx - d / 2, cy - d / 2, d, d, "FFE6B8", alpha=alpha, shape=MSO_SHAPE.OVAL, name="!!flash")
+    soft_edge(o, max(0.02, d * 0.18))
+    return o
+
+
+def burst_keyframe(at):
+    """Auto-advancing slide between two content slides: the photon's light fills the screen."""
+    s = L.blank(prs, BG)
+    cx, cy = L.W_IN / 2, L.H_IN / 2
+    flash(s, cx, cy, 30.0, 0.97)
+    L.pic(s, A / "ray_fan.png", cx - 16, cy - 16, 32, 32, name="!!rays", rot=40)
+    L.pic(s, A / "sun_core.png", cx - 7, cy - 7, 14, 14, name="!!core")
+    L.transition(s, "morph", 650, auto_ms=0)
+    L.notes(s, "Transition keyframe: the photon's light fills the screen. This slide advances by itself; nothing to present.")
+
+
+class PhotonTimeline(L.Timeline):
+    """Entrances arrive in order of distance from the photon and drift outward from it."""
+
+    def __init__(self, slide, at):
+        super().__init__(slide)
+        self.at = at
+
+    def add(self, shape, kind, delay=0, dur=700, **o):
+        if kind in ("spin", "pulse", "breathe", "path") or shape.name.startswith("!!") or shape.name == "sun2":
+            return super().add(shape, kind, delay, dur, **o)
+        cx = (shape.left + shape.width / 2) / 914400
+        cy = (shape.top + shape.height / 2) / 914400
+        dx, dy = cx - self.at[0], cy - self.at[1]
+        dist = math.hypot(dx, dy) or 1.0
+        d = 150 + dist * 125 + delay * 0.08  # light reaches nearer things first; the authored order breaks ties
+        if kind in ("rise", "fade"):
+            kind = "drift"
+            o = dict(o, dx=dx / dist * 0.5 / L.W_IN, dy=dy / dist * 0.5 / L.H_IN)  # arrive from 0.5" closer to the photon
+        return super().add(shape, kind, d, max(dur, 750), **o)
+
+
 def slide(sun_xy, fan=8.0, core=None, title=None, kicker=None, footer=True):
     """New slide with the sun at sun_xy (inches); returns (slide, timeline, content delay start)."""
+    if PHOTON and N[0] >= 1:
+        burst_keyframe(PHOTON_AT[N[0] + 1])
     s = L.blank(prs, BG)
     N[0] += 1
-    cx, cy = sun_xy
+    if PHOTON:  # the mascot: a small photon, not a sun
+        cx, cy = PHOTON_AT[N[0]]
+        hero = N[0] in (1, 12)
+        fan, core = (5.2, 1.5) if hero else (2.6, 0.85)
+        flash(s, cx, cy, 0.3, 0.0)
+    else:
+        cx, cy = sun_xy
     rays = L.pic(s, A / "ray_fan.png", cx - fan / 2, cy - fan / 2, fan, fan, name="!!rays")
     c = core or fan * 0.30
     corep = L.pic(s, A / "sun_core.png", cx - c / 2, cy - c / 2, c, c, name="!!core")
-    tl = L.Timeline(s)
-    tl.add(rays, "spin", 0, 140000, deg=360, repeat="indefinite")
-    tl.add(corep, "pulse", 0, 2600, scale=1.10, repeat="indefinite")
+    tl = PhotonTimeline(s, (cx, cy)) if PHOTON else L.Timeline(s)
+    tl.add(rays, "spin", 0, 140000 if not PHOTON else 40000, deg=360, repeat="indefinite")
+    tl.add(corep, "pulse", 0, 2600 if not PHOTON else 1800, scale=1.10 if not PHOTON else 1.18, repeat="indefinite")
     if N[0] > 1:
-        L.transition(s, "morph", 1800)
+        L.transition(s, "morph", 1800 if not PHOTON else 900)
     if footer:
         L.text(s, 0.75, 7.0, 4, 0.3, "LightAudit", 10, DIM, B, name=f"foot{N[0]}")
         L.text(s, 11.6, 7.0, 1, 0.3, str(N[0]), 10, DIM, B, align="r", name=f"num{N[0]}")

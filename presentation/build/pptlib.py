@@ -220,17 +220,21 @@ def _insert_after_clrmap(slide, el):
     anchor.addnext(el)
 
 
-def transition(slide, kind="morph", dur=1600, **kw):
+def transition(slide, kind="morph", dur=1600, auto_ms=None, **kw):
+    """auto_ms: advance to the next slide on its own this many ms after the slide's animations (no click)."""
     if kind == "morph":
         xml = MORPH % (NS_P, dur, NS_P)
     elif kind == "fade":
         xml = '<p:transition xmlns:p="%s" spd="slow"><p:fade/></p:transition>' % NS_P
-        _insert_after_clrmap(slide, etree.fromstring(xml))
-        return
     else:  # a PowerPoint 2010 transition element: prism, vortex, ripple, glitter, shred, flash, ...
         attrs = " ".join(f'{k}="{v}"' for k, v in kw.items())
         xml = P14 % (NS_P, dur, f"<p14:{kind} {attrs}/>", NS_P)
-    _insert_after_clrmap(slide, etree.fromstring(xml))
+    el = etree.fromstring(xml)
+    if auto_ms is not None:
+        for tr in el.iter(f"{{{NS_P}}}transition"):
+            tr.set("advClick", "0")
+            tr.set("advTm", str(int(auto_ms)))
+    _insert_after_clrmap(slide, el)
 
 
 # ---------------------------------------------------------------- animations
@@ -274,6 +278,16 @@ class Timeline:
                 f'<p:tav tm="100000"><p:val><p:strVal val="#ppt_x"/></p:val></p:tav></p:tavLst></p:anim>'
                 f'<p:anim calcmode="lin" valueType="num"><p:cBhvr><p:cTn id="{self._nid()}" dur="{dur}" decel="100000" fill="hold"/>{tgt}'
                 f'<p:attrNameLst><p:attrName>ppt_y</p:attrName></p:attrNameLst></p:cBhvr><p:tavLst><p:tav tm="0"><p:val><p:strVal val="#ppt_y+{dy}"/></p:val></p:tav>'
+                f'<p:tav tm="100000"><p:val><p:strVal val="#ppt_y"/></p:val></p:tav></p:tavLst></p:anim>')
+        if kind == "drift":  # fade in while travelling (dx, dy) slide fractions into place: light arriving from a source
+            dx, dy = o.get("dx", 0.0), o.get("dy", 0.0)
+            return 42, "entr", 0, self._vis(spid) + (
+                f'<p:animEffect transition="in" filter="fade"><p:cBhvr><p:cTn id="{self._nid()}" dur="{dur}"/>{tgt}</p:cBhvr></p:animEffect>'
+                f'<p:anim calcmode="lin" valueType="num"><p:cBhvr><p:cTn id="{self._nid()}" dur="{dur}" decel="100000" fill="hold"/>{tgt}'
+                f'<p:attrNameLst><p:attrName>ppt_x</p:attrName></p:attrNameLst></p:cBhvr><p:tavLst><p:tav tm="0"><p:val><p:strVal val="#ppt_x{-dx:+.4f}"/></p:val></p:tav>'
+                f'<p:tav tm="100000"><p:val><p:strVal val="#ppt_x"/></p:val></p:tav></p:tavLst></p:anim>'
+                f'<p:anim calcmode="lin" valueType="num"><p:cBhvr><p:cTn id="{self._nid()}" dur="{dur}" decel="100000" fill="hold"/>{tgt}'
+                f'<p:attrNameLst><p:attrName>ppt_y</p:attrName></p:attrNameLst></p:cBhvr><p:tavLst><p:tav tm="0"><p:val><p:strVal val="#ppt_y{-dy:+.4f}"/></p:val></p:tav>'
                 f'<p:tav tm="100000"><p:val><p:strVal val="#ppt_y"/></p:val></p:tav></p:tavLst></p:anim>')
         if kind == "zoom":  # fade in while growing from a smaller size
             s = o.get("from", 0.6)
