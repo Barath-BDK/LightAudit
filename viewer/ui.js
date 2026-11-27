@@ -1,8 +1,8 @@
 // DOM building blocks: icons, verdict chip/banner, region table, gallery, toasts, overlays.
 
-import { VERDICT_META, REVIEW, esc, richText, reasonOf, whatIfText, CUE_NAMES, explain } from './text.js';
+import { VERDICT_META, REVIEW, esc, richText, reasonOf, whatIfText, CUE_NAMES, plainWhy, regionName } from './text.js';
 import { azElDeg } from './grid.js';
-import { asciiBackground } from './ascii_bg.js';
+import { initHero } from './plot.js';
 
 export const ICONS = {
   CONSISTENT: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M5 8.2l2 2 4-4.2"/></svg>',
@@ -91,55 +91,51 @@ export function closeTopDialog() {
 export function dialogOpen() { return openStack.length > 0; }
 
 // ------------------------------------------------------------------ verdict panel
-export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modified, display, original }) {
-  const v = fusion.verdict;
-  const m = VERDICT_META[v];
-  const sMax = 6.91;
-  const s = fusion.n_reliable ? fusion.S_img : 0;
-  const notAssessed = regions.map((r, i) => ({ r, p: fusion.per_region[i] }))
-    .filter(({ p, r }) => !p.reliable && r.kind !== 'pseudo');
-  const [az, elv] = azElDeg(light);
-  el.innerHTML = `
-    <div class="verdict-main">
-    <div class="verdict-banner v-${v}" aria-live="polite">
-      <div class="vicon">${ICONS[v]}</div>
-      <div><div class="micro" style="color:inherit;opacity:.85">${modified ? 'Live audit verdict (your settings)' : 'Audit verdict'}</div>
-        <div class="vword">${esc((VERDICT_META[v] || { word: v }).word)}</div></div>
-      <div class="vscore" title="Image score S_img: the largest leave-one-out shortfall among reliable regions. Above the alert level means a region does not fit the light the others agree on.">S<sub>img</sub><b>${fusion.n_reliable ? s.toFixed(2) : '–'}</b>alert ${tau.toFixed(2)}</div>
-      <div class="vsub">${esc(m.action)}</div>
-    </div>
-    <div class="verdict-section meter-row">
-      ${meter(s, tau, sMax, v, fusion.n_reliable)}
-      <div class="meter-note"><b>${fusion.n_reliable ? s.toFixed(2) : '–'}</b> image score<br><span class="faint">alert at ${tau.toFixed(2)} · 0 = full agreement · 6.9 = no overlap</span></div>
-    </div>
-    </div>
-    <div class="verdict-detail">
-    <div class="verdict-section">
-      <div class="micro" style="margin-bottom:4px">Why</div>
-      <p class="why">${richText(fusion.text)}</p>
-      <div class="review-note">${fusion.text.includes(REVIEW) ? '' : esc(REVIEW)}${original && modified ? ` Exported verdict for this bundle: <b>${esc(original)}</b>.` : ''}</div>
-    </div>
-    <div class="verdict-section">
-      <div class="whatif"><span class="micro">What-if at your light</span>
-        <span class="mono">az ${az.toFixed(0)}°, el ${elv.toFixed(0)}°</span>
-        ${whatIf ? chip(whatIf.verdict, true) : ''}</div>
-      <div class="whatif" style="margin-top:3px">${whatIf ? esc(whatIfText(whatIf, regions)) : ''}</div>
-    </div>
-    ${notAssessed.length ? `<div class="verdict-section not-assessed"><div class="micro">Could not be assessed (never flagged)</div><ul>${
-      notAssessed.map(({ r, p }) => `<li>${esc(r.name)}: <span class="faint">${p.excluded ? 'excluded' + (r.reason ? ` (${esc(r.reason)})` : '') : esc(reasonOf(r))}</span></li>`).join('')}</ul></div>` : ''}
-    </div>`;
-}
+// Main: the verdict word, one sentence, one action, Why. Extra (inside the Details disclosure): the numbers.
+/** Steps of the rail's "What to try" path the user has already used. */
+export const TRIED = new Set();
 
-// Round score meter: the arc is the image score on 0..6.9, the tick is the alert level.
-function meter(s, tau, sMax, v, ok) {
-  const R = 34, C = 2 * Math.PI * R, sweep = 0.75;  // a 270-degree dial, open at the bottom
-  const f = ok ? Math.min(1, s / sMax) : 0, t = Math.min(1, tau / sMax);
-  const a = (-225 + 270 * t) * Math.PI / 180;
-  return `<svg class="meter v-${v}" viewBox="-44 -44 88 88" role="img" aria-label="Image score ${ok ? s.toFixed(2) : 'none'} against alert level ${tau.toFixed(2)}">
-    <circle r="${R}" class="m-track" stroke-dasharray="${C * sweep} ${C}" transform="rotate(135)"/>
-    <circle r="${R}" class="m-fill" stroke-dasharray="${C * sweep * f} ${C}" transform="rotate(135)"/>
-    <line class="m-tau" x1="${(R - 7) * Math.cos(a)}" y1="${(R - 7) * Math.sin(a)}" x2="${(R + 7) * Math.cos(a)}" y2="${(R + 7) * Math.sin(a)}"/>
-  </svg>`;
+export function renderVerdict(el, { fusion, regions, tau, whatIf, light, modified, original, display }) {
+  const v = fusion.verdict;
+  const m = VERDICT_META[v] || { word: v, action: '' };
+  const s = fusion.n_reliable ? fusion.S_img : null;
+  const [az, elv] = azElDeg(light);
+  const why = fusion.text.split(' Please review manually.')[0];
+  el.innerHTML = `
+    <div class="v-word v-${v}" aria-live="polite">${esc(m.word)}</div>
+    <p class="why">${esc(plainWhy(fusion, regions))}</p>
+    <button type="button" class="btn primary pill" id="review-btn">${v === 'SUSPICIOUS' ? 'Send for human review' : 'Record review'}</button>
+    <h2 class="v-h">What to try</h2>
+    <ol class="path">${[['sun', ICONS.sun, 'Drag the sun', 'On the sky map'],
+      ['relit', ICONS.split, 'Compare Relit', 'The photo under your sun'],
+      ['details', ICONS.info, 'Open details', 'Region by region']].map(([k, ic, l, sub]) =>
+      `<li><button type="button" class="path-go${TRIED.has(k) ? ' done' : ''}" data-go="${k}"><span class="path-ic">${TRIED.has(k) ? ICONS.check : ic}</span>
+        <span class="path-l">${l}<small>${sub}</small></span><span class="path-chev" aria-hidden="true"></span></button></li>`).join('')}
+    </ol>`;
+  const extra = document.getElementById('verdict-extra');
+  if (!extra) return;
+  const pct = (x) => Math.max(0, Math.min(100, x / 6.91 * 100)).toFixed(1);
+  const rows = regions.map((r, i) => {
+    const p = fusion.per_region[i], d = display ? display[i] : p;
+    const st = p.excluded ? ['Left out', 'na', r.reason || 'excluded'] : !p.reliable ? ['Not assessed', 'na', reasonOf(r)]
+      : p.flagged ? ['Flagged', 'SUSPICIOUS', ''] : ['Agrees', 'CONSISTENT', ''];
+    const off = p.reliable && d && d.angle_deg != null ? `${d.angle_deg.toFixed(0)}° off the shared light` : st[2];
+    return `<li><button type="button" class="reg" data-sel="${i}"><span class="swatch" style="background:${esc(r.color)}"></span>
+      <span class="reg-n">${esc(regionName(r.name))}</span><span class="reg-s v-${st[1]}">${st[0]}</span><span class="reg-d">${esc(off)}</span></button></li>`;
+  }).join('');
+  extra.innerHTML = `
+    <section class="dgroup"><h3>What we measured</h3>
+      <p class="dlead">${esc(m.action)}</p>
+      <p class="dtext">Image score ${s === null ? 'not available' : `<b>${s.toFixed(2)}</b>`} against an alert level of <b>${tau.toFixed(2)}</b>. Lower is better: 0 means every region agrees.</p>
+      ${s === null ? '' : `<div class="meter-line" aria-hidden="true"><i style="width:${pct(s)}%"></i><b style="left:${pct(tau)}%"></b></div>`}
+      <p class="dtext">${richText(why)}</p>
+      <p class="dtext faint">${esc(REVIEW)}${original && modified ? ` The exported verdict for this photo is ${esc((VERDICT_META[original] || { word: original }).word)}.` : ''}</p>
+      <p class="dtext faint">At your light (azimuth ${az.toFixed(0)}°, elevation ${elv.toFixed(0)}°): ${whatIf ? esc(whatIfText(whatIf, regions)) : 'no result'}.</p>
+    </section>
+    <section class="dgroup"><h3>Each region</h3>
+      <p class="dtext faint">${fusion.n_reliable} of ${regions.length} regions could be assessed. Select one to see its light on the dome.</p>
+      <ul class="reg-list">${rows}</ul>
+    </section>`;
 }
 
 // ------------------------------------------------------------------ region table
@@ -187,265 +183,200 @@ export function renderTable(tbody, { regions, fusion, display, whatIf, use, sele
   }).join('');
 }
 
-// ------------------------------------------------------------------ gallery
+// ------------------------------------------------------------------ landing (gallery)
+const HERO = 'real_mit_pear_spliced';
+const CLAIM = 'real_street_car';
+
+// index titles for the outdoor photos are file names ("street_car.jpg"): show them as words
+function nice(t) { return /\.(jpe?g|png)$/i.test(t) ? (t = t.replace(/\.(jpe?g|png)$/i, '').replace(/_/g, ' '), t.charAt(0).toUpperCase() + t.slice(1)) : t; }
+function srcLabel(b) { return b.source === 'real' ? 'Real photo' : 'Synthetic'; }
+function verdictWord(v) { return esc((VERDICT_META[v] || { word: v }).word); }
+
 export function renderGallery(root, { index, api, onUpload }) {
-  const cards = index.map((b, i) => {
-    const fail = /failure/i.test(b.name);
-    return `<a class="card ${fail ? 'failure' : ''}" data-reveal href="?bundle=${encodeURIComponent(b.name)}">
-      <div class="thumb"><img src="../bundles/${esc(b.thumb || `${b.name}/thumb.jpg`)}" alt="" loading="lazy" width="320" height="220">
-        ${chip(b.verdict)}<span class="tag src">${esc(b.source || 'synthetic')}</span></div>
-      <div class="body"><h3>${esc(b.title)}</h3><p>${esc(b.description)}</p><div class="meta">${esc(b.name)}</div></div></a>`;
-  }).join('');
-  // featured audit for the hero: a real photo with a caught paste, else the first real or flagged bundle
-  const featured = index.find((b) => b.name === 'real_mit_pear_spliced')
-    || index.find((b) => b.source === 'real' && b.verdict === 'SUSPICIOUS') || index.find((b) => b.verdict === 'SUSPICIOUS');
-  root.innerHTML = `<div class="gallery-page">
-    <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
-      <span class="muted">Lighting-consistency audit of edited photos</span><span class="spacer"></span>
-      <nav><button class="btn sm" type="button" data-upload aria-disabled="${!api}" title="${api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve'}">${ICONS.upload}<span class="lbl">Audit your photo</span></button>
-        <button class="btn ghost" id="help-btn">${ICONS.help}<span class="lbl">Help</span></button>${themeButton()}</nav></header>
-    <main class="gallery-main">
-      <section class="hero">
-        <canvas class="hero-bg" id="hero-bg" aria-hidden="true"></canvas>
-        <span class="hero-bg-cap mono" id="hero-bg-cap" aria-hidden="true"></span>
-        <div class="hero-copy" data-hero>
-          <h1>Checks whether one light explains every part of a photo, and shows the evidence</h1>
-          <p class="lede">For each region of the image, LightAudit estimates which directions the light could come from, using shading, specular highlights and silhouettes. If one region's light disagrees with the light the other regions agree on, the region is flagged. When the photo carries too little lighting evidence it says so instead of guessing.</p>
-          <div class="hero-actions">
-            <button class="btn primary lg" type="button" data-upload aria-disabled="${!api}" title="${api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve'}">${ICONS.upload}Audit your photo</button>
-            ${featured ? `<a class="btn lg" href="?bundle=${encodeURIComponent(featured.name)}">Open the example audit</a>` : ''}
-          </div>
-          <p class="hero-note faint">${api ? 'JPEG or PNG. Mark the area to check, or let it find regions. About 5 minutes on a laptop CPU.' : 'Uploads need the LightAudit server: python -m lightaudit.cli serve'}</p>
-          <div class="legend-verdicts">${chip('CONSISTENT')}${chip('SUSPICIOUS')}${chip('INSUFFICIENT')}${chip('CONFLICT')}</div>
+  const has = (n) => index.some((b) => b.name === n);
+  const hero = has(HERO) ? HERO : null;
+  const claim = index.find((b) => b.name === CLAIM);
+  const clean = index.find((b) => b.name === 'real_mit_pear_clean');
+  const uploadTitle = api ? 'Upload a photo and run a full audit on the server' : 'Needs the LightAudit server: python -m lightaudit.cli serve';
+  const tiles = [...index].sort((a, b) => (b.source === 'real') - (a.source === 'real')).map((b) => `<a class="tile" href="?bundle=${encodeURIComponent(b.name)}">
+      <span class="tile-img"><img src="../bundles/${esc(b.thumb || `${b.name}/thumb.jpg`)}" alt="" width="320" height="220"></span>
+      <span class="tile-title">${esc(nice(b.title))}</span>
+      <span class="tile-meta"><span>${srcLabel(b)}</span><span class="v-${esc(b.verdict)}">${verdictWord(b.verdict)}</span></span></a>`).join('');
+  const base = `../bundles/${HERO}/`;
+  root.innerHTML = `<div class="landing">
+    <header class="topbar"><div class="topbar-in">
+      <a class="brand" href="index.html">${ICONS.brand}<span>LightAudit</span></a><span class="spacer"></span>
+      <nav aria-label="Site"><a class="nav-link" href="#how">How it works</a><a class="nav-link" href="#photos">Photos</a>
+        <button class="nav-link" type="button" id="help-btn">Help</button>${themeButton()}</nav></div></header>
+    <main>
+      <section class="hero" aria-labelledby="hero-h">
+        <h1 id="hero-h">Every claim photo has one sun.</h1>
+        <p class="hero-lede">LightAudit finds the part that was lit by another. Drag the sun to see it.</p>
+        <div class="hero-actions">
+          <button class="pill" type="button" data-upload aria-disabled="${!api}" title="${uploadTitle}">Audit a claim photo</button>
+          ${hero ? `<a class="text-link" href="?bundle=${HERO}">Open the case</a>` : ''}
         </div>
+        ${hero ? `<div class="hero-stage" id="hero-stage">
+          <canvas id="hv-canvas" aria-hidden="true"></canvas>
+          <svg id="hero-svg" aria-hidden="false"></svg>
+          <p class="hero-live" id="hero-live" aria-live="polite">Loading the real photo</p>
+        </div>
+        <p class="hero-cap">Real photo from the MIT Intrinsic Images dataset. The outlined patch was pasted in from a shot under a different lamp.</p>` : ''}
       </section>
-      ${featured ? `<section class="example" data-reveal>
-        <div class="section-head"><h2>A real audit</h2><span class="faint">${featured.name === 'real_mit_pear_spliced' ? 'Part of this object was pasted from a photo under another lamp. ' : ''}Open it to inspect every number</span></div>
-        <a class="hero-visual" href="?bundle=${encodeURIComponent(featured.name)}" aria-label="Open the audit of ${esc(featured.title)}">
-          <div class="hv-photo"><canvas id="hv-canvas" aria-hidden="true"></canvas><span class="hv-cap">${esc(featured.title)}</span></div>
-          <div class="hv-card" id="hv-card"><div class="hv-loading faint">Loading the audit</div></div>
-        </a>
+
+      ${claim ? `<section class="band alt stack" aria-labelledby="claims-h">
+        <div class="band-copy"><h2 id="claims-h">Made for claim photos.</h2>
+          <p>A claims reviewer uploads a vehicle-damage photo, marks the damage and reads one verdict: does a single light explain the whole picture? If a region was lit by a different sun, the claim goes to a person.</p></div>
+        <figure class="band-figure"><img src="../bundles/${CLAIM}/image.png" alt="${esc(nice(claim.title))}" width="1024" height="657">
+          <figcaption>${esc(nice(claim.title))}. Real photo, Wikimedia Commons. Verdict: <span class="v-${esc(claim.verdict)}">${verdictWord(claim.verdict)}</span>.</figcaption></figure>
       </section>` : ''}
-      <section class="intro" data-reveal>
-        <div><span class="micro">Every number is inspectable</span>
-          <p>Drag your own light on the 3D dome, relight the photo, and see where the prediction does not fit. The attack lab then re-lights fakes to measure how easily a forger could pass.</p>
-        </div>
-        <div><span class="micro">What it does not claim</span>
-          <ul>
-            <li>${ICONS.cross}<span>It is not an AI-image detector. A picture generated in one pass usually has consistent lighting.</span></li>
-            <li>${ICONS.cross}<span>A flag is not proof of fraud. A flag means <b>"send for human review"</b>, never "this is fraud".</span></li>
-            <li>${ICONS.cross}<span>A careful forger who re-lights the edit can pass the shading check; the attack lab shows how much work that takes.</span></li>
-            <li>${ICONS.info}<span>Results on synthetic scenes do not automatically transfer to real photos. The alert threshold holds only for photos like the calibration set.</span></li>
-          </ul>
-        </div>
+
+      ${hero ? `<section class="band" id="how" aria-labelledby="how-h">
+        <div class="band-copy centered"><h2 id="how-h">How it works.</h2></div>
+        <ol class="steps-row">
+          <li><img src="${base}image.png" alt="The pear photo" loading="lazy" width="568" height="668"><h3>Mark the damage</h3><p>Outline the area you want checked. The rest of the photo becomes the reference.</p></li>
+          <li><img src="${base}counterfactual.png" alt="The pear re-shaded under the light its regions agree on" loading="lazy" width="568" height="668"><h3>Measure the light</h3><p>For each region, LightAudit estimates which way its surfaces face and where its light comes from, then re-shades the photo under the light they share.</p></li>
+          <li><img src="${base}heat.png" alt="Residual map: where the shading does not fit" loading="lazy" width="568" height="668"><h3>Compare</h3><p>If one sun explains every region, the photo passes. A region that needs a different sun is flagged.</p></li>
+        </ol>
+      </section>` : ''}
+
+      <section class="band alt" aria-labelledby="bench-h">
+        <div class="band-copy"><h2 id="bench-h">Measured on real photos.</h2>
+          <p>We tested the marked-area check on 10 held-out real tabletop objects: 400 clean areas and 400 pasted ones. It raised a false alarm on 5.2% of the clean areas and caught 45% of the pasted ones.</p>
+          <p>When the pasted light came from 80° or more away, it caught 57%. After the forger matched colours, 32%.</p>
+          <p class="quiet">These are tabletop objects, not cars. No real car photos with real or pasted damage have been tested yet.</p></div>
+        <figure class="bars" aria-label="Real marked-area benchmark">
+          ${[['False alarms on clean areas', 5.2], ['Pasted areas caught', 45], ['Caught, light 80° or more away', 57], ['Caught, after colour matching', 32]]
+            .map(([l, v]) => `<div class="bar-row"><span class="bar-l">${l}</span><span class="bar-t"><i style="width:${v}%"></i></span><span class="bar-v">${v}%</span></div>`).join('')}
+        </figure>
       </section>
-      <div class="section-head"><h2 class="micro">Audited images</h2><span class="faint">${index.length} bundle${index.length === 1 ? '' : 's'} · open one to inspect</span></div>
-      <div class="cards">${cards}</div>
-      <p class="gallery-foot">Synthetic scenes use simulated surface normals unless stated. ${esc(REVIEW)}</p>
-    </main></div>`;
-  root.querySelectorAll('[data-upload]').forEach((b) => b.addEventListener('click', () => { if (api) onUpload(); }));
-  if (featured) heroPreview(root, featured);
-  const cap = root.querySelector('#hero-bg-cap');
-  asciiBackground(root.querySelector('#hero-bg'), {
-    onLight: (az, el) => { cap.textContent = `one light · az ${Math.round(az)}° · el ${Math.round(el)}°`; },
-  });
-  galleryMotion(root);
-}
 
-// Motion on the gallery (anime.js and Lenis, vendored; both optional): the hero enters once, cards rise in as
-// they scroll into view, and the page scrolls smoothly. Nothing moves when the viewer prefers reduced motion.
-function galleryMotion(root) {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const anime = window.anime;
-  if (reduce || !anime) return;
-  document.documentElement.classList.add('js-motion');
-  const ease = 'cubicBezier(.22, 1, .36, 1)';
-  anime({ targets: root.querySelectorAll('[data-hero]'), opacity: [0, 1], translateY: [12, 0], duration: 600, easing: ease, delay: anime.stagger(120) });
-  anime({ targets: '#hero-bg', opacity: [0, 1], duration: 1400, easing: 'linear' });
-  const io = new IntersectionObserver((entries) => {
-    const show = entries.filter((e) => e.isIntersecting).map((e) => e.target);
-    if (!show.length) return;
-    show.forEach((el) => io.unobserve(el));
-    anime({ targets: show, opacity: [0, 1], translateY: [16, 0], duration: 520, easing: ease, delay: anime.stagger(50) });
-  }, { rootMargin: '0px 0px -8% 0px' });
-  root.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
-  if (window.Lenis) {
-    const lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
-    const tick = (t) => { lenis.raf(t); requestAnimationFrame(tick); };
-    requestAnimationFrame(tick);
-  }
-}
+      <section class="band stack" aria-labelledby="limits-h">
+        <div class="band-copy"><h2 id="limits-h">A flag means send for human review. Never fraud.</h2>
+          <p>LightAudit is not an AI-image detector: a picture generated in one pass usually has consistent light. A careful forger who re-lights the edit can pass the shading check, and the attack lab shows how much work that takes. When a photo carries too little lighting evidence, it says so instead of guessing.</p></div>
+        ${clean && hero ? `<div class="pair">
+          <a href="?bundle=real_mit_pear_clean"><img src="../bundles/real_mit_pear_clean/thumb.jpg" alt="Real pear photo, unedited" loading="lazy"><span>Unedited <b class="v-${esc(clean.verdict)}">${verdictWord(clean.verdict)}</b></span></a>
+          <a href="?bundle=${HERO}"><img src="../bundles/${HERO}/thumb.jpg" alt="Real pear photo with a pasted patch" loading="lazy"><span>Pasted patch <b class="v-SUSPICIOUS">${verdictWord('SUSPICIOUS')}</b></span></a>
+        </div>` : ''}
+      </section>
 
-// Explanation from a stored manifest, with the current wording: per_region is matched to the regions by id.
-function whyText(m) {
-  const byId = new Map(m.regions.map((r) => [r.id, r]));
-  const regs = m.fusion.per_region.map((p) => byId.get(p.id));
-  const per = m.fusion.per_region.map((p, k) => ({ ...regs[k], ...p, index: k }));
-  const idx = (ids) => (ids || []).map((id) => regs.findIndex((r) => r.id === id));  // bundles store region ids
-  return explain({ ...m.fusion, per_region: per, flagged: idx(m.fusion.flagged), panel_flagged: idx(m.fusion.panel_flagged) }, regs)
-    .split(' Please review')[0];
-}
-
-// The hero shows a real audit: the photo with its marked area outlined and the verdict from its own manifest.
-async function heroPreview(root, b) {
-  const base = `../bundles/${b.name}/`;
-  const card = root.querySelector('#hv-card');
-  try {
-    const m = await (await fetch(base + 'manifest.json')).json();
-    const f = m.fusion;
-    const roi = m.regions.find((r) => r.name === 'ROI') || m.regions[f.top_region ?? 0];
-    const pr = f.per_region.find((p) => p.flagged) || null;
-    const meta = VERDICT_META[f.verdict] || { word: f.verdict, action: '' };
-    const z = roi && roi.panel_z != null ? roi.panel_z : null;
-    card.innerHTML = `<div class="hv-head v-${esc(f.verdict)}">${ICONS[f.verdict] || ''}<span>${esc(meta.word)}</span></div>
-      <p class="hv-action">${esc(meta.action)}</p>
-      ${z != null ? `<div class="hv-score"><span class="faint">Marked area vs its panel</span><span class="num"><span id="hv-z">0.0</span>× alert</span></div>
-        <div class="gauge v-${esc(f.verdict)}"><i class="fill" id="hv-fill" style="width:0%"></i><i class="tau" style="left:${(100 / 3).toFixed(1)}%"></i></div>
-        <div class="gauge-scale"><span>0</span><span>alert</span><span>3×</span></div>` : ''}
-      <p class="hv-why">${richText(whyText(m))}</p>
-      <div class="hv-meta mono faint">${esc(m.image.source)} photo · ${esc(m.normals_backend)} normals${pr ? ` · ${esc(m.regions[f.per_region.indexOf(pr)].name)} flagged` : ''}</div>`;
-    if (z != null) {
-      const fill = card.querySelector('#hv-fill'), out = card.querySelector('#hv-z');
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      requestAnimationFrame(() => { fill.style.width = `${Math.min(100, z / 3 * 100).toFixed(1)}%`; });
-      const t0 = performance.now();
-      const step = (t) => {
-        const k = reduce ? 1 : Math.min(1, (t - t0) / 700);
-        out.textContent = (z * (1 - (1 - k) ** 3)).toFixed(1);
-        if (k < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }
-    const [img, lab] = await Promise.all(['image.png', 'labels.png'].map((n) => new Promise((ok, bad) => {
-      const im = new Image(); im.onload = () => ok(im); im.onerror = bad; im.src = base + n;
-    })));
-    const cv = root.querySelector('#hv-canvas');
-    cv.width = img.width; cv.height = img.height;
-    const ctx = cv.getContext('2d');
-    ctx.drawImage(lab, 0, 0);
-    const L = ctx.getImageData(0, 0, cv.width, cv.height).data;
-    ctx.drawImage(img, 0, 0);
-    if (roi) {  // outline the marked area: ROI pixels with a non-ROI neighbour
-      const out = ctx.getImageData(0, 0, cv.width, cv.height);
-      const W = cv.width, H = cv.height, id = roi.id;
-      const col = getComputedStyle(document.documentElement).getPropertyValue('--bad').trim() || '#f0524f';
-      const [cr, cg, cb] = [1, 3, 5].map((i) => parseInt(col.slice(i, i + 2), 16));
-      for (let y = 2; y < H - 2; y++) for (let x = 2; x < W - 2; x++) {
-        const k = y * W + x;
-        if (L[k * 4] !== id) continue;
-        if ([1, 2].some((d) => L[(k - d) * 4] !== id || L[(k + d) * 4] !== id || L[(k - d * W) * 4] !== id || L[(k + d * W) * 4] !== id)) {  // 2 px line
-          out.data[k * 4] = cr; out.data[k * 4 + 1] = cg; out.data[k * 4 + 2] = cb;
-        }
-      }
-      ctx.putImageData(out, 0, 0);
-    }
-    cv.classList.add('ready');
-  } catch (e) {
-    card.innerHTML = '<div class="hv-loading faint">Preview unavailable</div>';
-  }
+      <section class="band alt photos" id="photos" aria-labelledby="photos-h">
+        <div class="band-copy"><h2 id="photos-h">Audited photos.</h2>
+          <p>${index.filter((b) => b.source === 'real').length} real photos and ${index.filter((b) => b.source !== 'real').length} synthetic scenes. Open any one to inspect its light.</p></div>
+        <div class="tiles">${tiles}</div>
+      </section>
+    </main>
+    <footer class="foot"><p>Outdoor car photos: Wikimedia Commons, CC BY / CC BY-SA. Tabletop objects: MIT Intrinsic Images. Synthetic scenes use simulated surface normals.</p>
+      <p>${esc(REVIEW)}</p></footer>
+  </div>`;
+  root.querySelectorAll('[data-upload]').forEach((b) => b.addEventListener('click', () => { if (api) onUpload(); else toast(uploadTitle, 'info'); }));
+  if (hero) initHero(root.querySelector('#hero-stage'), root.querySelector('#hero-live'), base);
 }
 
 // ------------------------------------------------------------------ loading skeleton
-export function skeletonHTML(name) {
-  const bars = (ws) => ws.map((w) => `<div class="skel-bar" style="width:${w}%"></div>`).join('');
-  return `<div class="app skel" aria-busy="true">
-  <header class="topbar"><a class="brand" href="index.html">${ICONS.brand}LightAudit</a><span class="sep"></span>
-    <div class="title"><h1 class="muted">${esc(name)}</h1></div><span class="spacer"></span><nav>${themeButton()}</nav></header>
-  <div class="load-line" role="progressbar" aria-label="Loading the audit"><i id="lp"></i></div>
-  <main class="workspace lt">
-    <aside class="rail"><section class="panel"><div style="padding:24px;display:grid;gap:12px">${bars([40, 70, 55])}</div></section>
-      <section class="panel"><div style="padding:16px 24px;display:grid;gap:12px">${bars([100, 100, 100])}</div></section></aside>
-    <section class="panel"><div class="panel-head"><span class="micro">Image</span></div><div class="stage"></div></section>
-    <section class="panel"><div class="panel-head"><span class="micro">Light dome</span></div><div class="stage"></div></section>
-  </main></div>`;
+function topbar(title, navInner) {
+  return `<header class="topbar"><div class="topbar-in">
+    <a class="brand" href="index.html" title="All photos">${ICONS.brand}<span>LightAudit</span></a>
+    ${title ? `<h1 class="topbar-title">${esc(title)}</h1>` : ''}<span class="spacer"></span>
+    <nav aria-label="Views">${navInner}${themeButton()}</nav></div></header>`;
 }
 
-// ------------------------------------------------------------------ main workspace skeleton
+export function skeletonHTML(name) {
+  return `<div class="app skel" aria-busy="true">${topbar(name, '')}
+  <div class="load-line" role="progressbar" aria-label="Loading the audit"><i id="lp"></i></div>
+  <main class="workspace"><aside class="rail"></aside><section class="center"><div class="stage"></div></section><section class="side"><div class="stage"></div></section></main></div>`;
+}
+
+// ------------------------------------------------------------------ main workspace
 export function workspaceHTML(b) {
   const m = b.manifest;
-  const modes = [['observed', 'Observed'], ['regions', 'Regions'], ['relit', 'Relit'], ['counterfactual', 'Counterfactual'], ['residual', 'Residual'], ['normals', 'Normals']];
+  const more = [['regions', 'Regions'], ['counterfactual', 'Counterfactual'], ['normals', 'Normals']];
   return `<div class="app">
-  <header class="topbar">
-    <a class="brand" href="index.html" title="Back to the gallery">${ICONS.brand}LightAudit</a><span class="sep"></span>
-    <div class="title"><h1>${esc(m.title)}</h1><span id="head-chip"></span>
-      <span class="tag" title="surface normals backend">${esc(m.normals_backend)}</span><span class="tag">${esc(m.image.source)}</span></div>
-    <span class="spacer"></span>
-    <nav aria-label="Views">
-      <a class="btn ghost" href="index.html">${ICONS.grid}<span class="lbl">Gallery</span></a>
-      <button class="btn ghost" id="explain-btn" title="How this verdict was made (E)">${ICONS.steps}<span class="lbl">Explain</span></button>
-      <button class="btn ghost" id="attack-btn" title="Attack lab (A)">${ICONS.target}<span class="lbl">Attack lab</span></button>
-      <button class="btn ghost" id="help-btn" title="Help (?)">${ICONS.help}<span class="lbl">Help</span></button>
-      ${themeButton()}
-    </nav>
-  </header>
-  <main class="workspace lt">
-    <aside class="rail" aria-label="Case file">
-    <section class="panel" id="verdict-panel" aria-label="Verdict">
-      <div class="panel-head"><span class="micro">Verdict</span><span id="live-tag"></span><span class="spacer"></span>
-        <button class="btn ghost sm" id="tune-btn" aria-expanded="false" title="Cue weights and thresholds">${ICONS.tune}Tune</button></div>
-      <div class="verdict-body" id="verdict-body"></div>
-    </section>
-    <section class="panel" id="table-panel" aria-label="Regions">
-      <div class="panel-head"><span class="micro">Regions</span><span class="faint" id="table-note"></span><span class="spacer"></span>
-        <span class="faint" style="font-size:11px">tick = used in the fusion</span></div>
-      <div class="table-wrap"><table class="regions">
-        <thead><tr>
-          <th class="plain" scope="col"><span class="sr-only">Use</span>Use</th>
-          <th scope="col" data-sort="name"><button>Region</button></th>
-          <th scope="col" data-sort="weight"><button>Weight</button></th>
-          <th scope="col" data-sort="shortfall"><button>Shortfall</button></th>
-          <th scope="col" data-sort="angle"><button>Angle</button></th>
-          <th scope="col" data-sort="like"><button title="agreement of each region with your light">At your light</button></th>
-          <th class="plain" scope="col">Cues</th>
-          <th scope="col" data-sort="status"><button>Status</button></th>
-        </tr></thead><tbody id="region-rows"></tbody></table></div>
-    </section>
+  ${topbar(nice(m.title), `<a class="nav-link" href="index.html">Photos</a>
+      <button class="nav-link" id="explain-btn" title="How this verdict was made (E)">Explain</button>
+      <button class="nav-link" id="attack-btn" title="Attack lab (A)">Attack lab</button>
+      <button class="nav-link" id="help-btn" title="Help (?)">Help</button>`)}
+  <main class="workspace">
+    <aside class="rail" id="verdict-panel" aria-label="Verdict">
+      <div class="rail-in">
+        <div id="verdict-body"></div>
+        <div id="live-tag"></div>
+        <details class="disclosure" id="details">
+          <summary>Details</summary>
+          <div class="disclosure-body">
+            <div id="verdict-extra"></div>
+            <details class="subdisclosure" id="numbers"><summary>Show numbers</summary>
+            <section id="table-panel" aria-label="Region numbers">
+              <p class="dtext faint">Untick a region to leave it out of the fusion. <span id="table-note"></span></p>
+              <div class="table-wrap"><table class="regions">
+                <thead class="sr-only"><tr>
+                  <th class="plain" scope="col">Use</th>
+                  <th scope="col" data-sort="name"><button>Region</button></th>
+                  <th scope="col" data-sort="weight"><button>Weight</button></th>
+                  <th scope="col" data-sort="shortfall"><button>Shortfall</button></th>
+                  <th scope="col" data-sort="angle"><button>Angle</button></th>
+                  <th scope="col" data-sort="like"><button>At your light</button></th>
+                  <th class="plain" scope="col">Cues</th>
+                  <th scope="col" data-sort="status"><button>Status</button></th>
+                </tr></thead><tbody id="region-rows"></tbody></table></div>
+            </section></details>
+            <section class="dgroup tune-group"><h3>Tune</h3>
+              <p class="dtext faint">Change the cue weights and the alert level. The verdict recomputes live, and Reset returns to the calibrated values.</p>
+              <button class="btn" id="tune-btn" aria-expanded="false" title="Cue weights and thresholds">${ICONS.tune}Open tuning</button>
+              <p class="dtext faint">${m.image.source === 'real' ? 'Real photo' : 'Synthetic scene'}. Surface directions from ${esc(m.normals_backend)}.</p>
+            </section>
+          </div>
+        </details>
+      </div>
     </aside>
-    <section class="panel" id="image-panel" aria-label="Image view">
-      <div class="panel-head">
-        <span class="micro">Image</span>
-        <div class="seg" role="tablist" aria-label="Image mode" id="mode-tabs">${modes.map(([k, l], i) =>
-          `<button role="tab" data-mode="${k}" aria-selected="false" title="${l} (${i + 1})">${l}<span class="k">${i + 1}</span></button>`).join('')}</div>
-        <span class="spacer"></span>
+    <section class="center" id="image-panel" aria-label="Photo">
+      <div class="stage-frame"><div class="stage" id="image-stage" style="--ar:${b.W} / ${b.H}"><canvas id="image-canvas" aria-label="Audited photo; click a region to select it"></canvas>
+        <canvas class="overlay2d" id="image-overlay"></canvas><div class="tip" id="image-tip" role="tooltip"></div><div class="result-card" id="result-card" aria-live="polite"></div></div></div>
+      <div class="toolbar">
+        <div class="segmented" role="tablist" aria-label="Photo evidence">${[['observed', 'Observed'], ['relit', 'Relit'], ['residual', 'Residual']].map(([k, l]) => `<button class="evidence-tab" role="tab" data-mode="${k}" aria-selected="false">${l}</button>`).join('')}</div>
         <span id="mode-tools"></span>
-        <button class="btn ghost sm" id="split-btn" aria-pressed="false" aria-label="Split view" title="Split view: Observed | current mode">${ICONS.split}</button>
-        <button class="btn ghost sm" id="shadow-btn" aria-pressed="false" aria-label="Shadow-pair tool (experimental)" title="Shadow-pair tool (experimental)">${ICONS.shadow}</button>
+        <details class="menu more-evidence"><summary>More</summary>
+          <div class="menu-body">
+            <div class="seg" role="tablist" aria-label="More photo evidence" id="mode-tabs">${more.map(([k, l]) => `<button role="tab" data-mode="${k}" aria-selected="false">${l}</button>`).join('')}</div>
+            <button class="btn sm" id="split-btn" aria-pressed="false" title="Split view: Observed beside the current mode">${ICONS.split}Split view</button>
+            <button class="btn sm" id="shadow-btn" aria-pressed="false" title="Shadow-pair tool (experimental)">${ICONS.shadow}Shadow pairs</button>
+          </div></details>
       </div>
-      <div class="stage" id="image-stage"><canvas id="image-canvas" aria-label="Audited photo; click a region to select it"></canvas>
-        <canvas class="overlay2d" id="image-overlay"></canvas><div class="tip" id="image-tip" role="tooltip"></div></div>
-      <div class="panel-foot" id="image-foot"></div>
+      <p class="caption" id="image-foot"></p>
     </section>
-    <section class="panel" id="dome-panel" aria-label="Light dome">
-      <div class="panel-head">
-        <span class="micro">Light dome</span>
-        <label class="sr-only" for="shell-sel">Shell shows</label>
-        <select class="sel" id="shell-sel" title="What the sphere shows">
-          <option value="selected">Selected region's light map</option><option value="consensus">Consensus map</option>
-          <option value="all">All regions overlay</option><option value="none">No map</option></select>
-        <label class="check" title="68% (solid) and 95% (dashed) credible cones (C)"><input type="checkbox" id="cones-cb"> Cones</label>
-        <span class="spacer"></span>
-        <div class="seg" id="baseline-seg" role="group" aria-label="Light estimator" ${b.ls ? '' : 'hidden'}>
-          <button data-b="rank" aria-pressed="true" title="The shading cue the audit used">Audit cue</button>
-          <button data-b="ls" aria-pressed="false" title="The other shading cue (rank or least squares), for comparison only">Baseline cue</button></div>
+    <section class="side" id="dome-panel" aria-label="Light dome">
+      <button type="button" class="light-toggle" id="light-toggle" aria-expanded="false" aria-controls="side-body">Where the light comes from</button>
+      <div class="side-body" id="side-body">
+      <div class="stage" id="dome-stage">
+        <details class="menu dome-menu"><summary>View</summary>
+          <div class="menu-body">
+            <label class="small" for="shell-sel">Sphere shows</label>
+            <select class="sel" id="shell-sel">
+              <option value="selected">Selected region's light map</option><option value="consensus">Consensus map</option>
+              <option value="all">All regions overlay</option><option value="none">No map</option></select>
+            <label class="check" title="68% (solid) and 95% (dashed) credible cones (C)"><input type="checkbox" id="cones-cb"> Cones</label>
+            <div class="seg" id="baseline-seg" role="group" aria-label="Light estimator" ${b.ls ? '' : 'hidden'}>
+              <button data-b="rank" aria-pressed="true" title="The shading cue the audit used">Audit cue</button>
+              <button data-b="ls" aria-pressed="false" title="The other shading cue, for comparison only">Baseline cue</button></div>
+          </div></details>
       </div>
-      <div class="stage" id="dome-stage"></div>
       <div class="sky-dock">
         <div class="sky" id="sky" role="group" aria-label="Sky map: drag the sun to relight the photo">
           <svg id="sky-svg" viewBox="-120 -120 240 240" aria-hidden="true"></svg>
         </div>
         <div class="sky-side">
-          <div class="micro">Sun</div>
           <div class="sky-read"><span>Azimuth</span><output id="sun-az-o">0°</output></div>
           <div class="sky-read"><span>Elevation</span><output id="sun-el-o">45°</output></div>
           <input type="range" id="sun-az" min="-180" max="180" step="1" value="0" aria-label="Sun azimuth">
           <input type="range" id="sun-el" min="-10" max="90" step="1" value="45" aria-label="Sun elevation">
-          <div class="sky-legend"><span><i class="k-sun"></i>your sun</span><span><i class="k-cons"></i>consensus</span><span><i class="k-reg"></i>region estimates</span></div>
+          <div class="sky-legend"><span><i class="k-sun"></i>Your sun</span><span><i class="k-cons"></i>Consensus</span><span><i class="k-reg"></i>Region estimates</span></div>
           <div class="sky-actions">
-            <button class="btn sm sweep" id="sun-sweep" type="button" aria-pressed="false" title="Swing the sun once round the scene and watch the relit photo">Sweep</button>
+            <button class="btn sm" id="sun-sweep" type="button" aria-pressed="false" title="Swing the sun once round the scene">Sweep</button>
             <button class="btn ghost sm" id="snap-cons" title="Snap the sun to the direction the regions agree on">Consensus</button>
             <button class="btn ghost sm" id="snap-sel" title="Snap the sun to the selected region's own estimate">Selected</button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   </main></div>`;

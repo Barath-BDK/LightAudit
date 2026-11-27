@@ -100,3 +100,18 @@ export function richText(s) {
 export function esc(s) {
   return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+/** The first line of "Why": one plain sentence (at most about 34 characters for the usual region names). */
+export function plainWhy(fusion, regions) {
+  const v = fusion.verdict;
+  if (v === 'CONSISTENT') return 'One light explains every region.';
+  if (v === 'INSUFFICIENT') return 'Too little lighting evidence.';
+  if (v === 'CONFLICT') return 'The regions disagree on the light.';
+  const names = (fusion.flagged || []).map((k) => regions[k]?.name).filter(Boolean)
+    .map((n) => (n === 'ROI' ? 'The marked area' : n.charAt(0).toUpperCase() + n.slice(1)));
+  if (names.length === 1) return `${names[0]} has its own light.`;
+  return names.length ? `${names.length} regions have their own light.` : 'A region has its own light.';
+}
+
+/** Display name of a region: the user's marked area is "Marked area", not "ROI". */
+export function regionName(n) { return n === 'ROI' ? 'Marked area' : n.charAt(0).toUpperCase() + n.slice(1); }

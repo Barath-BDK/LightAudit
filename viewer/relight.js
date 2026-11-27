@@ -121,7 +121,7 @@ void main() {
     bool edge = labelAt(px + ivec2(1, 0)) != id || labelAt(px - ivec2(1, 0)) != id ||
                 labelAt(px + ivec2(0, 1)) != id || labelAt(px - ivec2(0, 1)) != id;
     if (edge) {
-      if (id == uSelected) col = vec3(1.0, 0.54, 0.24);
+      if (id == uSelected) col = vec3(0.96, 0.70, 0.24);
       else if (id == uHover) col = vec3(1.0);
       else if (status == 3) col = mix(vec3(0.94, 0.32, 0.31), vec3(1.0, 0.7, 0.7), uPulse);
       else if (mode == 1) col = meta.rgb;

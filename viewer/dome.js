@@ -25,13 +25,14 @@ uniform float uBaseAlpha;
 uniform float uFront;
 const float PI = 3.14159265358979;
 vec3 viridis(float t) {
-  const vec3 c0 = vec3(0.2777273272234177, 0.005407344544966578, 0.3340998053353061);
-  const vec3 c1 = vec3(0.1050930431085774, 1.404613529898575, 1.384590162594685);
-  const vec3 c2 = vec3(-0.3308618287255563, 0.214847559468213, 0.09509516302823659);
-  const vec3 c3 = vec3(-4.634230498983486, -5.799100973351585, -19.33244095627987);
-  const vec3 c4 = vec3(6.228269936347081, 14.17993336680509, 56.69055260068105);
-  const vec3 c5 = vec3(4.776384997670288, -13.74514537774601, -65.35303263337234);
-  const vec3 c6 = vec3(-5.435455855934631, 4.645852612178535, 26.3124352495832);
+  // colour constants: a neutral grey to sunlight amber (#f5b23d) to near-white ramp (6th-order fit)
+  const vec3 c0 = vec3(0.146157, 0.157250, 0.186868);
+  const vec3 c1 = vec3(2.017899, 1.036006, -0.717507);
+  const vec3 c2 = vec3(-7.325906, -1.455478, 8.926932);
+  const vec3 c3 = vec3(29.086848, 5.778844, -35.443577);
+  const vec3 c4 = vec3(-49.585400, -9.851404, 60.421944);
+  const vec3 c5 = vec3(35.669406, 7.086637, -43.464707);
+  const vec3 c6 = vec3(-9.006650, -1.789401, 10.974990);
   return c0 + t * (c1 + t * (c2 + t * (c3 + t * (c4 + t * (c5 + t * c6)))));
 }
 void main() {
@@ -88,10 +89,10 @@ function sunTexture() {
   c.width = c.height = 64;
   const g = c.getContext('2d');
   g.translate(32, 32);
-  g.strokeStyle = '#ffd34d'; g.lineWidth = 4; g.lineCap = 'round';
+  g.strokeStyle = '#f5b23d'; g.lineWidth = 4; g.lineCap = 'round';
   for (let i = 0; i < 8; i++) { g.rotate(Math.PI / 4); g.beginPath(); g.moveTo(17, 0); g.lineTo(27, 0); g.stroke(); }
-  g.fillStyle = '#ffd34d'; g.beginPath(); g.arc(0, 0, 12, 0, 2 * Math.PI); g.fill();
-  g.strokeStyle = '#2b2105'; g.lineWidth = 2; g.stroke();
+  g.fillStyle = '#f5b23d'; g.beginPath(); g.arc(0, 0, 12, 0, 2 * Math.PI); g.fill();
+  g.strokeStyle = '#3a2a0a'; g.lineWidth = 2; g.stroke();
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -176,10 +177,10 @@ export class Dome {
 
     // your light: handle + ray
     this.light = [0, 1, 0];
-    this.handle = new THREE.Mesh(new THREE.SphereGeometry(0.042, 24, 16), new THREE.MeshBasicMaterial({ color: 0xff8a3d, depthTest: false }));
+    this.handle = new THREE.Mesh(new THREE.SphereGeometry(0.042, 24, 16), new THREE.MeshBasicMaterial({ color: 0xf5b23d, depthTest: false }));
     this.handle.renderOrder = 20;
     this.hit = new THREE.Mesh(new THREE.SphereGeometry(0.11, 12, 8), new THREE.MeshBasicMaterial({ visible: false }));
-    this.ray = this._line([0, 0, 0, 0, 1, 0], 0xff8a3d, 2, { dashed: true, dashSize: 0.04, gapSize: 0.03 });
+    this.ray = this._line([0, 0, 0, 0, 1, 0], 0xf5b23d, 2, { dashed: true, dashSize: 0.04, gapSize: 0.03 });
     this.ray.renderOrder = 19;
     this.ray.material.depthTest = false;
     scene.add(this.handle, this.hit, this.ray);
@@ -210,9 +211,9 @@ export class Dome {
   }
 
   _axes() {
-    const ax = [[[1.25, 0, 0], 0xe5484d], [[0, 1.25, 0], 0x3dbb7f], [[0, 0, 1.25], 0x4c8dff]];
+    const ax = [[[1.25, 0, 0], 0x8e8e93], [[0, 1.25, 0], 0x8e8e93], [[0, 0, 1.25], 0x8e8e93]];
     for (const [p, c] of ax) {
-      this.scene.add(this._line([0, 0, 0, ...p], c, 1.6, { opacity: 0.9 }));
+      this.scene.add(this._line([0, 0, 0, ...p], c, 1, { opacity: 0.7 }));
       const head = new THREE.Mesh(new THREE.ConeGeometry(0.025, 0.07, 16), new THREE.MeshBasicMaterial({ color: c }));
       head.position.set(...p);
       head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...p).normalize());
@@ -248,13 +249,13 @@ export class Dome {
     this.scene.background = bg;
     const light = document.documentElement.dataset.theme === 'light';
     for (const m of [this.shellBack, this.shellFront]) {
-      m.material.uniforms.uBase.value.set(light ? '#8a96a3' : '#7b8794');
-      m.material.uniforms.uGrid.value.set(light ? '#3b4652' : '#c4ccd4');
+      m.material.uniforms.uBase.value.set(light ? '#8e8e93' : '#7c7c80');
+      m.material.uniforms.uGrid.value.set(light ? '#48484a' : '#c7c7cc');
       m.material.uniforms.uBaseAlpha.value = light ? 0.08 : 0.05;
     }
-    this.ground.material.color.set(light ? '#5b6672' : '#9aa6b2');
-    this.tickLines.material.color.set(light ? '#4a5560' : '#a2abb5');
-    this.consColor = light ? 0x1b1f24 : 0xffffff;
+    this.ground.material.color.set(light ? '#636366' : '#98989d');
+    this.tickLines.material.color.set(light ? '#48484a' : '#a1a1a6');
+    this.consColor = light ? 0x1d1d1f : 0xffffff;
     this.dirty = true;
     if (this.lastCones) this.setCones(this.lastCones, this.lastCons);
   }

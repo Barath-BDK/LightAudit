@@ -3,10 +3,10 @@
 import { state, prefs, loadBundle, fetchJSON, detectApi, BUNDLES } from './state.js';
 import { D, dir, azElDeg, fromAzElDeg, normalize, hpd, coneHalfAngleDeg } from './grid.js';
 import { fuse, combineCues, logMaps, whatIf, displayShortfalls, mapArgmax, DEFAULT_CFG } from './fusion.js';
-import { explain, reasonOf, esc, VERDICT_META } from './text.js';
+import { explain, reasonOf, esc, VERDICT_META, plainWhy, regionName } from './text.js';
 import { ImageView, MODES, MODE_LABELS } from './relight.js';
 import { Dome } from './dome.js';
-import { $, $$, chip, toast, renderVerdict, renderTable, renderGallery, workspaceHTML, skeletonHTML, closeTopDialog, dialogOpen, openDialog, ICONS } from './ui.js';
+import { $, $$, chip, toast, renderVerdict, renderTable, renderGallery, workspaceHTML, skeletonHTML, closeTopDialog, dialogOpen, openDialog, ICONS, TRIED } from './ui.js';
 import { openExplain, openHelp } from './explain.js';
 import { openAttackLab } from './attack.js';
 import { ShadowTool } from './shadow_tool.js';
@@ -17,6 +17,19 @@ const params = new URLSearchParams(location.search);
 function hexRgb(h) {
   const n = parseInt(h.replace('#', ''), 16);
   return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+}
+
+// Viewer palette: no green or teal outside verdicts. Region colours from the bundle in that hue band become greys.
+const GREYS = ['#c7c7cc', '#8e8e93', '#aeaeb2', '#636366'];
+function quietColours(b) {
+  b.regions.forEach((r, i) => {
+    const [R, G, Bl] = hexRgb(r.color || '#888888');
+    const mx = Math.max(R, G, Bl), mn = Math.min(R, G, Bl);
+    if (mx - mn < 0.15) return;
+    const h = mx === R ? ((G - Bl) / (mx - mn) + 6) % 6 : mx === G ? (Bl - R) / (mx - mn) + 2 : (R - G) / (mx - mn) + 4;
+    if (h * 60 > 70 && h * 60 < 200) r.color = GREYS[i % GREYS.length];
+  });
+  return b;
 }
 
 // ------------------------------------------------------------------ theme
@@ -50,7 +63,7 @@ function bindTheme(onChange) {
 
 // ------------------------------------------------------------------ gallery
 async function showGallery() {
-  document.title = 'LightAudit · Gallery';
+  document.title = 'LightAudit';
   let index = [];
   try {
     index = await fetchJSON(`${BUNDLES}index.json`);
@@ -96,7 +109,9 @@ function openUpload() {
       const { job_id: id } = await r.json();
       for (;;) {
         await new Promise((res) => setTimeout(res, 1000));
-        const j = await (await fetch(`/api/jobs/${encodeURIComponent(id)}`, { cache: 'no-store' })).json();
+        const jr = await fetch(`/api/jobs/${encodeURIComponent(id)}`, { cache: 'no-store' });
+        if (!jr.ok) throw new Error(`the audit job was lost (HTTP ${jr.status}); upload again`);
+        const j = await jr.json();
         bar.firstElementChild.style.width = `${Math.round((j.progress || 0) * (j.progress > 1 ? 1 : 100))}%`;
         log.textContent = Array.isArray(j.log) ? j.log.join('\n') : (j.log || j.status);
         log.scrollTop = log.scrollHeight;
@@ -121,6 +136,7 @@ function cfgFromManifest(m) {
   return { ...DEFAULT_CFG, tau_img: c.tau_img ?? 2, tau_ref: c.tau_ref ?? c.tau_img ?? 2, w_min: c.w_min ?? 0.35, eps: c.eps ?? 1e-3,
     w_glint: c.w_glint ?? 0.5, w_contour: c.w_contour ?? 0.5, min_reliable: c.min_reliable ?? 3,
     broad_consensus_frac: c.broad_consensus_frac ?? 0.35,
+    max_flagged: c.max_flagged ?? 2, max_flagged_frac: c.max_flagged_frac ?? 0.2,
     soft_contrast: c.soft_contrast ?? Infinity, tau_panel: c.tau_panel ?? Infinity,
     shadow_levels_max: c.shadow_levels_max ?? Infinity };
 }
@@ -179,13 +195,51 @@ function renderPanels() {
     light: state.light, modified: state.modified, display: state.display, original: B.manifest.fusion.verdict });
   renderTable($('#region-rows'), { regions: regs, fusion: state.fusion, display: state.display, whatIf: state.whatIf,
     use: state.use, selected: state.selected, tau: state.cfg.tau_img, sort });
-  $('#head-chip').innerHTML = chip(state.fusion.verdict, true);
-  $('#live-tag').innerHTML = state.modified ? `<span class="live-tag">● live, your settings <button class="btn ghost sm" id="reset-btn">Reset</button></span>` : '';
+  const reviewBtn = $('#review-btn');
+  if (reviewBtn) reviewBtn.addEventListener('click', () => {
+    const sent = reviewBtn.getAttribute('aria-pressed') === 'true';
+    reviewBtn.setAttribute('aria-pressed', String(!sent));
+    reviewBtn.textContent = sent ? (state.fusion.verdict === 'SUSPICIOUS' ? 'Send for human review' : 'Record review') : 'Review noted';
+  });
+  $('#live-tag').innerHTML = state.modified ? `<p class="live-tag">Live result with your settings. <button class="link-btn" id="reset-btn">Reset</button></p>` : '';
   const rb = $('#reset-btn');
   if (rb) rb.addEventListener('click', resetSettings);
   $('#table-note').textContent = `${state.fusion.n_reliable} reliable of ${regs.length}`;
   syncSun();
   updateFoot();
+  placeCard();
+}
+
+// Result card floating on the photo, next to the flagged region (or the top region): the evidence sits on the image.
+function placeCard() {
+  const el = $('#result-card');
+  if (!el || !view || !state.fusion) return;
+  const f = state.fusion, regs = allRegions();
+  const k = f.flagged.length ? f.flagged[0] : f.top_region;
+  const r = k !== null && k !== undefined ? regs[k] : null;
+  const d = r ? state.display[k] : null;
+  let title, line, extra = '';
+  if (f.verdict === 'SUSPICIOUS' && r) {
+    title = regionName(r.name); line = 'Disagrees with the scene light';
+    if (d && d.angle_deg != null) extra = `${d.angle_deg.toFixed(0)}° off`;
+  } else if (f.verdict === 'CONSISTENT') {
+    title = 'All regions'; line = 'Agree with one light';
+    if (f.consensus) extra = `${f.n_reliable} regions`;
+  } else {
+    title = (VERDICT_META[f.verdict] || { word: f.verdict }).word; line = plainWhy(f, regs).replace(/\.$/, '');
+  }
+  el.innerHTML = `<b>${esc(title)}</b><span class="v-${f.verdict}">${esc(line)}</span>${extra ? `<span>${esc(extra)}</span>` : ''}`;
+  const rect = view.cssRect(), stage = $('#image-stage');
+  const sw = stage.clientWidth, sh = stage.clientHeight, cw = el.offsetWidth, ch = el.offsetHeight;
+  let x, y;
+  if (r && r.bbox && f.verdict === 'SUSPICIOUS') {
+    const [x0, y0, x1, y1] = r.bbox;
+    const right = rect.x + x1 / B.W * rect.w + 16, left = rect.x + x0 / B.W * rect.w - 16 - cw;
+    x = right + cw <= sw - 12 ? right : left >= 12 ? left : sw - cw - 16;   // wide regions: pin to the stage edge
+    y = rect.y + (y0 + y1) / 2 / B.H * rect.h - ch / 2;
+  } else { x = rect.x + rect.w - cw - 16; y = rect.y + 16; }
+  el.style.left = `${Math.max(12, Math.min(sw - cw - 12, x))}px`;
+  el.style.top = `${Math.max(12, Math.min(sh - ch - 12, y))}px`;
 }
 
 function resetSettings() {
@@ -230,7 +284,7 @@ function updateDome() {
     for (let k = 0; k < D; k++) { if (map[k] < lo) lo = map[k]; if (map[k] > hi) hi = map[k]; }
     const flat = hi - lo < 0.05;
     dome.setShell(flat ? 'none' : 'map', map);
-    hint = flat ? `${regs[sel].name}: flat light map, it does not constrain the light` : `${regs[sel].name}: light map`;
+    hint = flat ? `${regionName(regs[sel].name)}: its light is not constrained` : `${regionName(regs[sel].name)}: where its light could be`;
   } else if (state.shell === 'consensus') {
     const cm = ls ? lsFusion.consensus_map : f.consensus_map;
     dome.setShell(cm ? 'map' : 'none', cm);
@@ -294,7 +348,7 @@ function setMode(m) {
   if (avail[m] === false) { toast(`${MODE_LABELS[m]} needs files missing from this bundle.`, 'warn'); return; }
   state.mode = m;
   prefs.set('mode', m);
-  $$('#mode-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+  $$('[data-mode]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
   view.set({ mode: m });
   renderModeTools();
   updateFoot();
@@ -551,8 +605,10 @@ function openTune() {
     ${field('t-tau', 'Alert level τ', 0.5, 6.9, 0.05, c.tau_img, `Calibrated: ${cfgFromManifest(B.manifest).tau_img.toFixed(2)} (false-alarm control on the calibration set).`)}
     ${field('t-wmin', 'Reliability floor w<sub>min</sub>', 0, 0.95, 0.01, c.w_min, 'Regions below this weight are not used.')}
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px"><button class="btn sm" id="t-reset">Reset to calibrated</button></div>`;
-  $('#verdict-panel').appendChild(pop);
-  pop.style.right = '10px'; pop.style.top = '40px';
+  const host = $('#verdict-panel');
+  host.appendChild(pop);
+  const br = btn.getBoundingClientRect(), hr = host.getBoundingClientRect();
+  pop.style.left = `${br.left - hr.left}px`; pop.style.top = `${br.bottom - hr.top + host.scrollTop + 6}px`;
   let t = 0;
   const bind = (id, key) => {
     const el = $(`#${id}`, pop);
@@ -570,13 +626,15 @@ function openTune() {
 }
 
 function bindWorkspace() {
-  $$('#mode-tabs button').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
-  $('#mode-tabs').addEventListener('keydown', (e) => {
+  $$('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  $('#image-panel').addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     e.preventDefault(); e.stopPropagation();
-    const i = MODES.indexOf(state.mode) + (e.key === 'ArrowRight' ? 1 : -1);
-    setMode(MODES[(i + MODES.length) % MODES.length]);
-    $(`#mode-tabs button[data-mode="${state.mode}"]`).focus();
+    const tabs = [...document.querySelectorAll('.evidence-tab')];
+    const current = tabs.findIndex((b) => b.dataset.mode === state.mode);
+    const i = (current + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    setMode(tabs[i].dataset.mode);
+    tabs[i].focus();
   });
   const shellSel = $('#shell-sel');
   shellSel.value = state.shell;
@@ -599,6 +657,22 @@ function bindWorkspace() {
   $('#split-btn').addEventListener('click', () => { state.split = !state.split; if (state.split && state.mode === 'observed') setMode('relit'); updateSplit(); });
   $('#shadow-btn').addEventListener('click', () => shadow.toggle());
   $('#tune-btn').addEventListener('click', openTune);
+  // narrow screens: the dome and sky map sit behind one toggle
+  const openLight = (on) => { $('#dome-panel').classList.toggle('open', on); $('#light-toggle').setAttribute('aria-expanded', on); };
+  $('#light-toggle').addEventListener('click', () => openLight(!$('#dome-panel').classList.contains('open')));
+  // the rail's "What to try" path and the region list in Details
+  $('#verdict-panel').addEventListener('click', (e) => {
+    const go = e.target.closest('[data-go]'), reg = e.target.closest('[data-sel]');
+    if (reg) { select(+reg.dataset.sel); return; }
+    if (!go) return;
+    const k = go.dataset.go;
+    TRIED.add(k);
+    go.classList.add('done');
+    go.querySelector('.path-ic').innerHTML = ICONS.check;
+    if (k === 'sun') { openLight(true); const sun = $('.sky-sun'); $('#sky').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); if (sun) sun.focus(); }
+    if (k === 'relit') setMode('relit');
+    if (k === 'details') { const dt = $('#details'); dt.open = true; dt.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+  });
   $('#explain-btn').addEventListener('click', () => openExplain(ctx()));
   $('#attack-btn').addEventListener('click', () => openAttackLab(ctx()));
   $('#help-btn').addEventListener('click', () => openHelp());
@@ -671,7 +745,7 @@ function ctx() {
 }
 
 async function reloadBundle() {
-  B = await loadBundle(B.name);
+  B = quietColours(await loadBundle(B.name));
   view.setBundle(B);
   recompute();
   return B;
@@ -681,12 +755,12 @@ async function showBundle(name) {
   root.innerHTML = skeletonHTML(name);
   bindTheme();
   try {
-    B = await loadBundle(name, (p) => { const i = $('#lp'); if (i) i.style.width = `${Math.round(p * 100)}%`; });
+    B = quietColours(await loadBundle(name, (p) => { const i = $('#lp'); if (i) i.style.width = `${Math.round(p * 100)}%`; }));
   } catch (e) {
     root.innerHTML = `<div class="load-screen"><div><h2>Could not load "${esc(name)}"</h2><p class="muted">${esc(e.message)}</p><p><a class="btn" href="index.html">Back to the gallery</a></p></div></div>`;
     return;
   }
-  document.title = `LightAudit · ${B.manifest.title}`;
+  document.title = `${B.manifest.title} – LightAudit`;
   root.innerHTML = workspaceHTML(B);
   $('.workspace').classList.add('ready');
   state.cfg = cfgFromManifest(B.manifest);
@@ -707,7 +781,7 @@ async function showBundle(name) {
     return;
   }
   view.setBundle(B);
-  view.onResize = () => { placeSplit(); if (shadow) shadow.draw(); };
+  view.onResize = () => { placeSplit(); placeCard(); if (shadow) shadow.draw(); };
   dome = new Dome($('#dome-stage'), { onLight: (l) => setLight(l) });
   dome.setPhoto(B.images.image.bitmap, B.W, B.H);
   shadow = new ShadowTool({ stage: $('#image-stage'), canvas: $('#image-overlay'), view, bundle: B, cfg: () => state.cfg,
@@ -719,6 +793,7 @@ async function showBundle(name) {
       if (state.selected >= n + state.pseudo.length) state.selected = null;
       recompute();
     } });
+  state.cones = prefs.get('cones', false);  // cones only when asked for: the dome reads cleaner without them
   bindWorkspace();
   bindImage();
   recompute();
