@@ -2,7 +2,7 @@
  "version": 1,
  "name": "real_peugeot_104",
  "title": "peugeot_104.jpg",
- "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+ "description": "Real photo, ground truth unknown. Audit verdict: CONFLICT.",
  "cue": "ls",
  "image": {
   "w": 1024,
@@ -27,7 +27,10 @@
   "broad_consensus_frac": 0.35,
   "soft_contrast": 0.42476,
   "tau_panel": 3.91642,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -540,9 +543,9 @@
    "rho_max": 0.4528,
    "sharp_area": 0.00592,
    "mean_unc": 6.50052,
-   "weight": 0.68587,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.26509,
@@ -1110,9 +1113,9 @@
    "rho_max": 0.89911,
    "sharp_area": 0.00176,
    "mean_unc": 5.33613,
-   "weight": 0.62417,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.09507,
@@ -2267,9 +2270,9 @@
    "rho_max": 0.46019,
    "sharp_area": 0.0524,
    "mean_unc": 8.51679,
-   "weight": 0.67292,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.25667,
@@ -2677,9 +2680,9 @@
    "rho_max": 0.84698,
    "sharp_area": 0.08397,
    "mean_unc": 9.04941,
-   "weight": 0.67507,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.1685,
@@ -2999,7 +3002,7 @@
    "rho_max": 0.37047,
    "sharp_area": 0.00519,
    "mean_unc": 9.76384,
-   "weight": 0.33796,
+   "weight": 0.0,
    "reliable": false,
    "reason": "surface too flat",
    "factors": {
@@ -3147,97 +3150,89 @@
   }
  ],
  "fusion": {
-  "verdict": "SUSPICIOUS",
-  "reason": "",
-  "S_img": 6.90768,
-  "n_reliable": 18,
-  "top_region": 3,
-  "flagged": [
-   3,
-   20,
-   21,
-   2,
-   15,
-   7,
-   14
-  ],
+  "verdict": "CONFLICT",
+  "reason": "reference regions disagree: several lights or poor geometry",
+  "S_img": 6.9077,
+  "n_reliable": 14,
+  "top_region": 21,
+  "flagged": [],
   "consensus": {
    "dir": [
-    0.54675,
-    0.31368,
-    0.77632
+    0.52641,
+    0.40524,
+    0.74744
    ],
    "az_deg": 35.15625,
-   "el_deg": 18.28125,
-   "r68_deg": 71.81931,
-   "r95_deg": 123.79867,
-   "frac95": 0.06277
+   "el_deg": 23.90625,
+   "r68_deg": 70.57151,
+   "r95_deg": 122.86377,
+   "frac95": 0.12562
   },
   "per_region": [
    {
     "id": 1,
     "shortfall": -0.001,
-    "angle_deg": 71.71875,
+    "angle_deg": 66.09375,
     "flagged": false
    },
    {
     "id": 2,
-    "shortfall": 6.87647,
-    "angle_deg": 108.75818,
-    "flagged": true
+    "shortfall": 6.87638,
+    "angle_deg": 103.46259,
+    "flagged": false
    },
    {
     "id": 3,
-    "shortfall": 6.90768,
-    "angle_deg": 133.40485,
-    "flagged": true
+    "shortfall": 6.90764,
+    "angle_deg": 131.75536,
+    "flagged": false
    },
    {
     "id": 4,
     "shortfall": -0.001,
-    "angle_deg": 60.83039,
+    "angle_deg": 64.98487,
     "flagged": false
    },
    {
     "id": 5,
-    "shortfall": 0.74905,
-    "angle_deg": 34.72761,
+    "shortfall": 4.558,
+    "angle_deg": 124.22972,
     "flagged": false
    },
    {
     "id": 6,
-    "shortfall": 0.61374,
-    "angle_deg": 43.03812,
+    "shortfall": 0.79157,
+    "angle_deg": 44.63531,
     "flagged": false
    },
    {
     "id": 7,
-    "shortfall": 6.8106,
-    "angle_deg": 100.90186,
-    "flagged": true
+    "shortfall": 1.04271,
+    "angle_deg": 34.80403,
+    "flagged": false
    },
    {
     "id": 8,
-    "shortfall": 0.59723,
-    "angle_deg": 43.74371,
+    "shortfall": 0.65394,
+    "angle_deg": 47.63828,
     "flagged": false
    },
    {
     "id": 9,
-    "shortfall": 0.07408,
-    "angle_deg": 45.459,
+    "shortfall": 0.10962,
+    "angle_deg": 39.95603,
     "flagged": false
    },
    {
     "id": 10,
-    "shortfall": 0.08487,
-    "angle_deg": 14.77398,
+    "shortfall": 2.70936,
+    "angle_deg": 77.69776,
     "flagged": false
    },
    {
     "id": 11,
-    "shortfall": 0.61404,
-    "angle_deg": 56.08594,
+    "shortfall": 1.97844,
+    "angle_deg": 57.4121,
     "flagged": false
    },
    {
@@ -3248,168 +3243,173 @@
    },
    {
     "id": 13,
-    "shortfall": 1.2654,
-    "angle_deg": 66.5,
+    "shortfall": 1.3872,
+    "angle_deg": 60.4778,
     "flagged": false
    },
    {
     "id": 14,
-    "shortfall": 6.80555,
-    "angle_deg": 75.55301,
-    "flagged": true
+    "shortfall": 6.77081,
+    "angle_deg": 71.41546,
+    "flagged": false
    },
    {
     "id": 15,
-    "shortfall": 6.83403,
-    "angle_deg": 87.36923,
-    "flagged": true
+    "shortfall": 6.90163,
+    "angle_deg": 96.48989,
+    "flagged": false
    },
    {
     "id": 16,
     "shortfall": -0.001,
-    "angle_deg": 92.22816,
+    "angle_deg": 91.9999,
     "flagged": false
    },
    {
     "id": 17,
-    "shortfall": 0.52697,
-    "angle_deg": 22.85833,
+    "shortfall": 2.03565,
+    "angle_deg": 91.6473,
     "flagged": false
    },
    {
     "id": 18,
-    "shortfall": 1.00259,
-    "angle_deg": 60.59624,
+    "shortfall": 0.96601,
+    "angle_deg": 54.97818,
     "flagged": false
    },
    {
     "id": 19,
-    "shortfall": 0.23613,
-    "angle_deg": 38.63053,
+    "shortfall": 0.18137,
+    "angle_deg": 33.00685,
     "flagged": false
    },
    {
     "id": 20,
-    "shortfall": 6.90761,
-    "angle_deg": 114.78948,
-    "flagged": true
+    "shortfall": 6.90695,
+    "angle_deg": 109.16707,
+    "flagged": false
    },
    {
     "id": 21,
-    "shortfall": 6.9057,
-    "angle_deg": 99.04306,
-    "flagged": true
+    "shortfall": 6.9077,
+    "angle_deg": 110.91047,
+    "flagged": false
    },
    {
     "id": 22,
-    "shortfall": 3.28261,
-    "angle_deg": 86.82588,
+    "shortfall": 2.95361,
+    "angle_deg": 84.16625,
     "flagged": false
    },
    {
     "id": 23,
-    "shortfall": 0.7971,
-    "angle_deg": 37.5358,
+    "shortfall": 1.03977,
+    "angle_deg": 33.00045,
     "flagged": false
    },
    {
     "id": 24,
-    "shortfall": 1.08092,
-    "angle_deg": 49.51023,
+    "shortfall": 1.55678,
+    "angle_deg": 54.17598,
     "flagged": false
    },
    {
     "id": 25,
-    "shortfall": 0.90661,
-    "angle_deg": 51.52741,
+    "shortfall": 1.36253,
+    "angle_deg": 56.60979,
     "flagged": false
    },
    {
     "id": 26,
-    "shortfall": 1.36985,
-    "angle_deg": 93.81952,
+    "shortfall": 1.05985,
+    "angle_deg": 89.04831,
     "flagged": false
    },
    {
     "id": 27,
-    "shortfall": 1.12344,
-    "angle_deg": 71.93712,
+    "shortfall": 1.59857,
+    "angle_deg": 75.04951,
     "flagged": false
    },
    {
     "id": 28,
-    "shortfall": 0.77941,
-    "angle_deg": 37.95934,
+    "shortfall": 0.82948,
+    "angle_deg": 38.17424,
     "flagged": false
    },
    {
     "id": 29,
-    "shortfall": 0.73588,
-    "angle_deg": 49.40923,
+    "shortfall": 1.09814,
+    "angle_deg": 54.8744,
     "flagged": false
    },
    {
     "id": 30,
-    "shortfall": 1.19776,
-    "angle_deg": 34.38816,
+    "shortfall": 1.72867,
+    "angle_deg": 39.98747,
     "flagged": false
    },
    {
     "id": 31,
-    "shortfall": 3.45251,
-    "angle_deg": 87.13623,
+    "shortfall": 3.13052,
+    "angle_deg": 84.32461,
     "flagged": false
    },
    {
     "id": 32,
-    "shortfall": 1.23915,
-    "angle_deg": 6.26859,
+    "shortfall": 3.01861,
+    "angle_deg": 81.06629,
     "flagged": false
    },
    {
     "id": 33,
-    "shortfall": 0.29944,
-    "angle_deg": 10.13292,
+    "shortfall": 0.34624,
+    "angle_deg": 12.32314,
     "flagged": false
    },
    {
     "id": 34,
     "shortfall": -0.001,
-    "angle_deg": 154.57672,
+    "angle_deg": 160.17742,
     "flagged": false
    },
    {
     "id": 35,
-    "shortfall": 1.36601,
-    "angle_deg": 54.40301,
+    "shortfall": 1.37624,
+    "angle_deg": 54.74091,
     "flagged": false
    },
    {
     "id": 36,
     "shortfall": -0.001,
-    "angle_deg": 71.71875,
+    "angle_deg": 66.09375,
     "flagged": false
    },
    {
     "id": 37,
-    "shortfall": 0.00967,
-    "angle_deg": 30.82086,
+    "shortfall": 0.0531,
+    "angle_deg": 31.59266,
     "flagged": false
    },
    {
     "id": 38,
-    "shortfall": 4.91278,
-    "angle_deg": 88.68205,
+    "shortfall": 4.3149,
+    "angle_deg": 85.18075,
     "flagged": false
    }
   ],
   "soft_light": {
-   "contrast": 0.37488,
+   "contrast": 0.33083,
    "threshold": 0.42476,
    "abstain": false
   },
+  "shadow_levels": {
+   "value": null,
+   "threshold": null,
+   "conflict": false
+  },
   "panel_flagged": [],
-  "text": "The estimate for **region 3** points 133\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. The estimate for **region 20** points 115\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. The estimate for **region 21** points 99\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. The estimate for **region 2** points 109\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading, specular highlight. The estimate for **region 15** points 87\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.8 > alert 6.3). Cues: shading. The estimate for **region 7** points 101\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.8 > alert 6.3). Cues: shading. The estimate for **region 14** points 76\u00b0 away from where 11 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.8 > alert 6.3). Cues: shading, specular highlight. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  "text": "The reference regions disagree among themselves, which usually means several lights or unreliable geometry. No automatic decision."
  },
  "baseline_ls": {
   "present": false

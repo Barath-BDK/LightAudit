@@ -40,7 +40,10 @@
   "shadow_levels_max": 0.28631,
   "tau_panel_T": 1.68206,
   "tau_panel_Tr": 5.65107,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -909,13 +912,13 @@
    {
     "id": 1,
     "shortfall": -0.001,
-    "angle_deg": 24.44996,
+    "angle_deg": 24.44997,
     "flagged": false
    },
    {
     "id": 2,
     "shortfall": 0.25217,
-    "angle_deg": 9.24403,
+    "angle_deg": 9.244,
     "flagged": false
    },
    {
@@ -939,31 +942,31 @@
    {
     "id": 6,
     "shortfall": 0.05386,
-    "angle_deg": 8.26181,
+    "angle_deg": 8.2618,
     "flagged": false
    },
    {
     "id": 7,
     "shortfall": 0.21275,
-    "angle_deg": 13.1747,
+    "angle_deg": 13.17473,
     "flagged": false
    },
    {
     "id": 8,
     "shortfall": -0.001,
-    "angle_deg": 36.49713,
+    "angle_deg": 36.49706,
     "flagged": false
    },
    {
     "id": 9,
     "shortfall": 2.64204,
-    "angle_deg": 83.91777,
+    "angle_deg": 83.91796,
     "flagged": true
    },
    {
     "id": 10,
     "shortfall": 0.03168,
-    "angle_deg": 6.21532,
+    "angle_deg": 6.21515,
     "flagged": false
    }
   ],
@@ -980,7 +983,7 @@
   "panel_flagged": [
    9
   ],
-  "text": "The brightness of **ROI** is not predicted by the shading of the panel around it (shared-material score 1.1 times the alert level): it looks lit differently from its surroundings. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  "text": "The brightness of **ROI** is not predicted by the shading of the panel around it (panel score 1.1 times the alert level; the larger of the shared-light and shared-material tests): it looks lit differently from its surroundings. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
  },
  "baseline_ls": {
   "present": true,

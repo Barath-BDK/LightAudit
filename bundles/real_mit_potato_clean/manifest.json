@@ -30,7 +30,10 @@
   "shadow_levels_max": 0.28631,
   "tau_panel_T": 0.85149,
   "tau_panel_Tr": 2.40829,
-  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -321,19 +324,19 @@
    {
     "id": 1,
     "shortfall": 4.80398,
-    "angle_deg": 57.50173,
+    "angle_deg": 57.50192,
     "flagged": false
    },
    {
     "id": 2,
     "shortfall": 0.30924,
-    "angle_deg": 14.47605,
+    "angle_deg": 14.47577,
     "flagged": true
    },
    {
     "id": 3,
     "shortfall": 3.25338,
-    "angle_deg": 53.92998,
+    "angle_deg": 53.93012,
     "flagged": false
    }
   ],
@@ -350,7 +353,7 @@
   "panel_flagged": [
    2
   ],
-  "text": "The brightness of **ROI** is not predicted by the shading of the panel around it (panel score 2.1 times the alert level; the largest of the shared-light, shared-material and seam tests): it looks lit differently from its surroundings. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  "text": "The brightness of **ROI** is not predicted by the shading of the panel around it (panel score 2.1 times the alert level; the larger of the shared-light and shared-material tests): it looks lit differently from its surroundings. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
  },
  "baseline_ls": {
   "present": false

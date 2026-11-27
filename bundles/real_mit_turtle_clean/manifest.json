@@ -30,7 +30,10 @@
   "shadow_levels_max": 0.28631,
   "tau_panel_T": 0.85149,
   "tau_panel_Tr": 2.40829,
-  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)"
+  "source": "calib_default.json + calib_real_panel.json (panel thresholds from real objects)",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -323,19 +326,19 @@
    {
     "id": 1,
     "shortfall": 1.18881,
-    "angle_deg": 14.03612,
+    "angle_deg": 14.03604,
     "flagged": false
    },
    {
     "id": 2,
     "shortfall": 1.18465,
-    "angle_deg": 28.2519,
+    "angle_deg": 28.25213,
     "flagged": false
    },
    {
     "id": 3,
     "shortfall": 0.03262,
-    "angle_deg": 4.82902,
+    "angle_deg": 4.82914,
     "flagged": false
    }
   ],

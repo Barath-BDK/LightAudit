@@ -27,7 +27,10 @@
   "broad_consensus_frac": 0.35,
   "soft_contrast": 0.42476,
   "tau_panel": 3.91642,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -622,9 +625,9 @@
    "rho_max": 0.42504,
    "sharp_area": 0.0053,
    "mean_unc": 4.49527,
-   "weight": 0.62516,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.19299,
@@ -956,9 +959,9 @@
    "rho_max": 0.27216,
    "sharp_area": 0.1336,
    "mean_unc": 7.63652,
-   "weight": 0.34304,
+   "weight": 0.0,
    "reliable": false,
-   "reason": "weak directional shading (overcast/soft light?)",
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.10236,
@@ -2157,8 +2160,8 @@
  "fusion": {
   "verdict": "SUSPICIOUS",
   "reason": "",
-  "S_img": 6.88947,
-  "n_reliable": 10,
+  "S_img": 6.88865,
+  "n_reliable": 9,
   "top_region": 1,
   "flagged": [
    1,
@@ -2166,33 +2169,33 @@
   ],
   "consensus": {
    "dir": [
-    0.2163,
+    0.08441,
     0.72425,
-    -0.65474
+    -0.68435
    ],
-   "az_deg": 161.71875,
+   "az_deg": 172.96875,
    "el_deg": 46.40625,
-   "r68_deg": 65.2515,
-   "r95_deg": 112.58047,
-   "frac95": 0.12232
+   "r68_deg": 64.76213,
+   "r95_deg": 113.18037,
+   "frac95": 0.13671
   },
   "per_region": [
    {
     "id": 1,
-    "shortfall": 6.88947,
-    "angle_deg": 87.71624,
+    "shortfall": 6.88865,
+    "angle_deg": 87.80777,
     "flagged": true
    },
    {
     "id": 2,
     "shortfall": -0.001,
-    "angle_deg": 61.26819,
+    "angle_deg": 61.80744,
     "flagged": false
    },
    {
     "id": 3,
-    "shortfall": 5.06139,
-    "angle_deg": 69.58239,
+    "shortfall": 5.24726,
+    "angle_deg": 72.77544,
     "flagged": false
    },
    {
@@ -2203,62 +2206,62 @@
    },
    {
     "id": 5,
-    "shortfall": 2.55326,
-    "angle_deg": 47.98236,
+    "shortfall": 1.94257,
+    "angle_deg": 40.12282,
     "flagged": false
    },
    {
     "id": 6,
     "shortfall": -0.001,
-    "angle_deg": 118.34466,
+    "angle_deg": 114.7327,
     "flagged": false
    },
    {
     "id": 7,
-    "shortfall": 6.60091,
-    "angle_deg": 78.12155,
+    "shortfall": 6.8501,
+    "angle_deg": 106.87772,
     "flagged": true
    },
    {
     "id": 8,
     "shortfall": 3.41779,
-    "angle_deg": 72.26761,
+    "angle_deg": 72.26802,
     "flagged": false
    },
    {
     "id": 9,
     "shortfall": -0.001,
-    "angle_deg": 80.40646,
+    "angle_deg": 87.6352,
     "flagged": false
    },
    {
     "id": 10,
-    "shortfall": 3.0183,
-    "angle_deg": 138.77849,
+    "shortfall": 2.65837,
+    "angle_deg": 132.58008,
     "flagged": false
    },
    {
     "id": 11,
-    "shortfall": 3.061,
-    "angle_deg": 74.39866,
+    "shortfall": 2.16073,
+    "angle_deg": 75.46289,
     "flagged": false
    },
    {
     "id": 12,
-    "shortfall": 4.39065,
-    "angle_deg": 115.71911,
+    "shortfall": 4.33596,
+    "angle_deg": 109.74008,
     "flagged": false
    },
    {
     "id": 13,
     "shortfall": -0.001,
-    "angle_deg": 95.76589,
+    "angle_deg": 89.97627,
     "flagged": false
    },
    {
     "id": 14,
-    "shortfall": 0.24818,
-    "angle_deg": 48.74425,
+    "shortfall": 0.10402,
+    "angle_deg": 48.82374,
     "flagged": false
    },
    {
@@ -2269,50 +2272,50 @@
    },
    {
     "id": 16,
-    "shortfall": 2.20443,
-    "angle_deg": 54.2488,
+    "shortfall": 2.34742,
+    "angle_deg": 52.56836,
     "flagged": false
    },
    {
     "id": 17,
-    "shortfall": 0.08084,
-    "angle_deg": 49.11458,
+    "shortfall": 0.0854,
+    "angle_deg": 44.5356,
     "flagged": false
    },
    {
     "id": 18,
-    "shortfall": 3.06084,
-    "angle_deg": 139.91219,
+    "shortfall": 2.94358,
+    "angle_deg": 134.77598,
     "flagged": false
    },
    {
     "id": 19,
-    "shortfall": 0.44861,
-    "angle_deg": 18.79138,
+    "shortfall": 0.3976,
+    "angle_deg": 24.80165,
     "flagged": false
    },
    {
     "id": 20,
-    "shortfall": 1.22716,
-    "angle_deg": 63.30451,
+    "shortfall": 1.23289,
+    "angle_deg": 70.63461,
     "flagged": false
    },
    {
     "id": 21,
-    "shortfall": 4.58836,
-    "angle_deg": 131.09067,
+    "shortfall": 3.53556,
+    "angle_deg": 122.88333,
     "flagged": false
    },
    {
     "id": 22,
     "shortfall": -0.001,
-    "angle_deg": 71.16671,
+    "angle_deg": 63.41793,
     "flagged": false
    },
    {
     "id": 23,
-    "shortfall": 1.9854,
-    "angle_deg": 55.23619,
+    "shortfall": 1.86435,
+    "angle_deg": 53.84838,
     "flagged": false
    },
    {
@@ -2335,12 +2338,17 @@
    }
   ],
   "soft_light": {
-   "contrast": 0.01301,
+   "contrast": 0.0155,
    "threshold": 0.42476,
    "abstain": false
   },
+  "shadow_levels": {
+   "value": null,
+   "threshold": null,
+   "conflict": false
+  },
   "panel_flagged": [],
-  "text": "The estimate for **region 1** points 88\u00b0 away from where 8 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. The estimate for **region 7** points 78\u00b0 away from where 8 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.6 > alert 6.3). Cues: shading, specular highlight. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  "text": "The estimate for **region 1** points 88\u00b0 away from where 7 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading. The estimate for **region 7** points 107\u00b0 away from where 7 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.9 > alert 6.3). Cues: shading, specular highlight. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
  },
  "baseline_ls": {
   "present": false

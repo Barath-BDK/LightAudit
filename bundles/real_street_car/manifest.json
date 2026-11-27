@@ -2,7 +2,7 @@
  "version": 1,
  "name": "real_street_car",
  "title": "street_car.jpg",
- "description": "Real photo, ground truth unknown. Audit verdict: SUSPICIOUS.",
+ "description": "Real photo, ground truth unknown. Audit verdict: CONSISTENT.",
  "cue": "ls",
  "image": {
   "w": 1024,
@@ -27,7 +27,10 @@
   "broad_consensus_frac": 0.35,
   "soft_contrast": 0.42476,
   "tau_panel": 3.91642,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -298,9 +301,9 @@
    "rho_max": 0.43205,
    "sharp_area": 0.07337,
    "mean_unc": 11.80111,
-   "weight": 0.63438,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.25441,
@@ -1651,155 +1654,158 @@
   }
  ],
  "fusion": {
-  "verdict": "SUSPICIOUS",
+  "verdict": "CONSISTENT",
   "reason": "",
-  "S_img": 6.63775,
-  "n_reliable": 10,
-  "top_region": 4,
-  "flagged": [
-   4
-  ],
+  "S_img": 2.98652,
+  "n_reliable": 9,
+  "top_region": 14,
+  "flagged": [],
   "consensus": {
    "dir": [
-    0.68933,
-    0.72425,
-    -0.01692
+    0.7188,
+    0.68954,
+    0.08866
    ],
-   "az_deg": 91.40625,
-   "el_deg": 46.40625,
-   "r68_deg": 79.26677,
-   "r95_deg": 134.18426,
-   "frac95": 0.08704
+   "az_deg": 82.96875,
+   "el_deg": 43.59375,
+   "r68_deg": 67.21376,
+   "r95_deg": 125.32334,
+   "frac95": 0.07471
   },
   "per_region": [
    {
     "id": 1,
-    "shortfall": 1.08116,
-    "angle_deg": 69.12495,
+    "shortfall": 0.88343,
+    "angle_deg": 73.10888,
     "flagged": false
    },
    {
     "id": 2,
-    "shortfall": 2.16318,
-    "angle_deg": 96.24778,
+    "shortfall": 2.02104,
+    "angle_deg": 105.95223,
     "flagged": false
    },
    {
     "id": 3,
-    "shortfall": 1.33104,
-    "angle_deg": 59.85342,
+    "shortfall": 1.10288,
+    "angle_deg": 51.51019,
     "flagged": false
    },
    {
     "id": 4,
     "shortfall": 6.63775,
-    "angle_deg": 154.13171,
-    "flagged": true
+    "angle_deg": 154.13165,
+    "flagged": false
    },
    {
     "id": 5,
-    "shortfall": 1.79999,
-    "angle_deg": 94.13725,
+    "shortfall": 1.83149,
+    "angle_deg": 88.77361,
     "flagged": false
    },
    {
     "id": 6,
-    "shortfall": 1.88761,
-    "angle_deg": 63.59033,
+    "shortfall": 1.53332,
+    "angle_deg": 57.23794,
     "flagged": false
    },
    {
     "id": 7,
-    "shortfall": 0.70516,
-    "angle_deg": 51.88891,
+    "shortfall": 0.53641,
+    "angle_deg": 46.11192,
     "flagged": false
    },
    {
     "id": 8,
-    "shortfall": 0.35407,
-    "angle_deg": 42.37765,
+    "shortfall": 0.22387,
+    "angle_deg": 33.14621,
     "flagged": false
    },
    {
     "id": 9,
     "shortfall": -0.001,
-    "angle_deg": 39.53426,
+    "angle_deg": 44.04027,
     "flagged": false
    },
    {
     "id": 10,
-    "shortfall": 3.17453,
-    "angle_deg": 119.21156,
+    "shortfall": 2.47361,
+    "angle_deg": 115.94272,
     "flagged": false
    },
    {
     "id": 11,
     "shortfall": -0.001,
-    "angle_deg": 78.75197,
+    "angle_deg": 73.51865,
     "flagged": false
    },
    {
     "id": 12,
-    "shortfall": 0.15797,
-    "angle_deg": 34.38735,
+    "shortfall": 0.38543,
+    "angle_deg": 34.2903,
     "flagged": false
    },
    {
     "id": 13,
     "shortfall": -0.001,
-    "angle_deg": 43.59375,
+    "angle_deg": 46.40625,
     "flagged": false
    },
    {
     "id": 14,
-    "shortfall": 2.84341,
-    "angle_deg": 72.03549,
+    "shortfall": 2.98652,
+    "angle_deg": 74.3006,
     "flagged": false
    },
    {
     "id": 15,
     "shortfall": -0.001,
-    "angle_deg": 43.59375,
+    "angle_deg": 46.40625,
     "flagged": false
    },
    {
     "id": 16,
     "shortfall": -0.001,
-    "angle_deg": 43.59375,
+    "angle_deg": 46.40625,
     "flagged": false
    },
    {
     "id": 17,
     "shortfall": -0.001,
-    "angle_deg": 43.59375,
+    "angle_deg": 46.40625,
     "flagged": false
    },
    {
     "id": 18,
-    "shortfall": 1.23387,
-    "angle_deg": 51.57211,
+    "shortfall": 1.66285,
+    "angle_deg": 60.40412,
     "flagged": false
    },
    {
     "id": 19,
     "shortfall": -0.001,
-    "angle_deg": 178.06077,
+    "angle_deg": 171.57125,
     "flagged": false
    },
    {
     "id": 20,
     "shortfall": -0.001,
-    "angle_deg": 43.59375,
+    "angle_deg": 46.40625,
     "flagged": false
    }
   ],
   "soft_light": {
-   "contrast": 0.23901,
+   "contrast": 0.20908,
    "threshold": 0.42476,
    "abstain": false
   },
+  "shadow_levels": {
+   "value": null,
+   "threshold": null,
+   "conflict": false
+  },
   "panel_flagged": [],
-  "text": "The estimate for **region 4** points 154\u00b0 away from where 9 other regions agree. Its own light map does not overlap the consensus (agreement 0.00; shortfall 6.6 > alert 6.3). Cues: shading. Please review manually. A flag means \"send for human review\", never \"this is fraud\"."
+  "text": "9 regions agree on one light direction (about 83\u00b0 azimuth, 44\u00b0 elevation). The largest disagreement is region 14 at 74\u00b0 (below the alert level)."
  },
  "baseline_ls": {
   "present": false

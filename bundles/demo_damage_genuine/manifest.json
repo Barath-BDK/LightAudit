@@ -38,7 +38,10 @@
   "shadow_levels_max": 0.28631,
   "tau_panel_T": 1.68206,
   "tau_panel_Tr": 5.65107,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -902,7 +905,7 @@
    {
     "id": 2,
     "shortfall": 0.09514,
-    "angle_deg": 9.86144,
+    "angle_deg": 9.8615,
     "flagged": false
    },
    {
@@ -920,7 +923,7 @@
    {
     "id": 5,
     "shortfall": 2.60574,
-    "angle_deg": 59.4058,
+    "angle_deg": 59.40584,
     "flagged": false
    },
    {
@@ -932,25 +935,25 @@
    {
     "id": 7,
     "shortfall": 0.00305,
-    "angle_deg": 2.25514,
+    "angle_deg": 2.25506,
     "flagged": false
    },
    {
     "id": 8,
     "shortfall": 1.44868,
-    "angle_deg": 118.32892,
+    "angle_deg": 118.32885,
     "flagged": false
    },
    {
     "id": 9,
     "shortfall": 0.12336,
-    "angle_deg": 21.5477,
+    "angle_deg": 21.54759,
     "flagged": false
    },
    {
     "id": 10,
     "shortfall": 0.61293,
-    "angle_deg": 45.91871,
+    "angle_deg": 45.91885,
     "flagged": false
    }
   ],

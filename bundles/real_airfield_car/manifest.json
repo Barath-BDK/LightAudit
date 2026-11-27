@@ -27,7 +27,10 @@
   "broad_consensus_frac": 0.35,
   "soft_contrast": 0.42476,
   "tau_panel": 3.91642,
-  "source": "calib_default.json"
+  "source": "calib_default.json",
+  "max_flagged": 2,
+  "max_flagged_frac": 0.2,
+  "min_spread_deg": 12.0
  },
  "regions": [
   {
@@ -630,9 +633,9 @@
    "rho_max": 0.41894,
    "sharp_area": 0.00724,
    "mean_unc": 7.98062,
-   "weight": 0.49484,
-   "reliable": true,
-   "reason": null,
+   "weight": 0.0,
+   "reliable": false,
+   "reason": "surface too flat",
    "factors": {
     "f_size": 1.0,
     "f_spread": 0.06237,
@@ -1102,33 +1105,33 @@
  "fusion": {
   "verdict": "CONSISTENT",
   "reason": "",
-  "S_img": 3.52641,
-  "n_reliable": 7,
+  "S_img": 3.52319,
+  "n_reliable": 6,
   "top_region": 1,
   "flagged": [],
   "consensus": {
    "dir": [
-    0.07531,
+    0.04961,
     0.99248,
-    0.0965
+    0.11191
    ],
-   "az_deg": 37.96875,
+   "az_deg": 23.90625,
    "el_deg": 82.96875,
-   "r68_deg": 44.91891,
-   "r95_deg": 100.28538,
-   "frac95": 0.04921
+   "r68_deg": 42.8143,
+   "r95_deg": 95.25303,
+   "frac95": 0.04939
   },
   "per_region": [
    {
     "id": 1,
-    "shortfall": 3.52641,
-    "angle_deg": 122.51079,
+    "shortfall": 3.52319,
+    "angle_deg": 122.30371,
     "flagged": false
    },
    {
     "id": 2,
-    "shortfall": 0.38401,
-    "angle_deg": 16.60447,
+    "shortfall": 0.24012,
+    "angle_deg": 14.13979,
     "flagged": false
    },
    {
@@ -1139,56 +1142,56 @@
    },
    {
     "id": 4,
-    "shortfall": 0.10594,
-    "angle_deg": 10.06284,
+    "shortfall": 0.109,
+    "angle_deg": 10.37415,
     "flagged": false
    },
    {
     "id": 5,
-    "shortfall": 0.26583,
-    "angle_deg": 2.51913,
+    "shortfall": 0.27432,
+    "angle_deg": 4.39798,
     "flagged": false
    },
    {
     "id": 6,
-    "shortfall": 0.50525,
-    "angle_deg": 35.12897,
+    "shortfall": 0.48277,
+    "angle_deg": 34.52915,
     "flagged": false
    },
    {
     "id": 7,
-    "shortfall": 1.02468,
-    "angle_deg": 32.28647,
+    "shortfall": 1.02986,
+    "angle_deg": 32.04887,
     "flagged": false
    },
    {
     "id": 8,
     "shortfall": 2.5152,
-    "angle_deg": 74.85395,
+    "angle_deg": 74.85391,
     "flagged": false
    },
    {
     "id": 9,
-    "shortfall": 0.7902,
-    "angle_deg": 27.9719,
+    "shortfall": 0.73224,
+    "angle_deg": 26.58142,
     "flagged": false
    },
    {
     "id": 10,
-    "shortfall": 1.22127,
-    "angle_deg": 17.91425,
+    "shortfall": 1.17879,
+    "angle_deg": 17.84551,
     "flagged": false
    },
    {
     "id": 11,
-    "shortfall": 0.72614,
-    "angle_deg": 10.66088,
+    "shortfall": 0.73927,
+    "angle_deg": 9.72704,
     "flagged": false
    },
    {
     "id": 12,
-    "shortfall": 0.57742,
-    "angle_deg": 47.24926,
+    "shortfall": 0.53555,
+    "angle_deg": 45.58812,
     "flagged": false
    },
    {
@@ -1199,12 +1202,17 @@
    }
   ],
   "soft_light": {
-   "contrast": 0.0097,
+   "contrast": 0.00719,
    "threshold": 0.42476,
    "abstain": false
   },
+  "shadow_levels": {
+   "value": null,
+   "threshold": null,
+   "conflict": false
+  },
   "panel_flagged": [],
-  "text": "7 regions agree on one light direction (about 38\u00b0 azimuth, 83\u00b0 elevation). The largest disagreement is region 1 at 123\u00b0 (below the alert level)."
+  "text": "6 regions agree on one light direction (about 24\u00b0 azimuth, 83\u00b0 elevation). The largest disagreement is region 1 at 122\u00b0 (below the alert level)."
  },
  "baseline_ls": {
   "present": false
