@@ -3,6 +3,20 @@
 Status of the LightAudit build against `BUILD_SPEC.md`. Everything below was actually run on this laptop
 (Windows 11, Python 3.11.4, CPU only) unless it says otherwise.
 
+## Update 11 (27 Nov 2026): learned intrinsic decomposition is worse than guarded Retinex; report and decks
+
+- `residual.learned_albedo` (Careaga & Aksoy, package `intrinsic`, grayscale stage, 512 px working size) and
+  `panel_shared(alb_map=...)`. Benchmark `eval/intrinsic_bench.py` (5 lamps x 4 parts x 20 objects, rows in
+  `data/results/intrinsic_rows.json`), comparison `eval/intrinsic_compare.py` (matched held-out false alarms,
+  300 bootstrap draws over objects).
+- At 5% false alarms, caught (Retinex T+Tr vs learned T+Tr): plain 45.0% vs 25.0% (gain -20.0 [-32.6, -2.8]);
+  colour-matched 29.0% vs 14.0% (-15.0 [-18.5, -4.1]); 8 px feather 36.0% vs 27.0%; Poisson 7.5% vs 4.0%.
+  Using all four statistics is also worse than Retinex alone. Not adopted: the network attributes the paste-edge
+  step to paint, like unguarded Retinex. Albedo quality alone (0.93 correlation with true reflectance on a MIT
+  object) is not what this task needs.
+- Project report `docs/LightAudit_Report.pdf` (source `docs/report/`), professional deck
+  `presentation/LightAudit_Professional.pptx` (`deck_a.py pro`), creative decks A, B, C.
+
 ## Update 10 (16 Nov 2026): outside methods tried; seam test taken out of the verdict
 
 Fallback before this work: tag `fallback-2026-11-16` (commit 59ffc31, seam test in the verdict).

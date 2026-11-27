@@ -1,0 +1,20 @@
+--- splice (n clean 400, n paste 400)
+held-out FA 0.025: Retinex (T+Tr) 0.352 [0.28, 0.44]  learned (T+Tr) 0.163 [0.04, 0.31]  both (4 tests) 0.235 [0.06, 0.37]  | gain -0.189 [-0.361, -0.037]
+held-out FA 0.050: Retinex (T+Tr) 0.450 [0.39, 0.53]  learned (T+Tr) 0.250 [0.14, 0.45]  both (4 tests) 0.312 [0.24, 0.57]  | gain -0.200 [-0.326, -0.028]
+held-out FA 0.075: Retinex (T+Tr) 0.530 [0.44, 0.59]  learned (T+Tr) 0.285 [0.20, 0.54]  both (4 tests) 0.396 [0.32, 0.62]  | gain -0.245 [-0.306, +0.064]
+held-out FA 0.100: Retinex (T+Tr) 0.539 [0.47, 0.62]  learned (T+Tr) 0.378 [0.24, 0.64]  both (4 tests) 0.443 [0.37, 0.65]  | gain -0.162 [-0.299, +0.106]
+--- harmonised (n clean 400, n paste 400)
+held-out FA 0.025: Retinex (T+Tr) 0.212 [0.16, 0.27]  learned (T+Tr) 0.120 [0.03, 0.20]  both (4 tests) 0.145 [0.04, 0.25]  | gain -0.092 [-0.174, -0.005]
+held-out FA 0.050: Retinex (T+Tr) 0.290 [0.22, 0.34]  learned (T+Tr) 0.140 [0.08, 0.25]  both (4 tests) 0.180 [0.12, 0.30]  | gain -0.150 [-0.185, -0.041]
+held-out FA 0.075: Retinex (T+Tr) 0.330 [0.24, 0.40]  learned (T+Tr) 0.145 [0.11, 0.33]  both (4 tests) 0.239 [0.17, 0.34]  | gain -0.185 [-0.208, +0.051]
+held-out FA 0.100: Retinex (T+Tr) 0.336 [0.27, 0.45]  learned (T+Tr) 0.180 [0.14, 0.43]  both (4 tests) 0.267 [0.21, 0.39]  | gain -0.156 [-0.230, +0.094]
+--- feather8 (n clean 400, n paste 400)
+held-out FA 0.025: Retinex (T+Tr) 0.267 [0.21, 0.35]  learned (T+Tr) 0.163 [0.03, 0.31]  both (4 tests) 0.196 [0.04, 0.34]  | gain -0.104 [-0.230, +0.014]
+held-out FA 0.050: Retinex (T+Tr) 0.360 [0.30, 0.45]  learned (T+Tr) 0.270 [0.16, 0.45]  both (4 tests) 0.278 [0.19, 0.47]  | gain -0.090 [-0.190, +0.040]
+held-out FA 0.075: Retinex (T+Tr) 0.455 [0.35, 0.51]  learned (T+Tr) 0.310 [0.24, 0.56]  both (4 tests) 0.355 [0.26, 0.55]  | gain -0.145 [-0.172, +0.140]
+held-out FA 0.100: Retinex (T+Tr) 0.458 [0.38, 0.56]  learned (T+Tr) 0.378 [0.28, 0.64]  both (4 tests) 0.395 [0.32, 0.61]  | gain -0.081 [-0.165, +0.165]
+--- poisson (n clean 400, n paste 400)
+held-out FA 0.025: Retinex (T+Tr) 0.048 [0.01, 0.07]  learned (T+Tr) 0.023 [0.01, 0.05]  both (4 tests) 0.028 [0.01, 0.06]  | gain -0.026 [-0.050, +0.010]
+held-out FA 0.050: Retinex (T+Tr) 0.075 [0.05, 0.10]  learned (T+Tr) 0.040 [0.02, 0.13]  both (4 tests) 0.048 [0.03, 0.12]  | gain -0.035 [-0.065, +0.053]
+held-out FA 0.075: Retinex (T+Tr) 0.100 [0.07, 0.12]  learned (T+Tr) 0.060 [0.04, 0.18]  both (4 tests) 0.083 [0.04, 0.15]  | gain -0.040 [-0.075, +0.098]
+held-out FA 0.100: Retinex (T+Tr) 0.106 [0.09, 0.16]  learned (T+Tr) 0.098 [0.06, 0.23]  both (4 tests) 0.107 [0.07, 0.19]  | gain -0.009 [-0.071, +0.113]

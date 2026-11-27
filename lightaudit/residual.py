@@ -1,6 +1,8 @@
 """Analysis by synthesis: monotone fit, residual z-score heatmap, counterfactual image (BUILD_SPEC 7.12)."""
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
 
@@ -160,6 +162,34 @@ def retinex_albedo(lin: np.ndarray, mask: np.ndarray, thr: float = 0.10, lab=Non
     return np.where(mask, np.exp(r - np.median(r[mask])), 1.0)
 
 
+_IID = {}
+
+
+def learned_albedo(lin: np.ndarray) -> np.ndarray:
+    """Albedo from the learned intrinsic decomposition of Careaga & Aksoy (TOG 2023/2024, package `intrinsic`,
+    academic use), grayscale stage: albedo = image / predicted shading. Only stages 0-1 of the v2.1 weights are
+    needed (torch hub cache). lin: (H, W) linear luminance. Raises ImportError if the package is missing."""
+    import torch
+    from intrinsic.pipeline import load_models, run_gray_pipeline
+    if "m" not in _IID:
+        ck = Path(torch.hub.get_dir()) / "checkpoints"
+        files = [ck / "stage_0_v21.pt", ck / "stage_1_v21.pt"]
+        if all(f.exists() for f in files):
+            orig = torch.load  # the package's local-file path calls torch.load without map_location (CUDA tensors)
+            torch.load = lambda f, *a, **k: orig(f, *a, **{**k, "map_location": "cpu"})
+            try:
+                _IID["m"] = load_models([str(f) for f in files], stage=1, device="cpu")
+            finally:
+                torch.load = orig
+        else:
+            _IID["m"] = load_models("v2.1", stage=1, device="cpu")
+    img = np.repeat(np.clip(lin, 0, 1)[..., None], 3, 2).astype(np.float32)
+    # 512 px working size: 0.93 correlation with true paint on a MIT object vs 0.91 at full size, 2x faster
+    r = run_gray_pipeline(_IID["m"], img, resize_conf=512, maintain_size=True, linear=True, device="cpu")
+    shd = 1.0 / np.maximum(r["gry_shd"], 1e-3) - 1.0  # the network predicts inverse shading
+    return np.clip(lin, 1e-4, None) / np.maximum(shd, 1e-4)
+
+
 def fit_light(S: np.ndarray, y: np.ndarray):
     """Best light for y ~ a * s + b with a >= 0 over the directions in S (D, N): (index, a, b, rss per direction)."""
     n = len(y)
@@ -192,7 +222,8 @@ def shared_material_T(S_ref, y_ref, S_roi, y_roi) -> float:
 
 
 def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Config(), retinex: bool = True,
-                 thr: float = 0.10, max_px: int = 4000, blur: float = 0.0, band: int = 4, shape_only: bool = False):
+                 thr: float = 0.10, max_px: int = 4000, blur: float = 0.0, band: int = 4, shape_only: bool = False,
+                 alb_map: np.ndarray | None = None):
     """Panel mode, shared-material test (validated on real curved objects, eval/mit_bench.py): the ROI must be
     predicted by the ONE shading model (light, gain, offset) fitted on the ring and the panel remainder.
     Albedo is removed first by Retinex, guarded so that a step across the ROI boundary is never called paint.
@@ -207,7 +238,10 @@ def panel_shared(Y, normals, unc, labels, regions: list[dict], cfg: Config = Con
     lin = Y.astype(np.float64) ** 2.2
     m_roi = labels == roi["id"]
     panel = m_roi | (labels == ring["id"]) | (labels == rest["id"])
-    alb = retinex_albedo(lin, panel, thr, m_roi.astype(np.int8), blur, band) if retinex else np.ones_like(lin)
+    if alb_map is not None:  # precomputed albedo (e.g. learned_albedo), used instead of Retinex
+        alb = np.where(panel, alb_map / max(float(np.median(alb_map[panel])), 1e-9), 1.0)
+    else:
+        alb = retinex_albedo(lin, panel, thr, m_roi.astype(np.int8), blur, band) if retinex else np.ones_like(lin)
     rys, rxs = np.nonzero(erode(m_roi, erode_px(*Y.shape, cfg)) & (normals[..., 2] >= cfg.nz_min) & (unc <= cfg.unc_max))
     ys, xs = np.nonzero(valid_mask(Y, normals, unc, panel & ~m_roi, cfg))
     if len(rys) < cfg.panel_min_px or len(ys) < 4 * cfg.panel_min_px:

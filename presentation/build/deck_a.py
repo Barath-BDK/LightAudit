@@ -2,6 +2,7 @@
 
     python presentation/build/deck_a.py           -> presentation/LightAudit_A_One_Light.pptx
     python presentation/build/deck_a.py photon    -> presentation/LightAudit_C_Photon.pptx
+    python presentation/build/deck_a.py pro       -> presentation/LightAudit_Professional.pptx (no mascot)
 
 Photon mode: the mascot is a small photon that carries every transition. Between two slides an auto-advancing
 keyframe slide holds the photon's light flooding the whole screen, so in Slide Show the photon bursts, the old slide
@@ -20,8 +21,9 @@ import pptlib as L
 
 HERE = Path(__file__).resolve().parent
 A = HERE / "assets"
-PHOTON = len(sys.argv) > 1 and sys.argv[1] == "photon"
-OUT = HERE.parent / ("LightAudit_C_Photon.pptx" if PHOTON else "LightAudit_A_One_Light.pptx")
+MODE = sys.argv[1] if len(sys.argv) > 1 else "sun"
+PHOTON, PRO = MODE == "photon", MODE == "pro"
+OUT = HERE.parent / {"photon": "LightAudit_C_Photon.pptx", "pro": "LightAudit_Professional.pptx"}.get(MODE, "LightAudit_A_One_Light.pptx")
 # where the photon rests on each slide (inches); chosen in empty space next to the content
 PHOTON_AT = {1: (10.6, 2.7), 2: (7.55, 0.85), 3: (2.2, 5.6), 4: (12.35, 1.15), 5: (7.45, 0.8), 6: (12.35, 1.05),
              7: (12.4, 1.05), 8: (11.6, 0.95), 9: (12.55, 0.95), 10: (12.35, 1.05), 11: (12.35, 1.05), 12: (6.67, 2.9)}
@@ -96,25 +98,28 @@ def slide(sun_xy, fan=8.0, core=None, title=None, kicker=None, footer=True):
         flash(s, cx, cy, 0.3, 0.0)
     else:
         cx, cy = sun_xy
-    rays = L.pic(s, A / "ray_fan.png", cx - fan / 2, cy - fan / 2, fan, fan, name="!!rays")
-    c = core or fan * 0.30
-    corep = L.pic(s, A / "sun_core.png", cx - c / 2, cy - c / 2, c, c, name="!!core")
     tl = PhotonTimeline(s, (cx, cy)) if PHOTON else L.Timeline(s)
-    tl.add(rays, "spin", 0, 140000 if not PHOTON else 40000, deg=360, repeat="indefinite")
-    tl.add(corep, "pulse", 0, 2600 if not PHOTON else 1800, scale=1.10 if not PHOTON else 1.18, repeat="indefinite")
+    if not PRO:
+        rays = L.pic(s, A / "ray_fan.png", cx - fan / 2, cy - fan / 2, fan, fan, name="!!rays")
+        c = core or fan * 0.30
+        corep = L.pic(s, A / "sun_core.png", cx - c / 2, cy - c / 2, c, c, name="!!core")
+        tl.add(rays, "spin", 0, 140000 if not PHOTON else 40000, deg=360, repeat="indefinite")
+        tl.add(corep, "pulse", 0, 2600 if not PHOTON else 1800, scale=1.10 if not PHOTON else 1.18, repeat="indefinite")
     if N[0] > 1:
-        L.transition(s, "morph", 1800 if not PHOTON else 900)
+        L.transition(s, "morph", {"photon": 900, "pro": 1100}.get(MODE, 1800))
     if footer:
-        L.text(s, 0.75, 7.0, 4, 0.3, "LightAudit", 10, DIM, B, name=f"foot{N[0]}")
-        L.text(s, 11.6, 7.0, 1, 0.3, str(N[0]), 10, DIM, B, align="r", name=f"num{N[0]}")
+        L.text(s, 0.75, 7.0, 4, 0.3, "LightAudit", 10, DIM, B, name="!!foot" if PRO else f"foot{N[0]}")
+        L.text(s, 11.6, 7.0, 1, 0.3, str(N[0]), 10, DIM, B, align="r", name="!!num" if PRO else f"num{N[0]}")
     t = 350
     if kicker:
-        k = L.text(s, 0.75, 0.55, 8, 0.35, kicker, 13, AMBER, H, char_spacing=1.5)
-        tl.add(k, "fade", t, 500)
+        k = L.text(s, 0.75, 0.55, 8, 0.35, kicker, 13, AMBER, H, char_spacing=1.5, name="!!kicker" if PRO else None)
+        if not PRO:  # in the professional deck the kicker and title glide in with Morph instead
+            tl.add(k, "fade", t, 500)
         t += 150
     if title:
-        tt = L.text(s, 0.75, 0.9, 8.6, 1.4, title, 36, TXT, H, line_spacing=0.95)
-        tl.add(tt, "rise", t, 700)
+        tt = L.text(s, 0.75, 0.9, 8.6, 1.4, title, 36, TXT, H, line_spacing=0.95, name="!!title" if PRO else None)
+        if not PRO:
+            tl.add(tt, "rise", t, 700)
         t += 350
     return s, tl, t
 
@@ -128,6 +133,11 @@ for i, (o, args) in enumerate([
     (L.text(s, 0.8, 5.85, 6, 0.8, [[("Barath Dharshan", {"color": TXT, "font": H})], [("CS23I1005 · Interactive Computer Graphics · Semester 7", {})]], 14, MUTED, B), ("fade", 1600, 700)),
 ]):
     tl.add(o, *args[:1], args[1], args[2])
+if PRO:
+    pv = L.pic(s, A / "pear_dark_photo.jpg", 8.55, 1.05, None, 3.6, radius=0.12, shadow={"blur": 40, "dist": 14, "alpha": 0.55})
+    dv = L.pic(s, A / "pear_dark_dome.jpg", 10.05, 2.75, None, 4.0, radius=0.12, shadow={"blur": 40, "dist": 14, "alpha": 0.6})
+    tl.add(pv, "zoom", 500, 900, **{"from": 0.9})
+    tl.add(dv, "zoom", 900, 900, **{"from": 0.9})
 L.notes(s, "LightAudit asks one question about a photo: could a single light have lit every part of it? "
            "When someone edits a photo, for example pastes a dent into a car door or drops a whole car into a scene, "
            "the pasted part keeps the light of the photo it came from. LightAudit finds that disagreement, shows the evidence, "
@@ -168,11 +178,12 @@ steps = [("Estimate", "the light direction for every region, from shading, highl
          ("Agree", "on the light most regions share: the consensus"),
          ("Flag or abstain", "the region that does not fit, or say the evidence is too weak to judge")]
 for i, (h, d) in enumerate(steps):
-    x = 4.35 + i * 2.95
-    card = L.rect(s, x, 3.0, 2.7, 1.85, PANEL, radius=0.14, line=LINE)
+    x = (0.75 + i * 4.0) if PRO else (4.35 + i * 2.95)
+    cw = 3.75 if PRO else 2.7
+    card = L.rect(s, x, 3.0, cw, 1.85, PANEL, radius=0.14, line=LINE)
     num = L.text(s, x + 0.25, 3.18, 0.6, 0.4, str(i + 1), 18, AMBER, H)
-    hh = L.text(s, x + 0.25, 3.58, 2.25, 0.4, h, 18, TXT, H)
-    dd = L.text(s, x + 0.25, 3.98, 2.25, 0.85, d, 13, MUTED, B, line_spacing=1.05)
+    hh = L.text(s, x + 0.25, 3.58, cw - 0.45, 0.4, h, 18, TXT, H)
+    dd = L.text(s, x + 0.25, 3.98, cw - 0.45, 0.85, d, 13, MUTED, B, line_spacing=1.05)
     for k, o in enumerate((card, num, hh, dd)):
         tl.add(o, "rise" if k == 0 else "fade", t + 300 + i * 300 + k * 60, 600)
 verd = [("Consistent", GREEN, "one light explains every reliable region"),
@@ -180,13 +191,13 @@ verd = [("Consistent", GREEN, "one light explains every reliable region"),
         ("Insufficient", GREY, "too little lighting evidence to judge"),
         ("Conflict", AMBER, "the references disagree among themselves")]
 for i, (w, c, d) in enumerate(verd):
-    x = 4.35 + i * 2.21
+    x = (0.75 + i * 3.0) if PRO else (4.35 + i * 2.21)
     dot = L.rect(s, x, 5.35, 0.16, 0.16, c, shape=MSO_SHAPE.OVAL)
-    ww = L.text(s, x + 0.26, 5.24, 1.9, 0.35, w, 15, c, H)
-    dd = L.text(s, x + 0.26, 5.6, 1.9, 0.7, d, 11.5, MUTED, B, line_spacing=1.0)
+    ww = L.text(s, x + 0.26, 5.24, 2.6 if PRO else 1.9, 0.35, w, 15, c, H)
+    dd = L.text(s, x + 0.26, 5.6, 2.6 if PRO else 1.9, 0.7, d, 11.5, MUTED, B, line_spacing=1.0)
     for k, o in enumerate((dot, ww, dd)):
         tl.add(o, "fade", t + 1400 + i * 200 + k * 60, 500)
-never = L.text(s, 4.35, 6.45, 8.4, 0.4, [[("A flag means “send for human review”, never “this is fraud”.", {"color": TXT})]], 13, MUTED, B)
+never = L.text(s, 0.75 if PRO else 4.35, 6.45, 8.4, 0.4, [[("A flag means “send for human review”, never “this is fraud”.", {"color": TXT})]], 13, MUTED, B)
 tl.add(never, "fade", t + 2400, 600)
 L.notes(s, "Our answer is to ask the light. Every region of a photo, a door panel, a tyre, a wall, carries evidence of where its light "
            "came from, in its shading, its highlights and its outline. In an honest photo one light explains all of them. "
@@ -197,9 +208,10 @@ tl.write()
 
 # 4 ---------------------------------------------------------------- pipeline
 s, tl, t = slide((-0.4, 3.33), fan=5.5, kicker="HOW IT WORKS", title="From pixels to a verdict, in five steps")
-beam = L.pic(s, A / "beam.png", 0.0, 2.6, 6.0, 1.45, name="beam4")
-tl.add(beam, "fade", t, 600)
-tl.add(beam, "path", t, 5200, dx=0.62, dy=0.0, repeat="indefinite")
+if not PRO:
+    beam = L.pic(s, A / "beam.png", 0.0, 2.6, 6.0, 1.45, name="beam4")
+    tl.add(beam, "fade", t, 600)
+    tl.add(beam, "path", t, 5200, dx=0.62, dy=0.0, repeat="indefinite")
 steps = [("Regions", "Segment the photo into surfaces (SAM), or use the area the reviewer marks"),
          ("Surface normals", "Predict each pixel's surface direction (DSINE, Depth Anything)"),
          ("Light maps", "Per region: which of 8,192 light directions fit its shading, highlights and silhouette"),
@@ -294,9 +306,10 @@ tl.write()
 
 # 8 ---------------------------------------------------------------- abstain
 s, tl, t = slide((6.3, -0.35), fan=5.0, kicker="KNOWING WHEN NOT TO ANSWER", title="It says when the light cannot decide")
-sun2 = L.pic(s, A / "sun_core.png", 9.9 - 0.8, -0.75, 1.6, 1.6, name="sun2")
-tl.add(sun2, "zoom", t + 1400, 900, **{"from": 0.2})
-tl.add(sun2, "pulse", t + 2300, 2200, scale=1.12, repeat="indefinite")
+if not PRO:
+    sun2 = L.pic(s, A / "sun_core.png", 9.9 - 0.8, -0.75, 1.6, 1.6, name="sun2")
+    tl.add(sun2, "zoom", t + 1400, 900, **{"from": 0.2})
+    tl.add(sun2, "pulse", t + 2300, 2200, scale=1.12, repeat="indefinite")
 cards = [("consistent.png", "Consistent", GREEN, "One sun, clean scene", "0 of 5 clean scenes flagged"),
          ("overcast.png", "Insufficient", GREY, "Overcast: soft light, no direction", "4 of 5 abstain"),
          ("twosuns.png", "Conflict", AMBER, "Two light sources", "3 of 5 called a conflict, 2 abstain")]
@@ -314,7 +327,7 @@ tl.add(note, "fade", t + 1800, 600)
 L.notes(s, "A good auditor knows when not to answer. Under an overcast sky the light has no direction, and the soft-light check makes "
            "LightAudit abstain in four of five such scenes instead of guessing. With two suns there is no single light to agree on; a "
            "cast-shadow check spots the two shadow levels and calls a conflict in three of five, abstaining on the other two. Clean "
-           "one-sun scenes were never flagged. These are rendered scenes from our test suite. Notice the second sun that appeared on this slide.")
+           "one-sun scenes were never flagged. These are rendered scenes from our test suite." + ("" if PRO else " Notice the second sun that appeared on this slide."))
 tl.write()
 
 # 9 ---------------------------------------------------------------- viewer
@@ -387,11 +400,11 @@ tl.write()
 
 # 12 ---------------------------------------------------------------- close
 s, tl, t = slide((6.67, 3.1), fan=12.0, core=3.4, footer=False)
-q = L.text(s, 1.0, 4.65, 11.33, 0.9, "One light. Every region. Shown, not asserted.", 34, TXT, LT, align="c")
+q = L.text(s, 1.0, 2.9 if PRO else 4.65, 11.33, 0.9, "One light. Every region. Shown, not asserted.", 34, TXT, LT, align="c")
 tl.add(q, "rise", 600, 900)
-nm = L.text(s, 1.0, 5.6, 11.33, 0.5, "LightAudit", 22, AMBER, H, align="c")
+nm = L.text(s, 1.0, 3.85 if PRO else 5.6, 11.33, 0.5, "LightAudit", 22, AMBER, H, align="c")
 tl.add(nm, "fade", 1200, 700)
-lk = L.text(s, 1.0, 6.15, 11.33, 0.8, [[("github.com/Barath-BDK/LightAudit", {"color": TXT})], [("Barath Dharshan · CS23I1005", {})]], 14, MUTED, B, align="c", line_spacing=1.2)
+lk = L.text(s, 1.0, 4.4 if PRO else 6.15, 11.33, 0.8, [[("github.com/Barath-BDK/LightAudit", {"color": TXT})], [("Barath Dharshan · CS23I1005", {})]], 14, MUTED, B, align="c", line_spacing=1.2)
 tl.add(lk, "fade", 1600, 700)
 L.notes(s, "LightAudit: one light, every region, and every conclusion shown rather than asserted. The code, the benchmarks and the "
            "viewer are on GitHub. Thank you.")

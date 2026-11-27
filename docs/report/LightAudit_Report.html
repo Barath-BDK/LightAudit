@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LightAudit: Project Report</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+  :root { --ink: #1d2430; --muted: #5b6472; --line: #e1e4e8; --soft: #f5f6f8; --amber: #c27712; --blue: #2563c9; --red: #c8413b; --green: #2f8f4e; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); font: 10.4pt/1.55 "Segoe UI", system-ui, sans-serif; background: #fff; }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; color: #12161d; line-height: 1.25; }
+  h1 { font-size: 22pt; margin: 0 0 6mm; break-before: page; }
+  h1 .n { color: var(--amber); margin-right: 6px; }
+  h2 { font-size: 14pt; margin: 7mm 0 2.5mm; break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; break-after: avoid; font-family: "Segoe UI", sans-serif; font-weight: 600; }
+  p { margin: 0 0 2.6mm; text-align: left; }
+  ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
+  li { margin: 0 0 1.2mm; }
+  code, .mono { font-family: Consolas, "Cascadia Mono", monospace; font-size: 9pt; background: var(--soft); padding: 0 3px; border-radius: 3px; }
+  pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: 8.6pt; line-height: 1.45; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 3mm 4mm; margin: 0 0 3.5mm; white-space: pre-wrap; break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 1mm 0 4mm; font-size: 9.2pt; break-inside: avoid; }
+  th, td { text-align: left; padding: 1.6mm 2mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 8.6pt; border-bottom: 1.5px solid #cfd4da; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  figure { margin: 2mm 0 5mm; break-inside: avoid; text-align: center; }
+  figure img { max-width: 100%; border-radius: 6px; }
+  figure.shot img { border: 1px solid var(--line); max-height: 96mm; }
+  figcaption { font-size: 8.8pt; color: var(--muted); margin-top: 1.5mm; text-align: left; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; }
+  .callout { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 3.5mm 4.5mm; margin: 2mm 0 4.5mm; break-inside: avoid; }
+  .callout.warn { background: #fdf4f3; border-color: #f0d4d1; }
+  .callout.ok { background: #f2f8f4; border-color: #cfe6d7; }
+  .callout b:first-child { display: block; margin-bottom: 1mm; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; margin: 3mm 0 5mm; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 3mm 3.5mm; }
+  .kpi b { display: block; font: 500 20pt/1.1 Georgia, serif; color: var(--amber); }
+  .kpi span { font-size: 8.6pt; color: var(--muted); }
+  .verd { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 8.8pt; font-weight: 600; border: 1px solid currentColor; }
+  .v-ok { color: var(--green); } .v-bad { color: var(--red); } .v-na { color: #5b6472; } .v-cf { color: #b26a00; }
+  .qa { break-inside: avoid; margin: 0 0 3.5mm; }
+  .qa .q { font-weight: 600; }
+  .qa .a { color: #2b3340; margin-left: 4mm; }
+  .toc { columns: 2; column-gap: 10mm; font-size: 10pt; }
+  .toc div { break-inside: avoid; margin: 0 0 1.3mm; }
+  .toc .n { color: var(--amber); display: inline-block; width: 7mm; }
+  .muted { color: var(--muted); }
+  .small { font-size: 8.8pt; }
+  /* cover */
+  .cover { height: 258mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+  .cover .top { margin-top: 30mm; }
+  .cover .kicker { color: var(--amber); font-weight: 600; letter-spacing: .12em; font-size: 9pt; }
+  .cover h1.title { break-before: avoid; font-size: 40pt; margin: 4mm 0 3mm; }
+  .cover .sub { font: 400 16pt/1.35 Georgia, serif; color: var(--blue); font-style: italic; margin-bottom: 8mm; }
+  .cover .lede { font-size: 11.5pt; max-width: 150mm; color: #2b3340; }
+  .cover .meta { border-top: 1px solid var(--line); padding-top: 5mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; font-size: 9.5pt; }
+  .cover .meta b { display: block; font-size: 8.4pt; color: var(--muted); font-weight: 600; letter-spacing: .06em; }
+  .cover img { width: 100%; border-radius: 8px; border: 1px solid var(--line); margin-top: 8mm; }
+  .first { break-before: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ cover -->
+<section class="cover">
+  <div class="top">
+    <div class="kicker">PROJECT REPORT · INTERACTIVE COMPUTER GRAPHICS</div>
+    <h1 class="title">LightAudit</h1>
+    <div class="sub">Does one light explain this photo?</div>
+    <p class="lede">An explainable lighting-consistency audit for edited photographs, motivated by the review of damage
+    photos in insurance claims. This report explains the concept, the problem, the method in full, the interactive
+    viewer, every evaluation (including what failed), and how to present the work.</p>
+    <img src="../../presentation/build/assets/pear_light_full.jpg" alt="The LightAudit viewer auditing a real photograph with a pasted area">
+  </div>
+  <div class="meta">
+    <div><b>AUTHOR</b>Barath Dharshan<br><span class="muted">CS23I1005</span></div>
+    <div><b>COURSE</b>Interactive Computer Graphics<br><span class="muted">Semester 7</span></div>
+    <div><b>CODE</b>github.com/Barath-BDK/LightAudit<br><span class="muted">November 2026</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ contents -->
+<h1 class="first">Contents</h1>
+<div class="toc">
+  <div><span class="n">1</span>Executive summary</div>
+  <div><span class="n">2</span>The problem</div>
+  <div><span class="n">3</span>Background: light as evidence</div>
+  <div><span class="n">4</span>The core idea</div>
+  <div><span class="n">5</span>System overview</div>
+  <div><span class="n">6</span>The method in detail</div>
+  <div><span class="n">7</span>The marked-area (dent) check</div>
+  <div><span class="n">8</span>The interactive viewer</div>
+  <div><span class="n">9</span>Evaluation</div>
+  <div><span class="n">10</span>Attacking our own detector</div>
+  <div><span class="n">11</span>What we tried that did not work</div>
+  <div><span class="n">12</span>Key findings</div>
+  <div><span class="n">13</span>Limitations and honest scope</div>
+  <div><span class="n">14</span>Future work</div>
+  <div><span class="n">15</span>How to present this project</div>
+  <div><span class="n">16</span>Reproducing the results</div>
+  <div><span class="n">A</span>Parameters and glossary</div>
+</div>
+
+<div class="callout" style="margin-top:8mm">
+  <b>How to read this report</b>
+  Sections 1 and 4 give the whole idea in two pages. Sections 5 to 8 explain how it is built. Sections 9 to 13 give
+  every measured number, including the failures. Section 15 is a presentation guide: a talk outline, a demo script,
+  the questions a professor is likely to ask with answers, and a one-page cheat sheet of numbers. All numbers come
+  from files in <code>data/results/</code> and from <code>BUILD_LOG.md</code>; nothing is estimated for this report.
+</div>
+
+<!-- ============================================================ 1 -->
+<h1><span class="n">1</span>Executive summary</h1>
+<p><b>The problem.</b> Insurance claims are increasingly settled from photographs, and photographs are easy to edit: a dent can be
+pasted onto a car door, or a damaged car can be placed into another scene. Colour and brightness are easy to match, so the
+edit passes the eye. Pixel-level forgery detectors can flag an image, but a claims reviewer needs a <i>reason</i> they can check.</p>
+<p><b>The idea.</b> Every surface in a photo records the direction it was lit from, in its shading, its highlights and its outline.
+In an honest photo taken under one dominant light (the sun), a single light direction explains every surface. A pasted part
+keeps the light of the photo it came from. LightAudit estimates, for every region of the photo, which light directions could
+explain it, finds the light most regions agree on, and flags the region that does not fit. When the photo carries too little
+lighting evidence (an overcast sky, two lights) it says so instead of guessing.</p>
+<p><b>What was built.</b> A Python pipeline (segmentation, surface normals from pretrained networks, per-region light maps on a
+sphere of 8,192 directions, a leave-one-out consensus test, conformal calibration of the alarm level), a dedicated check for a
+marked area such as a dent, a synthetic ray-marched test-scene generator, an attack lab that attacks our own detector, and an
+interactive WebGL viewer (3D light dome, live relighting, a sky map to move the sun, step-by-step explanations).</p>
+<div class="kpis">
+  <div class="kpi"><b>45%</b><span>pasted areas caught on real photos at 5.2% false alarms</span></div>
+  <div class="kpi"><b>57%</b><span>caught when the light moved by 80° or more</span></div>
+  <div class="kpi"><b>1–3°</b><span>light error on real photos when the true shape is known</span></div>
+  <div class="kpi"><b>4 of 5</b><span>overcast scenes correctly abstain (rendered tests)</span></div>
+</div>
+<p><b>What it does not do, measured.</b> Deciding whether a <i>whole object</i> was pasted into a real indoor scene is at chance
+(AUC 0.49–0.59), because predicted surface shape is too rough on flat, indoor surfaces. A forger who re-renders the pasted object
+under the scene's light passes, and Poisson blending lowers detection of pasted areas from 38.5% to 4.8%. So lighting evidence is
+<b>necessary, not sufficient</b>: one strong, explainable check among several. A flag always means "send for human review",
+never "this is fraud".</p>
+<div class="callout ok"><b>One-sentence pitch</b>LightAudit checks whether one light could have lit every part of a photo, shows
+the evidence on a 3D light dome, and is honest about when the photo cannot answer.</div>
+
+<!-- ============================================================ 2 -->
+<h1><span class="n">2</span>The problem</h1>
+<h2>2.1 Edited claim photos</h2>
+<p>Motor insurers increasingly accept photos from customers instead of sending an assessor. That makes claims faster, but it also
+makes it cheap to inflate them: an old dent can be copied onto a new photo, damage from one car can be pasted onto another, or a
+car photographed elsewhere can be placed into the claimed location. Modern editing tools harmonise colour and brightness
+automatically, so the pasted part blends in at a glance.</p>
+<h2>2.2 Why existing detectors are not enough</h2>
+<ul>
+  <li><b>Pixel-trace detectors</b> (camera noise fingerprints, JPEG traces, learned detectors such as TruFor) are strong on benchmark
+  splices but are defeated by re-saving, resizing and social-media compression, and they output a score or a mask, not a reason
+  a reviewer can verify.</li>
+  <li><b>AI-image detectors</b> answer a different question (was the whole image generated?). A photo edited by pasting real content is
+  not generated.</li>
+  <li><b>Human review</b> catches crude pastes but not well-harmonised ones; the eye is poor at judging light direction across a scene.</li>
+</ul>
+<h2>2.3 What a useful audit must provide</h2>
+<ol>
+  <li><b>Physical evidence</b> that survives colour and brightness matching: the direction of light is spread across the whole picture
+  and is hard to fake consistently.</li>
+  <li><b>An explanation</b> a non-expert can check: which region disagrees, by how many degrees, and what it would look like if it agreed.</li>
+  <li><b>Calibrated false alarms</b>: an alert level set in advance on honest photos, so the reviewer knows how often a clean photo is flagged.</li>
+  <li><b>Honest abstention</b>: when the photo carries no directional light (overcast) or several lights, say so instead of guessing.</li>
+</ol>
+<div class="callout warn"><b>Scope, stated up front</b>LightAudit is not a fraud detector and not an AI-image detector. Its verdict
+SUSPICIOUS means "a region's light disagrees with the rest: send for human review". It never asserts intent.</div>
+
+<!-- ============================================================ 3 -->
+<h1><span class="n">3</span>Background: light as evidence</h1>
+<h2>3.1 The physics in one equation</h2>
+<p>For a matte (Lambertian) surface lit by a distant light, the brightness of a point depends on the angle between its surface
+normal <code>n</code> and the direction to the light <code>l</code>:</p>
+<pre>Y = albedo · E · max(0, n · l) + ambient        (clamped-cosine, Lambert's law)</pre>
+<p>Rendering computes <code>Y</code> from <code>n</code> and <code>l</code>. LightAudit runs this backwards: given the observed brightness
+<code>Y</code> and an estimate of <code>n</code>, which <code>l</code> explains it? This is the inverse-rendering problem from computer graphics,
+applied region by region. Real cameras add an unknown tone curve (gamma, HDR tone mapping), which is why a region's brightness is
+modelled up to an unknown monotone function.</p>
+<h2>3.2 Related work</h2>
+<table>
+  <tr><th>Work</th><th>Idea</th><th>Relation to LightAudit</th></tr>
+  <tr><td>Johnson &amp; Farid 2005, 2007</td><td>Estimate a 2-D light direction from occluding contours of objects; compare across objects</td><td>Our silhouette cue (C3) is this idea on 3-D normals</td></tr>
+  <tr><td>Kee &amp; Farid 2010</td><td>3-D lighting environment from faces (fitted 3-D face model, spherical harmonics)</td><td>Same consistency principle; we use predicted normals for any surface instead of faces</td></tr>
+  <tr><td>Kee, O'Brien &amp; Farid 2013, 2014</td><td>Cast shadows and attached shading as linear constraints on the light; infeasible = forged</td><td>Our shadow-pair cue (C4) and the new shadow-consistency test; our rank cue is a half-space voting relative of their constraints</td></tr>
+  <tr><td>Riess &amp; Angelopoulou 2010; de Carvalho et al. 2013</td><td>Illuminant colour maps; inconsistent light colour</td><td>Tried (section 11): no signal on our real benchmark</td></tr>
+  <tr><td>Lalonde, Efros &amp; Narasimhan 2009</td><td>Sun direction from sky, shadows and shading</td><td>Multi-cue fusion idea</td></tr>
+  <tr><td>Han 1987</td><td>Maximum-rank-correlation estimator</td><td>Basis of our original rank shading cue</td></tr>
+  <tr><td>Careaga &amp; Aksoy 2023/24</td><td>Learned intrinsic decomposition (paint vs shading)</td><td>Compared with our guarded Retinex (section 11): worse for this task</td></tr>
+  <tr><td>TruFor 2023</td><td>Learned noise-fingerprint forgery detector</td><td>Complementary; recommended as a second opinion</td></tr>
+</table>
+<p>What is new here is the combination: per-region light posteriors on a full sphere with calibrated uncertainty, a leave-one-out
+consensus test with a conformal alarm level, explicit abstention, a dedicated marked-area check that resists colour matching, an
+attack lab that measures our own weaknesses, and an interactive 3-D explanation.</p>
+
+<!-- ============================================================ 4 -->
+<h1><span class="n">4</span>The core idea</h1>
+<p><b>Hypothesis under test:</b> one distant light (plus smooth ambient light) explains the shading of every reliable region of the photo.</p>
+<ol>
+  <li><b>Estimate.</b> For each region, compute a map over all light directions on the sphere: how well each direction explains the
+  region's shading, highlights and outline. A curved region gives a tight map; a flat region gives a broad, uninformative one.</li>
+  <li><b>Agree.</b> Combine the maps of the reliable regions into a consensus: the directions most regions accept.</li>
+  <li><b>Test each region against the others.</b> For each region, find the light the <i>other</i> regions agree on and ask how well this
+  region accepts it (leave-one-out, so a pasted region cannot pull the consensus toward itself).</li>
+  <li><b>Decide or abstain.</b> Compare the worst region's score with an alert level calibrated on honest photos.</li>
+</ol>
+<table>
+  <tr><th>Verdict</th><th>When</th><th>Recommended action</th></tr>
+  <tr><td><span class="verd v-ok">CONSISTENT</span></td><td>One light explains every reliable region</td><td>Normal processing</td></tr>
+  <tr><td><span class="verd v-bad">SUSPICIOUS</span></td><td>A region disagrees with the light the others share</td><td>Send for human review</td></tr>
+  <tr><td><span class="verd v-na">INSUFFICIENT</span></td><td>Fewer than 3 reliable regions, a broad consensus, or soft (overcast) light</td><td>Request a better photo</td></tr>
+  <tr><td><span class="verd v-cf">CONFLICT</span></td><td>The reference regions disagree among themselves (e.g. two lights)</td><td>Human review, no automatic decision</td></tr>
+</table>
+<figure><img src="../figures/light_dome.png" style="max-height:78mm" alt="Light dome"><figcaption>Figure 1. The idea on the sphere: each region's light map, the consensus where they overlap, and a pasted region whose map sits apart.</figcaption></figure>
+
+<!-- ============================================================ 5 -->
+<h1><span class="n">5</span>System overview</h1>
+<figure><img src="../figures/pipeline.png" alt="Pipeline"><figcaption>Figure 2. Pipeline. Tags mark the course area of each stage (graphics, vision, image processing, learning).</figcaption></figure>
+<table>
+  <tr><th>Component</th><th>Where</th><th>What it does</th></tr>
+  <tr><td>Regions</td><td><code>lightaudit/regions.py</code></td><td>SAM segmentation on real photos, ground-truth objects on synthetic scenes; a marked area (ROI) plus a ring around it in panel mode</td></tr>
+  <tr><td>Surface normals</td><td><code>lightaudit/normals.py</code></td><td>Pretrained DSINE and Depth Anything, axis-convention checks, ensemble uncertainty</td></tr>
+  <tr><td>Cues</td><td><code>lightaudit/cues/</code></td><td>C1 shading (least squares; rank baseline), C2 specular glints, C3 silhouette, C4 cast-shadow pairs</td></tr>
+  <tr><td>Region posterior</td><td><code>lightaudit/posterior.py</code></td><td>Block bootstrap + kernel density on the sphere, credible cones</td></tr>
+  <tr><td>Reliability</td><td><code>lightaudit/reliability.py</code></td><td>Five factors, geometric mean, a reason when a region is unreliable</td></tr>
+  <tr><td>Fusion and verdict</td><td><code>lightaudit/fusion.py</code></td><td>Log-linear consensus, leave-one-out shortfall, verdict logic, soft-light and shadow-level checks</td></tr>
+  <tr><td>Panel (dent) check</td><td><code>lightaudit/residual.py</code></td><td>Shared-light and shared-material tests after guarded Retinex</td></tr>
+  <tr><td>Calibration</td><td><code>lightaudit/calibrate.py</code></td><td>Posterior bandwidth and temperature; split-conformal alarm levels</td></tr>
+  <tr><td>Synthetic scenes</td><td><code>lightaudit/synth/</code></td><td>NumPy signed-distance ray marcher with sun, sky, soft shadows, Blinn-Phong, camera pipeline</td></tr>
+  <tr><td>Attacks</td><td><code>lightaudit/attacks.py</code></td><td>Colour transfer, physics re-shade, adaptive white-box attack</td></tr>
+  <tr><td>Bundles and server</td><td><code>bundle.py</code>, <code>server.py</code>, <code>cli.py</code></td><td>Writes audit results for the viewer; FastAPI upload-and-audit</td></tr>
+  <tr><td>Viewer</td><td><code>viewer/</code></td><td>three.js light dome, WebGL2 relighting, sky map, attack lab, explanations; fusion mirrored in JavaScript</td></tr>
+  <tr><td>Evaluation</td><td><code>eval/</code></td><td>Synthetic suite E1–E10, real benchmarks (MIT Multi-Illumination, MIT Intrinsic Images), stress tests</td></tr>
+</table>
+<p>Size: 65 automated Python tests and 506 browser/Python parity checks (the verdict logic is implemented twice, in Python and in
+JavaScript, and checked to agree on shared test vectors).</p>
+
+<!-- ============================================================ 6 -->
+<h1><span class="n">6</span>The method in detail</h1>
+<h2>6.1 Conventions and the direction grid</h2>
+<p>Camera space: <code>+x</code> right, <code>+y</code> up, <code>+z</code> toward the viewer. A pinhole camera with a 60° horizontal field of view
+maps pixel <code>(u, v)</code> to a ray. Every light map lives on one equirectangular grid of 128 azimuths × 64 elevations = 8,192
+directions (about 2.8° per cell), with area weights proportional to <code>cos(latitude)</code>. A fixed grid represents any shape of
+posterior (ridges, two lobes), makes fusion element-wise arithmetic that is easy to mirror in the browser, and the 3-D dome shader
+samples the same array as a texture.</p>
+<h2>6.2 Regions and usable pixels</h2>
+<p>A pixel is used for shading only if it lies inside the region eroded by a few pixels (normals are unreliable at boundaries), is
+neither deep shadow nor saturated (<code>0.04 ≤ Y ≤ 0.97</code>), faces the camera (<code>n_z ≥ 0.05</code>) and has normal uncertainty below 35°.
+Regions with fewer than 150 usable pixels get weight 0. Glass and tyres are excluded by default because they break the matte model.</p>
+<h2>6.3 Surface normals</h2>
+<p>On real photos the normals come from pretrained networks (DSINE and Depth Anything). Their outputs are resampled to the image,
+checked for axis conventions, and fused; their disagreement is used as a per-pixel uncertainty. A key finding (section 12): DSINE's
+x axis was mirrored relative to our convention, which made every earlier real-photo result invalid until it was fixed.</p>
+<h2>6.4 Cue C1: shading</h2>
+<p>The default cue is a least-squares fit: for every candidate light <code>l</code>, the Pearson correlation between the clamped cosine
+<code>max(0, n·l)</code> and the linearised brightness <code>Y^2.2</code> of the region's pixels:</p>
+<pre>S(l) = Pearson( max(0, N·l),  Y^2.2 )      for all 8,192 directions l</pre>
+<p>The original design used a <b>rank</b> statistic (Spearman correlation between the ranks of <code>n·l</code> and of <code>Y</code>), which is
+invariant to any monotone tone curve and is the maximum-rank-correlation estimator for a single-index model. Measured, it was about
+three times less accurate (median light error 21.6–25.8° against 6.0–7.6° for least squares), because ranks discard brightness
+magnitudes, which matters for shapes with few distinct normals. It is kept as the evaluated baseline.</p>
+<h2>6.5 Region posterior: bootstrap and kernel density</h2>
+<p>Pixels inside a region are not independent (normal errors and paint variations are spatially correlated), so a naive likelihood
+would be far too confident. Instead:</p>
+<ol>
+  <li>Resample square blocks of the region (block bootstrap, 30 draws) and perturb the normals with smooth random noise sized by
+  their uncertainty.</li>
+  <li>For each draw, find the best light (coarse search on 512 directions, then local refinement).</li>
+  <li>Turn the 30 samples into a map with a kernel density on the sphere, then sharpen or flatten it with a temperature:
+  <code>P(l) = (Σ_b exp(−θ(l, l_b)² / 2h²))^(1/T)</code>, normalised to a maximum of 1.</li>
+</ol>
+<p>The bandwidth <code>h</code> and temperature <code>T</code> are calibrated so that the 68% and 95% highest-density sets contain the true light
+about that often on calibration scenes (calibrated: <code>h = 14°</code>, <code>T = 1.5</code>, coverage 0.70 / 0.90).</p>
+<h2>6.6 Additional cues</h2>
+<figure><img src="../figures/cue_geometry.png" style="max-height:62mm" alt="Cue geometry"><figcaption>Figure 3. Geometry of the additional cues.</figcaption></figure>
+<ul>
+  <li><b>C2 specular glints.</b> A highlight sits where the mirror reflection of the view vector about the normal points at the light:
+  <code>l = 2(n·v)n − v</code>. Each small saturated blob votes for that direction (mean over blobs, weight 0.5), so a reflection of some
+  other bright object cannot veto the sun.</li>
+  <li><b>C3 silhouette.</b> At an occluding contour the normal lies in the image plane and is known from 2-D geometry alone, without a
+  network. Available, but off by default: on 60 calibration scenes it added no detection and slightly more false alarms.</li>
+  <li><b>C4 cast-shadow pairs.</b> An object point, its shadow point and the camera centre span a plane containing the light direction
+  (<code>l · (r(p) × r(s)) = 0</code>). Manual, experimental; the basis of the shadow-consistency test in section 14.</li>
+</ul>
+<h2>6.7 Reliability weight</h2>
+<p>Each region gets five factors in <code>[0, 1]</code> (enough pixels, curved enough, sharp map, strong directional shading, trustworthy
+normals) and their geometric mean as its weight; regions below 0.35 are unreliable and the smallest factor names the reason shown to
+the user ("surface too flat", "weak directional shading (overcast?)"). A geometric mean lets any single fatal factor pull the weight down.</p>
+<h2>6.8 Fusion, consensus and the leave-one-out shortfall</h2>
+<pre>F_R(l)   = Σ_{j∈R} w_j · ln(ε + A_j(l))                  consensus (weighted product of maps), ε = 0.001
+l*_{−k}  = argmax_l Σ_{j∈R, j≠k} w_j ln(ε + A_j(l))       the light everyone except k agrees on
+s_k      = −ln(ε + A_k(l*_{−k}))                          shortfall of region k: 0 = agrees, at most −ln ε ≈ 6.9
+S_img    = max_k s_k                                     image score</pre>
+<figure><img src="../figures/shortfall_diagram.png" style="max-height:52mm" alt="Shortfall"><figcaption>Figure 4. Leave-one-out shortfall on a one-dimensional toy example.</figcaption></figure>
+<p><b>Why leave-one-out:</b> a pasted region inside the consensus would pull it toward itself and hide its own disagreement. Asking
+each region how well it fits the light the <i>others</i> agree on removes that self-influence. The score is interpretable:
+<code>s_k = 2</code> means the region's map at the others' light is <code>e^−2 ≈ 0.14</code> of its own peak.</p>
+<h2>6.9 Verdict logic</h2>
+<ol>
+  <li><b>INSUFFICIENT</b> if fewer than 3 regions are reliable, or the consensus covers more than 35% of the sphere (uninformative).</li>
+  <li><b>CONSISTENT</b> if <code>S_img</code> is at most the alert level <code>τ</code>.</li>
+  <li>Otherwise the regions above <code>τ</code> are candidates. If the remaining reliable regions (at least 2) agree among themselves:
+  <b>SUSPICIOUS</b>, candidates flagged. Else each candidate is tried alone: if removing just it leaves the rest consistent,
+  <b>SUSPICIOUS</b> with that region (handles one heavy outlier dragging the others). Else <b>CONFLICT</b>.</li>
+  <li>An unreliable region is never flagged; it is listed as "could not be assessed".</li>
+</ol>
+<h2>6.10 Two scene-level checks</h2>
+<ul>
+  <li><b>Soft-light abstention.</b> Per region, <code>contrast = P10 / P90</code> of linear brightness. Under a sun the shaded side is several times
+  darker; under overcast sky it is not. If the median contrast exceeds a calibrated level (0.42), the verdict is INSUFFICIENT. Needed
+  because sky light looks like a broad light from above, so the direction test alone would call overcast scenes consistent.</li>
+  <li><b>Cast-shadow levels (two lights).</b> On a large flat region, one sun casts one shadow level; two suns cast two half-shadow
+  levels. The share of shadow pixels clearly above the darkest level, above a calibrated 0.29, gives CONFLICT (pre-test AUC 0.96).</li>
+</ul>
+<h2>6.11 Calibration: a guaranteed false-alarm rate</h2>
+<p>All thresholds are set on a separate calibration split; test data never sets a threshold. The alarm level is a split-conformal
+quantile of the image scores of honest calibration photos:</p>
+<pre>τ(α) = the ⌈(n + 1)(1 − α)⌉-th smallest score of n honest calibration images</pre>
+<p>If a new honest image is exchangeable with the calibration set, the chance its score exceeds <code>τ</code> is at most <code>α</code> (5% by
+default). This bounds false alarms, not misses, and only within the same kind of photos. Synthetic thresholds turned out several
+times too high for real photos, so the marked-area check uses thresholds calibrated on real objects.</p>
+<figure><img src="../figures/conformal.png" style="max-height:50mm" alt="Conformal threshold"><figcaption>Figure 5. The alert level is a quantile of honest scores (illustrative).</figcaption></figure>
+<h2>6.12 Analysis by synthesis: residuals, counterfactuals and relighting</h2>
+<p>For every region, a monotone (isotonic) curve <code>ĝ</code> maps <code>max(0, n·l*)</code> to brightness under the reference light. This
+gives a residual heat map (observed minus predicted, in units of expected noise), a <b>counterfactual image</b> (each region re-shaded to
+the brightness the consensus light predicts) and the viewer's <b>albedo-free relighting</b>:</p>
+<pre>rgb' = rgb · (ĝ(max(0, n·l_user)) + 0.01) / (ĝ(max(0, n·l_ref)) + 0.01)</pre>
+<p>Optional highlights use Blinn-Phong or the GGX (Cook-Torrance microfacet) model with Smith shadowing and Schlick Fresnel; they are a
+visual aid only and never enter a score.</p>
+
+<!-- ============================================================ 7 -->
+<h1><span class="n">7</span>The marked-area (dent) check</h1>
+<p>A dent is too small and too shallow to estimate a light of its own. For damage we ask a narrower question that fits the insurance
+case: <b>does the marked area share the light and the paint of the panel around it?</b> The reviewer marks the area; the pipeline adds a
+ring around it on the same panel.</p>
+<div class="two">
+  <div class="callout"><b>Shared-light test</b>A light fitted on the ring and panel must also explain the area's shading shape, while the
+  area keeps its own gain and offset. Invariant to any brightness or colour change applied to the area, so colour matching cannot hide it.
+  <code>T = log(RSS at the panel's light / RSS at the area's own best light)</code></div>
+  <div class="callout"><b>Shared-material test</b>One model (light, gain and offset) fitted on the ring must also predict the area's pixels.
+  Catches a paste whose brightness level does not fit. <code>Tr = log(RSS shared model / RSS own fit)</code></div>
+</div>
+<h3>Removing paint first: guarded Retinex</h3>
+<p>Paint, dirt and texture change brightness without being shading. Retinex separates them: large brightness gradients are attributed to
+paint, small ones to shading, and the paint layer is re-integrated with a Poisson solve. Plain Retinex has a fatal flaw here: it reads the
+brightness step at the paste boundary as a paint edge and removes exactly the evidence we need. The fix is a <b>guard</b>: gradients
+across the marked area's boundary (a 3-pixel band, because pastes are feathered) are never attributed to paint.</p>
+<table>
+  <tr><th>Paint handling (real objects, shared-material test)</th><th class="num">AUC</th></tr>
+  <tr><td>No paint handling</td><td class="num">0.74</td></tr>
+  <tr><td>Plain Retinex on the composite</td><td class="num">0.66</td></tr>
+  <tr><td>Retinex guarded at the boundary</td><td class="num"><b>0.82–0.86</b></td></tr>
+  <tr><td>Ground-truth reflectance (upper reference)</td><td class="num">0.84</td></tr>
+</table>
+<p>The verdict flags the area (SUSPICIOUS) if either test exceeds its own conformal level (half the error budget each), unless the
+scene is a CONFLICT. Known blind spot: a dent facing away from both lights looks the same under either.</p>
+
+<!-- ============================================================ 8 -->
+<h1><span class="n">8</span>The interactive viewer</h1>
+<p>The viewer is where the computer-graphics side of the project is most visible, and it is the main tool for explaining a verdict.
+It runs in a browser from exported audit bundles, or live against the FastAPI server for uploads.</p>
+<figure class="shot"><img src="../../presentation/build/assets/car_light_full.jpg" alt="Viewer"><figcaption>Figure 6. The audit page: the case rail (verdict, score meter, reason, region cards), the photo, the 3-D light dome and the sky map.</figcaption></figure>
+<ul>
+  <li><b>Case rail.</b> The verdict, a round meter (the arc is the image score, the tick is the alert level), the reason in one sentence
+  (generated from the numbers by fixed templates, no language model), the what-if verdict at your chosen light, and each region as a card
+  (shortfall, angle off the consensus, weight, agreement with your light).</li>
+  <li><b>Image modes.</b> Observed, regions, relit, counterfactual, residual heat map, normals, plus a split view.</li>
+  <li><b>3-D light dome</b> (three.js): the photo on a plane inside a sphere of directions; the sphere is textured with the selected
+  region's light map or the consensus; 68% and 95% credible cones; a draggable light.</li>
+  <li><b>Relighting</b> (WebGL2 fragment shader): each region re-shaded live under your light with its own fitted tone curve, optional
+  Blinn-Phong or GGX highlights.</li>
+  <li><b>Sky map:</b> the scene seen from above (centre = straight overhead, rim = horizon) with every region's own light estimate as a
+  dot, the consensus and your sun. Dragging the sun relights the photo and updates the what-if verdict; a pasted region shows up as the
+  dot that sits apart.</li>
+  <li><b>Explain stepper</b> (seven steps from regions to verdict) and an <b>attack lab</b> that replays precomputed attacks.</li>
+  <li><b>Parity:</b> the fusion and verdict logic exist in Python and JavaScript; 506 shared test vectors check they agree.</li>
+</ul>
+
+<!-- ============================================================ 9 -->
+<h1><span class="n">9</span>Evaluation</h1>
+<h2>9.1 Three test beds</h2>
+<table>
+  <tr><th>Test bed</th><th>What it is</th><th>What it can show</th></tr>
+  <tr><td>Synthetic scenes</td><td>Our NumPy ray marcher: a car and 2–5 objects on a ground plane, sun + sky light, soft shadows, Blinn-Phong, five tone curves, noise, JPEG. Composites re-render the target under a second light from the same geometry.</td><td>Exact ground truth; controlled light angles; attacks</td></tr>
+  <tr><td>MIT Multi-Illumination (real)</td><td>Six real indoor scenes, 25 flash directions each, with a grey and a chrome ball</td><td>Whole-object splices on real photos (one region taken from another lighting)</td></tr>
+  <tr><td>MIT Intrinsic Images (real)</td><td>20 real curved objects, 10 lamp positions each, ground-truth reflectance</td><td>Marked-area splices on real photos (part of an object from another lamp)</td></tr>
+</table>
+<h2>9.2 Real photos, marked-area check (the main real result)</h2>
+<p>Ten objects calibrate the thresholds; ten other objects are the held-out test (400 clean and 400 pasted images, feathered, 8-bit).</p>
+<div class="two">
+  <figure><img src="figs/real_by_angle.svg" alt="Detection by angle"><figcaption>Figure 7. Detection rises with the angle between the paste's light and the scene's light.</figcaption></figure>
+  <div>
+    <table>
+      <tr><th>Operating level</th><th class="num">False alarms</th><th class="num">Caught</th></tr>
+      <tr><td>10% level</td><td class="num">5.2%</td><td class="num"><b>45.0%</b></td></tr>
+      <tr><td>5% level</td><td class="num">2.2%</td><td class="num">33.8%</td></tr>
+      <tr><td>After colour matching (10%)</td><td class="num">5.2%</td><td class="num">31.5%</td></tr>
+    </table>
+    <p class="small">By angle at the 10% level: 0–25° 36%, 25–50° 41%, 50–80° 47%, ≥80° 57%. Threshold transfer between halves of the
+    objects is uneven (5% false alarms one way, 10–19% the other): ten objects are few. Per object the range is wide (pear 85% caught but
+    15% false alarms; box and frog about 23%).</p>
+  </div>
+</div>
+<h2>9.3 Real photos, whole-object check</h2>
+<ul>
+  <li><b>MIT Multi-Illumination:</b> AUC 0.49–0.59 over estimators and normal sources (0.64 at ≥ 90°): chance level.</li>
+  <li><b>Why:</b> almost every region in these indoor scenes is flat (the smallest eigenvalue of the normal covariance is about 0), and a
+  flat region with unknown paint says nothing about the light direction; the light is also near-field bounce flash, not a distant sun.</li>
+  <li><b>The estimator itself is right:</b> using the grey ball's true shape, the estimated light is within 1–3° of the measured light in all six scenes.
+  With predicted normals on the same ball, errors are 11–27° (Depth Anything) and 17–22° (DSINE) in most scenes. The weak link is predicted shape.</li>
+  <li><b>Six unedited outdoor car photos:</b> 4 of 6 wrongly flagged with synthetic thresholds. One crude real splice was flagged.</li>
+</ul>
+<h2>9.4 Synthetic test suite (quick run, 5–15 scenes per cell)</h2>
+<table>
+  <tr><th>Case</th><th>Result</th></tr>
+  <tr><td>Pasted car, ≥ 30° light difference</td><td>AUC 0.65 (rank baseline 0.57); at 90°: 4 of 5 and 6 of 8 caught; clean scenes 0 of 5 flagged</td></tr>
+  <tr><td>Pasted dent (panel check)</td><td>5 of 8 caught; 6 of 8 after re-shade attacks; 0 of 8 after colour matching; dent false alarms 4 of 15</td></tr>
+  <tr><td>Overcast</td><td>4 of 5 INSUFFICIENT (soft-light check)</td></tr>
+  <tr><td>Two suns</td><td>3 of 5 CONFLICT, 2 of 5 INSUFFICIENT (shadow-level check)</td></tr>
+  <tr><td>Whole car after physics re-shade</td><td>0 of 8 caught</td></tr>
+  <tr><td>Rank vs least-squares shading cue</td><td>median light error 21.6–25.8° vs 6.0–7.6°</td></tr>
+  <tr><td>Calibration</td><td>coverage of the 68% / 95% sets 0.70 / 0.90; alarm level 6.29 (max ≈ 6.9); 19.5% of clean scenes abstain</td></tr>
+</table>
+<p class="small">Only the quick suite (10% of the planned sample sizes) has been run; intervals are wide.</p>
+
+<!-- ============================================================ 10 -->
+<h1><span class="n">10</span>Attacking our own detector</h1>
+<p>The attack lab plays a forger who wants a pasted region to pass, at increasing strength:</p>
+<figure><img src="../figures/attack_ladder.png" style="max-height:58mm" alt="Attack ladder"><figcaption>Figure 8. Attack tiers: naive paste, colour harmonisation, physics re-shade, adaptive white-box.</figcaption></figure>
+<div class="two">
+  <figure><img src="figs/stress.svg" alt="Stress test"><figcaption>Figure 9. Marked-area check on held-out real objects: feathering and Poisson blending hide the paste edge.</figcaption></figure>
+  <figure><img src="figs/colour_match.svg" alt="Colour matching"><figcaption>Figure 10. Colour matching at matched false-alarm rates (bootstrap over objects).</figcaption></figure>
+</div>
+<ul>
+  <li><b>Colour and brightness matching</b> lowers detection from 44.7% to 31.2% at 5% false alarms; the shared-light test is what keeps it above zero.</li>
+  <li><b>Feathering</b> the paste over 8 px: 38.5% → 25.8%. <b>Poisson blending</b>: 38.5% → 4.8%. Both hide the boundary step the check relies on.</li>
+  <li><b>Physics re-shade</b> (re-render the pasted object under the scene's own light): passes completely on synthetic scenes (0 of 8).</li>
+  <li>Conclusion: lighting evidence is <b>necessary, not sufficient</b>. A forger who understands the physics can remove it.</li>
+</ul>
+
+<!-- ============================================================ 11 -->
+<h1><span class="n">11</span>What we tried that did not work</h1>
+<p>Each idea below was measured before it was kept; these were dropped or kept only as baselines. Reporting them is part of the result.</p>
+<table>
+  <tr><th>Idea</th><th>Outcome</th></tr>
+  <tr><td>Rank-correlation shading cue as the main cue</td><td>3× less accurate than least squares; kept as baseline</td></tr>
+  <tr><td>Silhouette cue on by default</td><td>No detection gain, slightly more false alarms; off</td></tr>
+  <tr><td>Second-light fit for two suns</td><td>AUC 0.65–0.70; replaced by the shadow-level check (0.96)</td></tr>
+  <tr><td>Averaging DSINE and Depth Anything normals</td><td>Not better than the better single model</td></tr>
+  <tr><td>Plain Retinex</td><td>Hides pastes (AUC 0.66 vs 0.74 without); guarded version kept</td></tr>
+  <tr><td>Gradient-boosted arbiter instead of the rule</td><td>Not better; the explainable rule stays default</td></tr>
+  <tr><td>Normal-free boundary "seam" test (Nov 2026)</td><td>+10 points on colour-matched pastes at 10% false alarms, but defeated by 4 px feathering (20% → 4%) and 64% false alarms when the marked area is drawn 4 px tight; removed from the verdict</td></tr>
+  <tr><td>Light-colour consistency (illuminant maps)</td><td>AUC 0.51–0.53 on the real scenes (all lit by one flash); no signal there</td></tr>
+  <tr><td>Learned intrinsic decomposition (Careaga &amp; Aksoy) instead of guarded Retinex</td><td>Never better at matched false alarms (5% level): plain pastes 25% vs 45% caught, colour-matched 14% vs 29%, 8 px feathered 27% vs 36%, Poisson-blended 4% vs 7.5%. The network absorbs the paste edge into paint, like unguarded Retinex.</td></tr>
+</table>
+<figure><img src="figs/intrinsic.svg" style="max-height:62mm" alt="Learned vs guarded Retinex"><figcaption>Figure 11. A stronger paint-removal model is not automatically better: what matters is that the paste edge is never called paint.</figcaption></figure>
+
+<!-- ============================================================ 12 -->
+<h1><span class="n">12</span>Key findings</h1>
+<ol>
+  <li><b>The light estimator is correct on real photos</b>: 1–3° error given true shape. The weak link is predicted surface normals.</li>
+  <li><b>An axis bug can invalidate everything</b>: DSINE's x axis was mirrored (46° normal error on a sphere, 18–25° after the fix). Every
+  real-photo result before the fix was discarded.</li>
+  <li><b>Flat regions carry no light information</b> when their paint is unknown, and most regions in real indoor scenes are flat. Curvature, not
+  pixel count, is what makes a region useful.</li>
+  <li><b>False alarms grow with the number of regions</b> when the score is a maximum over regions (correlation 0.43); a per-region
+  likelihood-ratio test with Holm correction removes it (0.09). Implemented in the benchmark, not yet in the pipeline.</li>
+  <li><b>Paint removal must be told where the paste edge is.</b> Unguarded Retinex and a learned decomposition both explain the edge away.</li>
+  <li><b>Synthetic thresholds do not transfer to real photos</b>: real scores are several times smaller; calibrate on real images.</li>
+  <li><b>Abstaining is a feature</b>: soft light and two lights need explicit checks, because the direction test alone calls them consistent.</li>
+</ol>
+
+<!-- ============================================================ 13 -->
+<h1><span class="n">13</span>Limitations and honest scope</h1>
+<ul>
+  <li><b>Whole-object splices on real photos</b> are not detected reliably (chance on real indoor scenes; 4 of 6 unedited outdoor photos flagged).</li>
+  <li><b>The real evidence is from tabletop objects</b> with within-object pastes, not real cars and not real dents. Genuine damage with scratches,
+  dirt or primer inside the marked area may raise false alarms; this is unmeasured (real dent photos from CarDD need a licence form).</li>
+  <li><b>Ten objects</b> are few for calibration; threshold transfer is uneven.</li>
+  <li><b>A skilled forger</b> who re-shades, feathers widely or uses Poisson blending can pass.</li>
+  <li><b>Glossy car paint</b> follows the matte model only approximately; the glint cue helps only when the sun itself is reflected.</li>
+  <li><b>Normal networks can be circular</b>: trained to infer shape from appearance, they may bend normals toward a pasted region's wrong light.</li>
+  <li><b>Only the quick synthetic suite</b> has been run.</li>
+</ul>
+
+<!-- ============================================================ 14 -->
+<h1><span class="n">14</span>Future work</h1>
+<ol>
+  <li><b>Cast-shadow consistency (built, synthetic only).</b> Lines from object points through their shadow points must meet at one light;
+  needs no surface normals. On rendered geometry: 0 of 60 clean scenes flagged; second-sun objects caught 58% / 70% / 93% / 92% for
+  10–30° / 30–60° / 60–90° / ≥ 90°. Needs a person (or a shadow detector such as SSIS) to mark pairs on real photos.</li>
+  <li><b>Real dent photos</b> (CarDD, 4,000 images with masks) to measure false alarms on genuine damage.</li>
+  <li><b>Real car photos</b>: 40–50 clean directional-light photos and 20–30 self-made splices, to test the target domain.</li>
+  <li><b>Likelihood-ratio + Holm test and a curvature gate</b> in the whole-object fusion.</li>
+  <li><b>A learned noise-fingerprint detector</b> (e.g. TruFor) as a second, complementary opinion.</li>
+</ol>
+<figure><img src="figs/shadow.svg" style="max-height:60mm" alt="Shadow consistency"><figcaption>Figure 12. Cast-shadow consistency on synthetic geometry.</figcaption></figure>
+
+<!-- ============================================================ 15 -->
+<h1><span class="n">15</span>How to present this project</h1>
+<h2>15.1 The 30-second version</h2>
+<div class="callout">"Edited claim photos pass the eye because colour is easy to match, but the direction of light is not. LightAudit estimates
+which light directions could explain every region of a photo, finds the light most regions agree on, and flags the region that does
+not fit, with a 3-D explanation. On real photos it catches 45% of pasted areas at a 5% false-alarm rate, abstains when the light has no
+direction, and we measured exactly how a skilled forger defeats it."</div>
+<h2>15.2 The two-minute version</h2>
+<ol>
+  <li><b>Problem</b> (20 s): photo-based claims; pasted dents; detectors give scores, not reasons.</li>
+  <li><b>Idea</b> (30 s): inverse rendering per region; one light must explain all; leave-one-out consensus; four verdicts.</li>
+  <li><b>Demo</b> (40 s): open the pear audit; show the flagged region on the dome and sky map; drag the sun.</li>
+  <li><b>Results and honesty</b> (30 s): 45% at 5.2% false alarms on held-out real objects; chance on whole objects in real rooms; attacks that work.</li>
+</ol>
+<h2>15.3 The ten-minute talk (maps to the professional deck)</h2>
+<table>
+  <tr><th>Slide</th><th>Say</th><th class="num">Time</th></tr>
+  <tr><td>1 Title</td><td>One question: does one light explain this photo?</td><td class="num">0:30</td></tr>
+  <tr><td>2 Problem</td><td>Edits are cheap; colour matches, light direction does not; reviewers need reasons</td><td class="num">1:00</td></tr>
+  <tr><td>3 Answer</td><td>Estimate, agree, flag or abstain; four verdicts; flag ≠ fraud</td><td class="num">1:00</td></tr>
+  <tr><td>4 Pipeline</td><td>Regions, normals, light maps on 8,192 directions, consensus, calibrated verdict</td><td class="num">1:15</td></tr>
+  <tr><td>5 Light dome</td><td>Each region votes; overlap is consensus; the paste sits 40° apart</td><td class="num">0:45</td></tr>
+  <tr><td>6 Dent check</td><td>Shared light vs shared material; guarded Retinex 0.74 → 0.86 AUC</td><td class="num">1:00</td></tr>
+  <tr><td>7 Results</td><td>45% at 5.2% false alarms; 57% at ≥ 80°; 32% after colour matching</td><td class="num">1:00</td></tr>
+  <tr><td>8 Abstention</td><td>Overcast and two suns: say "cannot tell"</td><td class="num">0:45</td></tr>
+  <tr><td>9 Viewer</td><td>Every number inspectable; relight; sky map</td><td class="num">0:45</td></tr>
+  <tr><td>10 Limits</td><td>Feathering, Poisson, re-shading; whole objects at chance; necessary not sufficient</td><td class="num">1:00</td></tr>
+  <tr><td>11–12 Next, close</td><td>Shadows, real dents, real cars</td><td class="num">1:00</td></tr>
+</table>
+<h2>15.4 Live demo script</h2>
+<ol>
+  <li>Start the server: <code>.\.venv\Scripts\python.exe -m lightaudit.cli serve</code>, open <code>http://127.0.0.1:8000</code>.</li>
+  <li>The gallery hero shows the idea live: an ASCII scene lit by one orbiting light, its shadows following it.</li>
+  <li>Click <b>Open the example audit</b> (the pear). Point at the rail: SUSPICIOUS, the meter, the one-sentence reason.</li>
+  <li>Click the <b>ROI</b> card; on the dome its light map sits apart from the others' (40° off).</li>
+  <li>Drag the sun on the <b>sky map</b>: the photo relights and the what-if verdict changes.</li>
+  <li>Switch the image to <b>Residual</b> and <b>Counterfactual</b>: where the model and the photo disagree.</li>
+  <li>Open the car splice for a whole-object case, and the overcast demo for INSUFFICIENT.</li>
+  <li>Open the <b>Attack lab</b>: the re-shade attack passes. Say why that is reported, not hidden.</li>
+</ol>
+<h2>15.5 Where the computer-graphics content is</h2>
+<table>
+  <tr><th>Graphics concept</th><th>Where it appears in LightAudit</th></tr>
+  <tr><td>Lambertian reflectance, clamped cosine <code>max(0, n·l)</code></td><td>The shading cue and every light map</td></tr>
+  <tr><td>Inverse rendering</td><td>Estimating light from shading, per region</td></tr>
+  <tr><td>Spherical parameterisation, solid angle</td><td>The 8,192-direction equirectangular grid with <code>cos(latitude)</code> area weights; credible cones</td></tr>
+  <tr><td>Ray marching signed distance fields</td><td>The synthetic scene renderer (sun, sky, soft shadows)</td></tr>
+  <tr><td>Blinn-Phong and GGX / Cook-Torrance</td><td>Highlights in the renderer and the viewer's relighting</td></tr>
+  <tr><td>Mirror reflection <code>2(n·v)n − v</code></td><td>The specular-glint cue</td></tr>
+  <tr><td>Projective geometry, vanishing points</td><td>Cast-shadow pairs and the shadow-consistency test</td></tr>
+  <tr><td>Camera response, tone curves, gamma</td><td>Why the rank cue exists; linearisation; the synthetic camera pipeline</td></tr>
+  <tr><td>Image-based relighting, analysis by synthesis</td><td>The relit and counterfactual views (albedo-free ratio relight)</td></tr>
+  <tr><td>Real-time rendering (WebGL2, shaders, three.js)</td><td>Relighting shader, 3-D light dome, textured light maps on a sphere</td></tr>
+  <tr><td>Poisson image editing</td><td>Retinex re-integration, and the Poisson-blending attack</td></tr>
+</table>
+<h2>15.6 Questions a professor is likely to ask</h2>
+<div class="qa"><div class="q">Why not just train a neural network to detect splices?</div><div class="a">Learned detectors are strong but give a score, not a physical reason; they are also hurt by re-compression. LightAudit gives a check a reviewer can see and argue with. The two are complementary, and we recommend running both.</div></div>
+<div class="qa"><div class="q">The surface normals come from a network. Isn't that circular?</div><div class="a">Partly, and we say so: a network that infers shape from appearance can bend normals toward a pasted region's light. That is one reason the whole-object check fails on real photos, and why we built normal-free checks (cast shadows) and the marked-area check, which compares the area with its own panel.</div></div>
+<div class="qa"><div class="q">How do you know the light estimate is right?</div><div class="a">On real scenes with a grey ball, using its known shape, the estimate is within 1–3° of the measured light. With predicted normals it is 11–27° off, so the estimator is sound and shape is the bottleneck.</div></div>
+<div class="qa"><div class="q">What does the 5% false-alarm rate guarantee?</div><div class="a">Split-conformal calibration: for honest photos like the calibration set, at most 5% exceed the alert level. It does not bound misses and does not transfer across domains, which is why we recalibrated on real photos.</div></div>
+<div class="qa"><div class="q">Why leave-one-out instead of comparing each region with the full consensus?</div><div class="a">A pasted region inside the consensus pulls it toward itself and partly hides its own disagreement. Leave-one-out removes that self-influence (ablation: no leave-one-out drops the car AUC from 0.65 to 0.58).</div></div>
+<div class="qa"><div class="q">Why is the detection rate only 45%?</div><div class="a">Many pastes come from a light within 25° of the scene's light, where shading differences are tiny (36% caught there, 57% at ≥ 80°). The false-alarm rate is fixed at about 5% by design; a higher catch rate would mean more honest claims flagged.</div></div>
+<div class="qa"><div class="q">Why does it fail on whole objects in real scenes?</div><div class="a">Most real indoor regions are flat; a flat region with unknown paint does not constrain the light direction. Predicted shape is also too rough. We measured both (curvature eigenvalue ≈ 0; 11–27° normal error).</div></div>
+<div class="qa"><div class="q">Can a forger beat it?</div><div class="a">Yes, and we measured how: Poisson blending (4.8% caught), wide feathering (25.8%), re-shading (0 of 8). That is why the claim is "necessary, not sufficient".</div></div>
+<div class="qa"><div class="q">What if the photo has several lights or is overcast?</div><div class="a">Explicit checks: soft-light contrast gives INSUFFICIENT (4 of 5 overcast scenes), two shadow levels give CONFLICT (3 of 5 two-sun scenes). The system says it cannot tell instead of guessing.</div></div>
+<div class="qa"><div class="q">Why least squares when the rank cue is tone-curve invariant?</div><div class="a">We measured it: rank was three times less accurate (about 24° vs 7°), because ranks throw away brightness magnitudes. Least squares on linearised brightness was better on every tone curve we tested.</div></div>
+<div class="qa"><div class="q">Why did a better paint-removal network do worse?</div><div class="a">The task is not general paint removal: the paste edge must never be called paint. Our guarded Retinex is told where the edge is; the network is not, and absorbs the evidence (25% vs 45% caught).</div></div>
+<div class="qa"><div class="q">What is the graphics contribution?</div><div class="a">Inverse rendering on a full sphere of light directions, a ray-marched synthetic test generator, analysis-by-synthesis relighting and counterfactuals, GGX/Blinn-Phong highlights, and a real-time WebGL viewer that makes the evidence explorable in 3-D.</div></div>
+<h2>15.7 What to say about the failures</h2>
+<div class="callout">Present them as results, not excuses: "We found the boundary of what lighting evidence can show, and we measured it."
+The honest framing that the findings support: <b>calibrated abstention, a measured map of when lighting evidence exists, a marked-area check
+that works on real photos and resists colour matching, and an attack lab that shows the remaining weaknesses.</b></div>
+<h2>15.8 Numbers cheat sheet</h2>
+<table>
+  <tr><th>Claim</th><th>Number</th><th>Source</th></tr>
+  <tr><td>Pasted areas caught, real held-out objects, 10% level</td><td>45.0% at 5.2% false alarms</td><td><code>eval/mit_panel.py</code></td></tr>
+  <tr><td>Same, 5% level</td><td>33.8% at 2.2%</td><td><code>eval/mit_panel.py</code></td></tr>
+  <tr><td>By light angle (10% level)</td><td>36 / 41 / 47 / 57% (0–25, 25–50, 50–80, ≥ 80°)</td><td><code>eval/mit_panel.py</code></td></tr>
+  <tr><td>After colour matching</td><td>31.5% at 5.2%</td><td><code>eval/mit_attack.py</code></td></tr>
+  <tr><td>Guarded Retinex separation</td><td>AUC 0.74 → 0.82–0.86</td><td><code>eval/mit_bench.py</code></td></tr>
+  <tr><td>Light error with true shape</td><td>1–3°</td><td><code>eval/real_bench.py ball</code></td></tr>
+  <tr><td>Whole objects in real indoor scenes</td><td>AUC 0.49–0.59 (chance)</td><td><code>eval/real_bench.py</code></td></tr>
+  <tr><td>Overcast / two suns (rendered)</td><td>4 of 5 INSUFFICIENT / 3 of 5 CONFLICT</td><td>quick suite</td></tr>
+  <tr><td>Stress test</td><td>38.5% → 25.8% (8 px feather) → 4.8% (Poisson)</td><td><code>eval/seam_robust.py</code></td></tr>
+  <tr><td>Rank vs least-squares light error</td><td>21.6–25.8° vs 6.0–7.6°</td><td>quick suite E1</td></tr>
+  <tr><td>Shadow consistency (synthetic)</td><td>0 of 60 false alarms; 92–93% at ≥ 60°</td><td><code>eval/shadow_bench.py</code></td></tr>
+  <tr><td>Tests</td><td>65 pytest + 506 parity checks</td><td><code>pytest</code>, <code>viewer/tests</code></td></tr>
+</table>
+
+<!-- ============================================================ 16 -->
+<h1><span class="n">16</span>Reproducing the results</h1>
+<pre>Set-ExecutionPolicy -Scope Process Bypass
+.\setup.ps1                                               # venv, dependencies, model weights
+.\.venv\Scripts\python.exe -m pytest                      # 65 tests
+node viewer/tests/parity.test.mjs                         # 506 Python/JS parity checks
+.\.venv\Scripts\python.exe -m lightaudit.cli serve        # viewer at http://127.0.0.1:8000
+.\.venv\Scripts\python.exe -m lightaudit.cli calibrate --n-cal 200
+.\.venv\Scripts\python.exe -m lightaudit.cli eval --suite quick
+.\.venv\Scripts\python.exe -m lightaudit.cli audit --image photo.jpg --roi mask.png --html
+.\.venv\Scripts\python.exe eval/mit_panel.py              # real marked-area benchmark (needs data/mit_intrinsic)
+.\.venv\Scripts\python.exe eval/real_bench.py bench       # real whole-object benchmark (needs data/multilum)</pre>
+<p>Data not in the repository (licences unclear, public repository): MIT Multi-Illumination scenes (<code>eval/real_bench.py fetch N</code>)
+and MIT Intrinsic Images (102 MB archive from the University of Toronto). The 12 real-object demo bundles the viewer shows are committed.
+Hardware used: a laptop CPU; one real photo with SAM segmentation takes 5–7 minutes.</p>
+
+<!-- ============================================================ A -->
+<h1><span class="n">A</span>Parameters and glossary</h1>
+<table>
+  <tr><th>Group</th><th>Defaults</th></tr>
+  <tr><td>Grid</td><td>128 × 64 = 8,192 directions; coarse 512 for the bootstrap</td></tr>
+  <tr><td>Usable pixels</td><td><code>0.04 ≤ Y ≤ 0.97</code>, <code>n_z ≥ 0.05</code>, normal uncertainty ≤ 35°, 150–2,500 pixels per region</td></tr>
+  <tr><td>Posterior</td><td>30 block-bootstrap draws, 24 px blocks; KDE <code>h = 14°</code>, <code>T = 1.5</code> (calibrated)</td></tr>
+  <tr><td>Cues</td><td>shading (least squares); glints weight 0.5; silhouette weight 0 (off); shadow pairs 0.7</td></tr>
+  <tr><td>Reliability</td><td>geometric mean of five factors, reliable if ≥ 0.35</td></tr>
+  <tr><td>Verdict</td><td>alert level 6.29 (synthetic, α = 0.05); at least 3 reliable regions; broad consensus if 95% set &gt; 35% of the sphere</td></tr>
+  <tr><td>Scene checks</td><td>soft-light contrast 0.42; shadow levels 0.29</td></tr>
+  <tr><td>Panel check (real)</td><td>shared light 0.85, shared material 2.41 (10% level); Retinex guard band 3 px</td></tr>
+</table>
+<table>
+  <tr><th>Term</th><th>Meaning</th></tr>
+  <tr><td>Surface normal</td><td>The direction a surface faces at a pixel</td></tr>
+  <tr><td>Light map / posterior</td><td>A region's map over all light directions of how well each explains it</td></tr>
+  <tr><td>Consensus</td><td>The light directions most reliable regions accept (product of their maps)</td></tr>
+  <tr><td>Shortfall</td><td>How badly a region fits the light the other regions agree on (0 to 6.9)</td></tr>
+  <tr><td>AUC</td><td>Probability that a pasted image scores higher than a clean one (0.5 = chance, 1 = perfect)</td></tr>
+  <tr><td>False-alarm rate</td><td>Share of honest photos flagged</td></tr>
+  <tr><td>Conformal calibration</td><td>Setting the alert level as a quantile of honest scores, giving a false-alarm guarantee</td></tr>
+  <tr><td>Retinex</td><td>Separating paint (reflectance) from shading using brightness gradients</td></tr>
+  <tr><td>Panel mode</td><td>Auditing a marked area against the panel around it</td></tr>
+  <tr><td>Morph / relighting</td><td>Re-shading the photo under a different light using each region's fitted tone curve</td></tr>
+</table>
+<p class="muted small" style="margin-top:8mm">Report generated from the project repository. Photos in the figures: MIT Intrinsic Images (Grosse et al.) and rendered scenes.</p>
+</body>
+</html>
