@@ -54,6 +54,15 @@ def test_conflict():
     assert f["verdict"] == "CONFLICT"
 
 
+def test_many_flags_is_conflict_not_suspicious():
+    # 7 agreeing regions + 3 outliers spread apart: 3 > max_flagged and 3 > 20% of 10 -> bad geometry, not a splice
+    agree = [(30 + d, 40) for d in range(-6, 8, 2)]
+    *_, f = run(agree + [(-120, 30), (150, 10), (-60, 5)])
+    assert f["verdict"] == "CONFLICT" and f["flagged"] == []
+    *_, f = run(agree + [(-120, 30), (150, 10), (-60, 5)], cfg=replace(CFG, max_flagged=3))
+    assert f["verdict"] == "SUSPICIOUS" and len(f["flagged"]) == 3
+
+
 def test_unreliable_never_flagged():
     *_, f = run([(30, 40), (33, 42), (28, 38), (-120, 30)], weights=[0.8, 0.8, 0.8, 0.1])
     assert f["verdict"] == "CONSISTENT" and not f["per_region"][3]["flagged"]
@@ -130,3 +139,8 @@ def test_shadow_levels_conflict():
     assert f["verdict"] == "SUSPICIOUS" and f["shadow_levels"]["conflict"] is False
     f = fuse(A, w, [True, False, False, False], cfg, centers, shadow_mid=[0.7, None, None, None])  # excluded region ignored
     assert f["verdict"] != "CONFLICT"
+
+
+def test_no_regions_is_insufficient():
+    f = fuse(np.zeros((0, len(eq_dirs())), np.float32), [], None, CFG)
+    assert f["verdict"] == "INSUFFICIENT"

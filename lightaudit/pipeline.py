@@ -49,6 +49,10 @@ def fuse_regions(regions: list[dict], cfg: Config, cues=ALL_CUES, loo: bool = Tr
     for r in regions:
         if r.get("kind") == "pseudo":
             continue
+        # flat auto-found regions get no vote (unknown paint colour hides the light); the user-marked ROI keeps its
+        # vote, since a shallow dent is exactly what panel mode is for (BUILD_LOG Update 11)
+        if r["weight"] > 0 and r["name"] != "ROI" and r["spread_deg"] < cfg.min_spread_deg:
+            r.update(weight=0.0, reason=reliability.REASONS["f_spread"])
         if any(r.get(k) is not None for k in ("panel_T", "panel_Tr", "panel_S")):
             r["panel_z"] = panel_ratio(r, cfg)  # re-derived so a changed calibration applies to cached regions
         g = r["glint"] if "glint" in cues else None

@@ -61,11 +61,15 @@ class Config:
     w_shadow: float = 0.7
     # reliability
     w_min: float = 0.35
+    min_spread_deg: float = 12.0  # flatter regions get no vote: on real photos they flagged clean scenes (BUILD_LOG Update 11)
     # verdict
     tau_img: float = 2.0  # calibrated
     tau_ref_factor: float = 1.0
     min_reliable: int = 3
     broad_consensus_frac: float = 0.35
+    # a splice is one or two objects: more flagged regions than this (count and share of reliable) -> CONFLICT
+    max_flagged: int = 2
+    max_flagged_frac: float = 0.2
     # soft-light abstention: median over reliable regions of P10/P90 of linearised luminance (calibrated)
     soft_contrast: float = 0.34
     # panel mode: |mean residual| of the ROI against the panel's own shading curve, in robust sigmas (calibrated)

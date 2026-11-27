@@ -68,7 +68,7 @@ def _decode_image(data: bytes) -> tuple[str, tuple[int, int]]:
         im.verify()
     with Image.open(io.BytesIO(data)) as im:
         fmt, size = (im.format or "PNG").upper(), im.size
-    ext = {"JPEG": ".jpg", "PNG": ".png", "WEBP": ".webp", "BMP": ".bmp", "TIFF": ".tif"}.get(fmt)
+    ext = {"JPEG": ".jpg", "MPO": ".jpg", "PNG": ".png", "WEBP": ".webp", "BMP": ".bmp", "TIFF": ".tif"}.get(fmt)
     if ext is None:
         raise ValueError(f"unsupported image format {fmt}")
     return ext, size
@@ -175,7 +175,8 @@ def _bundle_cfg(m: dict) -> Config:
     kw = dict(kde_h=float(c.get("h", base.kde_h)), T=float(c.get("T", base.T)), tau_img=tau,
               tau_ref_factor=tau_ref / tau if tau else 1.0, w_min=float(c.get("w_min", base.w_min)),
               alpha=float(c.get("alpha", base.alpha)))
-    for k in ("eps", "w_glint", "w_contour", "min_reliable", "broad_consensus_frac"):
+    for k in ("eps", "w_glint", "w_contour", "min_reliable", "broad_consensus_frac", "soft_contrast", "shadow_levels_max",
+              "tau_panel", "tau_panel_T", "tau_panel_Tr", "max_flagged", "max_flagged_frac", "min_spread_deg"):
         if c.get(k) is not None:
             kw[k] = type(getattr(base, k))(c[k])
     return replace(base, **kw)

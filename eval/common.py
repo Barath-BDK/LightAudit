@@ -37,7 +37,7 @@ RESULTS = ROOT / "data" / "results"
 CACHE = RESULTS / "cache"
 TABLES = RESULTS / "tables"
 FIGS = ROOT / "docs" / "figures"
-CACHE_VERSION = "v7"
+CACHE_VERSION = "v8"  # v8: flat-region gate (min_spread_deg) changed stored weights
 CAVEAT = "synthetic scenes with simulated normal predictors unless stated"
 
 CUE_SETS = {"C1": ("shading",), "C1+C2": ("shading", "glint"), "C1+C2+C3": ("shading", "glint", "contour")}

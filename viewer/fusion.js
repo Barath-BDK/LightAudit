@@ -13,7 +13,7 @@ export const VERDICTS = ['CONSISTENT', 'SUSPICIOUS', 'INSUFFICIENT', 'CONFLICT']
 
 export const DEFAULT_CFG = Object.freeze({
   eps: 1e-3, w_glint: 0.5, w_contour: 0.5, w_shadow: 0.7, w_min: 0.35, tau_img: 2.0, tau_ref: 2.0,
-  min_reliable: 3, broad_consensus_frac: 0.35, soft_contrast: Infinity, tau_panel: Infinity, shadow_levels_max: Infinity,
+  min_reliable: 3, broad_consensus_frac: 0.35, max_flagged: 2, max_flagged_frac: 0.2, soft_contrast: Infinity, tau_panel: Infinity, shadow_levels_max: Infinity,
 });
 
 function argmax(a) {
@@ -161,6 +161,8 @@ function fuseCore(A, weights, excluded = null, cfg = DEFAULT_CFG, centers = null
       if (consistent(idx.filter((x) => x !== k))) { flagged = [k]; break; }
     }
   }
+  // many disagreeing regions point at bad surface estimates, not at one pasted object (fusion.py)
+  if (flagged !== null && flagged.length > cfg.max_flagged && flagged.length > cfg.max_flagged_frac * idx.length) flagged = null;
   if (flagged === null) {
     res.verdict = 'CONFLICT';
     res.reason = 'reference regions disagree: several lights or poor geometry';

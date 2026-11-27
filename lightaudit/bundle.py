@@ -101,6 +101,7 @@ def build_manifest(result: dict, name: str, title: str, description: str, source
         calibration=dict(h=cfg.kde_h, T=cfg.T, tau_img=cfg.tau_img, tau_ref=cfg.tau_ref, w_min=cfg.w_min,
                          alpha=cfg.alpha, eps=cfg.eps, w_glint=cfg.w_glint, w_contour=cfg.w_contour,
                          min_reliable=cfg.min_reliable, broad_consensus_frac=cfg.broad_consensus_frac,
+                         max_flagged=cfg.max_flagged, max_flagged_frac=cfg.max_flagged_frac, min_spread_deg=cfg.min_spread_deg,
                          soft_contrast=cfg.soft_contrast, tau_panel=cfg.tau_panel, shadow_levels_max=cfg.shadow_levels_max, tau_panel_T=cfg.tau_panel_T, tau_panel_Tr=cfg.tau_panel_Tr,
                          source=result.get("calib_source", "calib_default.json")),
         regions=[region_manifest(r, i) for i, r in enumerate(result["regions"])],

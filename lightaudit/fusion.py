@@ -42,7 +42,7 @@ def _fuse_core(A, weights, excluded=None, cfg: Config = Config(), centers=None, 
     agree among themselves -> SUSPICIOUS(candidates). Otherwise try each candidate alone, highest shortfall
     first: if the rest without that one region is mutually consistent -> SUSPICIOUS(that region). Else CONFLICT.
     """
-    A = np.asarray(A, np.float64).reshape(len(weights), -1)
+    A = np.asarray(A, np.float64).reshape(len(weights), len(eq_dirs()))
     w = np.asarray(weights, np.float64)
     R = len(w)
     excluded = np.zeros(R, bool) if excluded is None else np.asarray(excluded, bool)
@@ -102,6 +102,8 @@ def _fuse_core(A, weights, excluded=None, cfg: Config = Config(), centers=None, 
             if consistent(idx[idx != k]):
                 flagged = [k]
                 break
+    if flagged is not None and len(flagged) > cfg.max_flagged and len(flagged) > cfg.max_flagged_frac * len(idx):
+        flagged = None  # many disagreeing regions point at bad surface estimates, not at one pasted object
     if flagged is None:
         res.update(verdict="CONFLICT", reason="reference regions disagree: several lights or poor geometry")
         return res

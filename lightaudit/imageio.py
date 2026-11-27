@@ -4,12 +4,16 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 def load_rgb(path, max_side: int | None = None) -> np.ndarray:
     """uint8 RGB, optionally downscaled so the long side is <= max_side."""
-    im = Image.open(path).convert("RGB")
+    im = ImageOps.exif_transpose(Image.open(path))  # phone photos store rotation in EXIF
+    if im.mode in ("I;16", "I;16B", "I;16L", "I"):  # 16-bit: convert("RGB") would clip every pixel to white
+        a = np.asarray(im, np.float64)
+        im = Image.fromarray(np.uint8(np.clip(a / max(a.max(), 1) * 255, 0, 255)))
+    im = im.convert("RGB")
     if max_side and max(im.size) > max_side:
         s = max_side / max(im.size)
         im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
